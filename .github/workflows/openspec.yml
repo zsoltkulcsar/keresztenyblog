@@ -25,8 +25,14 @@ jobs:
       - name: Install OpenSpec CLI
         run: npm install -g @fission-ai/openspec
 
+      - name: Install app dependencies
+        run: npm ci
+
       - name: Validate Hungarian Christian blog plan
         run: openspec validate plan-hungarian-christian-blog
 
       - name: Show OpenSpec status
         run: openspec status --change plan-hungarian-christian-blog
+
+      - name: Build first prototype
+        run: npm run build

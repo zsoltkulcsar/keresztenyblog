@@ -21,13 +21,13 @@ The missing layer is product and editorial planning: what content types exist, h
 
 ## Decisions
 
-### Decision: Treat the homepage blueprint as the first implementation source of truth
+### Decision: Treat the homepage blueprint as the first prototype reference
 
-The initial implementation SHOULD follow `keskeny-ut-blueprint.md` for visual design, stack, fonts, tokens, layout, content examples, and acceptance checks.
+The initial implementation SHOULD use `keskeny-ut-blueprint.md` as the starting reference for visual design, stack, fonts, tokens, layout sections, content examples, and acceptance checks, while allowing the product design to evolve during prototype review.
 
-Rationale: The blueprint already contains a coherent editorial direction and exact build guidance. Reusing it prevents the planning phase from fragmenting the design.
+Rationale: The blueprint already contains a coherent editorial direction and exact build guidance. Reusing it gives the first prototype a strong baseline without freezing the final product design too early.
 
-Alternative considered: Start with a broader site map and redesign the homepage later. This was rejected because the user already has a concrete initial design and wants help turning it into a plan and workflow.
+Alternative considered: Treat the blueprint as the final design specification. This was rejected because the user wants a first prototype that can be evaluated and improved, not a locked end product.
 
 ### Decision: Model the product around editorial content, not church operations
 
