@@ -31,8 +31,9 @@ jobs:
       - name: Validate OpenSpec specs
         run: openspec validate --specs
 
-      - name: List OpenSpec changes
-        run: openspec list
+      - name: Validate active OpenSpec changes
+        run: |
+          node -e "const { execFileSync } = require('node:child_process'); const data = JSON.parse(execFileSync('openspec', ['list', '--json'], { encoding: 'utf8' })); for (const change of data.changes || []) { execFileSync('openspec', ['validate', change.name], { stdio: 'inherit' }); }"
 
       - name: Build first prototype
         run: npm run build
