@@ -28,11 +28,11 @@ jobs:
       - name: Install app dependencies
         run: npm ci
 
-      - name: Validate Hungarian Christian blog plan
-        run: openspec validate plan-hungarian-christian-blog
+      - name: Validate OpenSpec specs
+        run: openspec validate --specs
 
-      - name: Show OpenSpec status
-        run: openspec status --change plan-hungarian-christian-blog
+      - name: List OpenSpec changes
+        run: openspec list
 
       - name: Build first prototype
         run: npm run build
