@@ -18,3 +18,18 @@ schema: spec-driven
 #       - Always include a "Non-goals" section
 #     tasks:
 #       - Break tasks into chunks of max 2 hours
+
+context: |
+  Governance: Every OpenSpec change and implementation work item must have a
+  corresponding GitHub issue in https://github.com/zsoltkulcsar/blog. Planning
+  artifacts should include or reserve the GitHub issue reference before work is
+  considered ready to implement.
+
+rules:
+  proposal:
+    - Every proposal must reference the corresponding GitHub issue URL or state that the issue still needs to be created before implementation starts.
+  design:
+    - Every design must preserve the GitHub issue linkage from the proposal and mention any additional implementation issues needed for separate epics.
+  tasks:
+    - Every task group must map to a GitHub issue or explicitly include a task to create that issue before implementation work starts.
+    - Implementation must not begin for a task group until its GitHub issue exists and is linked from the OpenSpec change.
