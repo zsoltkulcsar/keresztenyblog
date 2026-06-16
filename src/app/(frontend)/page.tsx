@@ -2,8 +2,17 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { homepageContent } from '@/lib/homepage-content'
+import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 
 import './styles.css'
+
+export function generateMetadata() {
+  return buildDiscoveryMetadata({
+    description: 'Kovasz is a dark editorial Christian publication for articles, series, and study resources.',
+    path: '/',
+    title: 'Kovasz',
+  })
+}
 
 export default function HomePage() {
   const { leadStory, latestArticles, modules } = homepageContent

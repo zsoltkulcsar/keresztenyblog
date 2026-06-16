@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { buildSearchUrl, createEditorialSearch } from '@/lib/editorial-search'
+import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 
 type SearchPageProps = {
   searchParams?:
@@ -33,6 +34,24 @@ function typeLabel(type: string) {
     default:
       return type
   }
+}
+
+export function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+}) {
+  return Promise.resolve(searchParams ?? {}).then((resolvedSearchParams) => {
+    const q = getSingleValue(resolvedSearchParams.q)?.trim() ?? ''
+    const path = q ? `/search?q=${encodeURIComponent(q)}` : '/search'
+
+    return buildDiscoveryMetadata({
+      description: 'Search across articles, series, authors, resources, and Daily Verse.',
+      path,
+      title: q ? `Search results for ${q}` : 'Search the publication',
+      type: 'website',
+    })
+  })
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { buildArchiveUrl, createArchiveContent } from '@/lib/article-archive'
+import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 
 type ArchivePageProps = {
   searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
@@ -31,6 +32,42 @@ function buildPageLabel(currentPage: number, totalPages: number, totalArticles: 
   }
 
   return `Page ${currentPage} of ${totalPages} · ${totalArticles} articles`
+}
+
+export function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+}) {
+  return Promise.resolve(searchParams ?? {}).then((resolvedSearchParams) => {
+    const category = getSingleValue(resolvedSearchParams.category)
+    const series = getSingleValue(resolvedSearchParams.series)
+    const author = getSingleValue(resolvedSearchParams.author)
+    const tag = getSingleValue(resolvedSearchParams.tag)
+    const page = getSingleValue(resolvedSearchParams.page)
+
+    const selectedFilters = [
+      category,
+      series,
+      author,
+      tag,
+      page && page !== '1' ? `Page ${page}` : '',
+    ].filter(Boolean) as string[]
+    const suffix = selectedFilters.length > 0 ? ` · ${selectedFilters.join(' · ')}` : ''
+    const query = new URLSearchParams()
+
+    if (author) query.set('author', author)
+    if (category) query.set('category', category)
+    if (page && page !== '1') query.set('page', page)
+    if (series) query.set('series', series)
+    if (tag) query.set('tag', tag)
+
+    return buildDiscoveryMetadata({
+      description: 'Browse the Kovasz archive by category, series, author, tag, and sort order.',
+      path: query.toString() ? `/articles?${query.toString()}` : '/articles',
+      title: `Articles${suffix}`,
+    })
+  })
 }
 
 export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
