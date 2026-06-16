@@ -17,16 +17,16 @@ export default function HomePage() {
         </div>
 
         <nav aria-label="Primary" className="top-nav">
-          <Link href="#latest">Articles</Link>
+          <Link href="/articles">Articles</Link>
           <Link href="#series">Series</Link>
           <Link href="#resources">Resources</Link>
           <Link href="#about">About</Link>
         </nav>
 
         <div className="masthead-actions">
-          <a className="search-entry" href="#latest">
+          <Link className="search-entry" href="/articles">
             Search the publication
-          </a>
+          </Link>
           <Link className="admin-link" href="/admin">
             Admin
           </Link>
@@ -50,7 +50,7 @@ export default function HomePage() {
 
           <div className="lead-links">
             <Link href="/admin">Read the issue</Link>
-            <a href="#latest">Browse latest</a>
+            <Link href="/articles">Browse archive</Link>
           </div>
         </div>
 
@@ -80,7 +80,7 @@ export default function HomePage() {
               </p>
               <h3>{article.title}</h3>
               <p>{article.excerpt}</p>
-              <a href={`#${article.slug}`}>Open article</a>
+              <Link href="/articles">Open archive</Link>
             </li>
           ))}
         </ol>

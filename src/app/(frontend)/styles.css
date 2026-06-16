@@ -100,6 +100,16 @@ img {
   font-size: 0.92rem;
 }
 
+.top-nav a:hover,
+.search-entry:hover,
+.admin-link:hover,
+.lead-links a:hover,
+.latest-item a:hover,
+.archive-reset-link:hover,
+.pagination-link:hover {
+  border-color: rgba(215, 196, 157, 0.8);
+}
+
 .search-entry,
 .admin-link {
   display: inline-flex;
@@ -265,6 +275,196 @@ img {
   align-self: end;
 }
 
+.archive-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.archive-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
+  gap: 20px;
+  align-items: end;
+  padding: 18px 0 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.archive-header h1 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.4rem, 4vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.archive-intro,
+.archive-summary,
+.archive-empty p {
+  max-width: 68ch;
+  margin: 18px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.archive-header-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.archive-reset-link {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 0.92rem;
+}
+
+.archive-toolbar {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.archive-filters {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.archive-filters label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.archive-filters span {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.archive-filters select,
+.archive-filters button {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  padding: 10px 12px;
+}
+
+.archive-filters button {
+  background: var(--text);
+  color: var(--bg);
+  cursor: pointer;
+}
+
+.archive-summary {
+  margin-top: 16px;
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.archive-item,
+.archive-empty {
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.archive-item {
+  padding: 22px;
+}
+
+.archive-item h2,
+.archive-empty h2 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.8rem;
+  line-height: 1.15;
+}
+
+.archive-item p {
+  margin: 16px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.archive-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+  margin: 20px 0 0;
+}
+
+.archive-details div {
+  min-width: 0;
+}
+
+.archive-details dt {
+  color: var(--accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.archive-details dd {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.archive-pagination {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.pagination-pages {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pagination-link {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 0.92rem;
+}
+
+.pagination-link[aria-current='page'] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.archive-empty {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  margin-top: 18px;
+  padding: 24px;
+}
+
 @media (max-width: 1100px) {
   .masthead {
     grid-template-columns: 1fr;
@@ -290,10 +490,24 @@ img {
   .modules-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .archive-header,
+  .archive-empty {
+    grid-template-columns: 1fr;
+  }
+
+  .archive-filters,
+  .archive-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 720px) {
   .front-page {
+    padding: 16px;
+  }
+
+  .archive-page {
     padding: 16px;
   }
 
@@ -319,11 +533,26 @@ img {
     grid-template-columns: 1fr;
   }
 
+  .archive-filters,
+  .archive-grid,
+  .archive-details {
+    grid-template-columns: 1fr;
+  }
+
+  .archive-header h1 {
+    font-size: 2.2rem;
+  }
+
   .bottom-band {
     padding: 20px;
   }
 
   .bottom-band h2 {
     font-size: 1.6rem;
+  }
+
+  .archive-item h2,
+  .archive-empty h2 {
+    font-size: 1.5rem;
   }
 }
