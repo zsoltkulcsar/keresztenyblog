@@ -42,6 +42,8 @@ const discoveryRoutes: DiscoveryRoute[] = [
   { changeFrequency: 'daily', path: '/search', priority: 0.5 },
   { changeFrequency: 'weekly', path: '/series', priority: 0.8 },
   { changeFrequency: 'daily', path: '/napi-ige', priority: 0.8 },
+  { changeFrequency: 'monthly', path: '/resources', priority: 0.6 },
+  { changeFrequency: 'monthly', path: '/about', priority: 0.4 },
 ]
 
 const redirectManifest: RedirectManifestEntry[] = [

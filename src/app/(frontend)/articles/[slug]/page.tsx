@@ -4,9 +4,9 @@ import { notFound } from 'next/navigation'
 
 import { ReadingProgress } from '@/components/features/article/ReadingProgress'
 import { ShareTools } from '@/components/features/article/ShareTools'
-import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildArticleUrl, createArticleDetail } from '@/lib/article-detail'
 import { createArchiveContent } from '@/lib/article-archive'
+import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 
 type ArticlePageProps = {
   params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
@@ -150,6 +150,26 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           ))}
         </section>
 
+        <section className="page-links" aria-label="Article routes">
+          <Link className="page-link" href="/articles">
+            Back to archive
+          </Link>
+          {detail.series ? (
+            <Link className="page-link" href="/series">
+              Browse series
+            </Link>
+          ) : null}
+          <Link className="page-link" href="/napi-ige">
+            Daily Verse
+          </Link>
+          <Link className="page-link" href="/resources">
+            Resources
+          </Link>
+          <Link className="page-link" href="/about">
+            About Kovasz
+          </Link>
+        </section>
+
         {detail.series ? (
           <section className="series-nav" aria-label="Series navigation">
             <div>
@@ -200,4 +220,3 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     </main>
   )
 }
-

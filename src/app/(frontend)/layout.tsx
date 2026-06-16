@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { SiteChrome } from '@/components/layout/SiteChrome'
 import './styles.css'
 
 export const metadata = {
@@ -9,5 +10,5 @@ export const metadata = {
 export default function RootLayout(props: { children: ReactNode }) {
   const { children } = props
 
-  return <>{children}</>
+  return <SiteChrome>{children}</SiteChrome>
 }

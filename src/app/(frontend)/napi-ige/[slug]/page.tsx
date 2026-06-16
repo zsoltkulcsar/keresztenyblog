@@ -79,7 +79,21 @@ export default async function DailyVerseDetail({
           Back to archive
         </Link>
       </section>
+
+      <section className="page-links" aria-label="Daily Verse routes">
+        <Link className="page-link" href="/articles">
+          Articles
+        </Link>
+        <Link className="page-link" href="/series">
+          Series
+        </Link>
+        <Link className="page-link" href="/resources">
+          Resources
+        </Link>
+        <Link className="page-link" href="/about">
+          About Kovasz
+        </Link>
+      </section>
     </main>
   )
 }
-

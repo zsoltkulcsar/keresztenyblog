@@ -97,6 +97,21 @@ export default async function SeriesDetailPage({
         ))}
       </section>
 
+      <section className="page-links" aria-label="Series routes">
+        <Link className="page-link" href="/articles">
+          Browse archive
+        </Link>
+        <Link className="page-link" href="/napi-ige">
+          Daily Verse
+        </Link>
+        <Link className="page-link" href="/resources">
+          Resources
+        </Link>
+        <Link className="page-link" href="/about">
+          About Kovasz
+        </Link>
+      </section>
+
       <section className="related-section" aria-label="Related series">
         <div className="section-heading">
           <p className="eyebrow">More series</p>

@@ -5,8 +5,6 @@ import { buildArticleUrl } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { homepageContent } from '@/lib/homepage-content'
 
-import './styles.css'
-
 function getSingleValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value
 }
@@ -30,29 +28,6 @@ export default async function HomePage({
 
   return (
     <main className="front-page">
-      <header className="masthead">
-        <div>
-          <p className="eyebrow">Kovasz</p>
-          <h1>Hungarian Christian articles, series, and study resources.</h1>
-        </div>
-
-        <nav aria-label="Primary" className="top-nav">
-          <Link href="/articles">Articles</Link>
-          <Link href="#series">Series</Link>
-          <Link href="#resources">Resources</Link>
-          <Link href="#about">About</Link>
-        </nav>
-
-        <div className="masthead-actions">
-          <Link className="search-entry" href="/search">
-            Search the publication
-          </Link>
-          <Link className="admin-link" href="/admin">
-            Admin
-          </Link>
-        </div>
-      </header>
-
       <section className="lead-story" aria-labelledby="lead-story-title">
         <div className="lead-copy">
           <p className="eyebrow">Featured article</p>
@@ -146,9 +121,11 @@ export default async function HomePage({
           <h2 id="series-title">Topic-based learning paths for new and mature believers.</h2>
         </div>
         <p>
-          Series will carry the audience distinction, while the homepage keeps the front page
-          mixed and editorial.
+          Series carry the audience distinction, while the homepage keeps the front page mixed and editorial.
         </p>
+        <Link className="bottom-band-link" href="/series">
+          Browse series
+        </Link>
       </section>
 
       <section className="bottom-band" id="resources" aria-labelledby="resources-title">
@@ -157,9 +134,11 @@ export default async function HomePage({
           <h2 id="resources-title">Study aids, books, and teaching tools.</h2>
         </div>
         <p>
-          Practical material stays organized for readers who want to study Scripture more
-          carefully and serve others well.
+          Practical material stays organized for readers who want to study Scripture more carefully and serve others well.
         </p>
+        <Link className="bottom-band-link" href="/resources">
+          Open resources
+        </Link>
       </section>
 
       <section className="bottom-band" id="about" aria-labelledby="about-title">
@@ -168,11 +147,12 @@ export default async function HomePage({
           <h2 id="about-title">Mission, doctrine, and editorial posture.</h2>
         </div>
         <p>
-          The publication is shaped around Scripture, spiritual guidance, and daily Christian
-          life.
+          The publication is shaped around Scripture, spiritual guidance, and daily Christian life.
         </p>
+        <Link className="bottom-band-link" href="/about">
+          Read about Kovasz
+        </Link>
       </section>
     </main>
   )
 }
-
