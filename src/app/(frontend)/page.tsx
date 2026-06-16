@@ -24,7 +24,7 @@ export default function HomePage() {
         </nav>
 
         <div className="masthead-actions">
-          <Link className="search-entry" href="/articles">
+          <Link className="search-entry" href="/search">
             Search the publication
           </Link>
           <Link className="admin-link" href="/admin">
