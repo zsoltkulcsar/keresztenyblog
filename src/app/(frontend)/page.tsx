@@ -1,10 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { homepageContent } from '@/lib/homepage-content'
+import { buildArticleUrl } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { homepageContent } from '@/lib/homepage-content'
 
 import './styles.css'
+
+function getSingleValue(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value
+}
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
@@ -14,8 +19,14 @@ export function generateMetadata() {
   })
 }
 
-export default function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+}) {
   const { leadStory, latestArticles, modules } = homepageContent
+  const resolvedSearchParams = await Promise.resolve(searchParams ?? {})
+  const newsletterState = getSingleValue(resolvedSearchParams.newsletter)
 
   return (
     <main className="front-page">
@@ -58,7 +69,7 @@ export default function HomePage() {
           </div>
 
           <div className="lead-links">
-            <Link href="/admin">Read the issue</Link>
+            <Link href={buildArticleUrl(leadStory.slug)}>Read the issue</Link>
             <Link href="/articles">Browse archive</Link>
           </div>
         </div>
@@ -89,7 +100,7 @@ export default function HomePage() {
               </p>
               <h3>{article.title}</h3>
               <p>{article.excerpt}</p>
-              <Link href="/articles">Open archive</Link>
+              <Link href={buildArticleUrl(article.slug)}>Open article</Link>
             </li>
           ))}
         </ol>
@@ -103,6 +114,30 @@ export default function HomePage() {
             <p>{module.body}</p>
           </article>
         ))}
+      </section>
+
+      <section className="newsletter-band" id="newsletter" aria-labelledby="newsletter-title">
+        <div>
+          <p className="eyebrow">Newsletter</p>
+          <h2 id="newsletter-title">Get new articles, series, and study resources by email.</h2>
+          <p>
+            Sign up to receive new teaching without needing to track every update manually.
+          </p>
+          {newsletterState === 'success' ? (
+            <p className="newsletter-status success">Thanks. Your signup was received.</p>
+          ) : newsletterState === 'invalid' ? (
+            <p className="newsletter-status error">Enter a valid email address and try again.</p>
+          ) : null}
+        </div>
+
+        <form action="/api/newsletter" method="post" className="newsletter-form">
+          <label>
+            <span>Email address</span>
+            <input autoComplete="email" name="email" placeholder="you@example.com" type="email" />
+          </label>
+          <input name="source" type="hidden" value="homepage" />
+          <button type="submit">Subscribe</button>
+        </form>
       </section>
 
       <section className="bottom-band" id="series" aria-labelledby="series-title">
@@ -140,3 +175,4 @@ export default function HomePage() {
     </main>
   )
 }
+

@@ -1,10 +1,13 @@
 import Link from 'next/link'
 
 import { buildArchiveUrl, createArchiveContent } from '@/lib/article-archive'
+import { buildArticleUrl } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 
 type ArchivePageProps = {
-  searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  searchParams?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }
 
 function getSingleValue(value: string | string[] | undefined) {
@@ -37,7 +40,9 @@ function buildPageLabel(currentPage: number, totalPages: number, totalArticles: 
 export function generateMetadata({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  searchParams?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   return Promise.resolve(searchParams ?? {}).then((resolvedSearchParams) => {
     const category = getSingleValue(resolvedSearchParams.category)
@@ -46,13 +51,7 @@ export function generateMetadata({
     const tag = getSingleValue(resolvedSearchParams.tag)
     const page = getSingleValue(resolvedSearchParams.page)
 
-    const selectedFilters = [
-      category,
-      series,
-      author,
-      tag,
-      page && page !== '1' ? `Page ${page}` : '',
-    ].filter(Boolean) as string[]
+    const selectedFilters = [category, series, author, tag, page && page !== '1' ? `Page ${page}` : ''].filter(Boolean) as string[]
     const suffix = selectedFilters.length > 0 ? ` · ${selectedFilters.join(' · ')}` : ''
     const query = new URLSearchParams()
 
@@ -180,10 +179,19 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
               <article className="archive-item" key={article.slug}>
                 <p className="card-meta">
                   <span>{article.category.label}</span>
-                  <span>{new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(`${article.publishedAt}T00:00:00Z`))}</span>
+                  <span>
+                    {new Intl.DateTimeFormat('en-GB', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    }).format(new Date(`${article.publishedAt}T00:00:00Z`))}
+                  </span>
                 </p>
                 <h2>{article.title}</h2>
                 <p>{article.excerpt}</p>
+                <Link className="archive-open-link" href={buildArticleUrl(article.slug)}>
+                  Open article
+                </Link>
                 <dl className="archive-details">
                   <div>
                     <dt>Series</dt>
@@ -297,3 +305,4 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
     </main>
   )
 }
+

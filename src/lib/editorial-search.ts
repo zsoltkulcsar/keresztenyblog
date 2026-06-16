@@ -1,3 +1,5 @@
+import { buildArticleUrl } from '@/lib/article-detail'
+
 export type SearchResultType = 'article' | 'author' | 'dailyVerse' | 'resource' | 'series'
 
 export type SearchResult = {
@@ -32,7 +34,7 @@ type SearchRecord = {
 const searchCorpus: SearchRecord[] = [
   {
     excerpt: 'How shepherding, doctrine, and presence shape healthy church life.',
-    href: '/articles?category=pastoral-theology',
+    href: buildArticleUrl('scripture-shapes-christian-growth'),
     keywords: [
       'scripture',
       'growth',
@@ -48,7 +50,7 @@ const searchCorpus: SearchRecord[] = [
   },
   {
     excerpt: 'A grounded pattern for prayer, Scripture, and habits that last.',
-    href: '/articles?category=christian-life',
+    href: buildArticleUrl('daily-rhythm-for-spiritual-growth'),
     keywords: ['prayer', 'habits', 'scripture', 'growth', 'rhythm'],
     tags: ['Christian Life', 'Prayer', 'Habits'],
     title: 'A daily rhythm for spiritual growth',
@@ -56,7 +58,7 @@ const searchCorpus: SearchRecord[] = [
   },
   {
     excerpt: 'What covenant love looks like when the week is busy and the heart is tired.',
-    href: '/articles?category=marriage',
+    href: buildArticleUrl('marriage-family-and-patient-love'),
     keywords: ['marriage', 'family', 'covenant', 'love', 'home'],
     tags: ['Marriage', 'Family'],
     title: 'Marriage, family, and patient love',
@@ -213,3 +215,4 @@ export function buildSearchUrl(query: string) {
   const normalized = query.trim()
   return normalized ? `/search?q=${encodeURIComponent(normalized)}` : '/search'
 }
+

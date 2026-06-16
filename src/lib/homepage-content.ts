@@ -32,7 +32,7 @@ const fallbackLatestArticles: HomepageArticle[] = [
   {
     category: 'Pastoral Theology',
     excerpt: 'How shepherding, doctrine, and presence shape a healthy local church.',
-    slug: 'pastoral-theology-for-ordinary-churches',
+    slug: 'scripture-shapes-christian-growth',
     title: 'Pastoral theology for ordinary churches',
     time: '8 min read',
   },
