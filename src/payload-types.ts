@@ -70,6 +70,8 @@ export interface Config {
     users: User;
     media: Media;
     'newsletter-signups': NewsletterSignup;
+    series: Series;
+    'daily-verse': DailyVerse;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +82,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'newsletter-signups': NewsletterSignupsSelect<false> | NewsletterSignupsSelect<true>;
+    series: SeriesSelect<false> | SeriesSelect<true>;
+    'daily-verse': DailyVerseSelect<false> | DailyVerseSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -176,6 +180,40 @@ export interface NewsletterSignup {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "series".
+ */
+export interface Series {
+  id: number;
+  title: string;
+  slug: string;
+  topic: 'pastoral-theology' | 'christian-life' | 'marriage' | 'ethics';
+  audience: 'new-believer' | 'growing-believer' | 'mature-believer' | 'leader';
+  description: string;
+  longDescription?: string | null;
+  status: 'draft' | 'published';
+  cover?: (number | Media) | null;
+  articleSlugs?: (unknown[] | { [k: string]: unknown } | string | number | boolean | null) | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "daily-verse".
+ */
+export interface DailyVerse {
+  id: number;
+  date: string;
+  reference: string;
+  text: string;
+  note?: string | null;
+  status: 'draft' | 'published';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -209,6 +247,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'newsletter-signups';
         value: number | NewsletterSignup;
+      } | null)
+    | ({
+        relationTo: 'series';
+        value: number | Series;
+      } | null)
+    | ({
+        relationTo: 'daily-verse';
+        value: number | DailyVerse;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -299,6 +345,38 @@ export interface MediaSelect<T extends boolean = true> {
 export interface NewsletterSignupsSelect<T extends boolean = true> {
   email?: T;
   source?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "series_select".
+ */
+export interface SeriesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  topic?: T;
+  audience?: T;
+  description?: T;
+  longDescription?: T;
+  status?: T;
+  cover?: T;
+  articleSlugs?: T;
+  seoTitle?: T;
+  seoDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "daily-verse_select".
+ */
+export interface DailyVerseSelect<T extends boolean = true> {
+  date?: T;
+  reference?: T;
+  text?: T;
+  note?: T;
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -51,7 +51,9 @@ export function generateMetadata({
     const tag = getSingleValue(resolvedSearchParams.tag)
     const page = getSingleValue(resolvedSearchParams.page)
 
-    const selectedFilters = [category, series, author, tag, page && page !== '1' ? `Page ${page}` : ''].filter(Boolean) as string[]
+    const selectedFilters = [category, series, author, tag, page && page !== '1' ? `Page ${page}` : ''].filter(
+      Boolean,
+    ) as string[]
     const suffix = selectedFilters.length > 0 ? ` · ${selectedFilters.join(' · ')}` : ''
     const query = new URLSearchParams()
 
@@ -164,9 +166,7 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
         </form>
 
         {filterSummary.length > 0 ? (
-          <p className="archive-summary">
-            Active filters: {filterSummary.join(' · ')}
-          </p>
+          <p className="archive-summary">Active filters: {filterSummary.join(' · ')}</p>
         ) : (
           <p className="archive-summary">No filters are active. The latest articles appear first.</p>
         )}
@@ -293,9 +293,7 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
           <div>
             <p className="eyebrow">No results</p>
             <h2>No articles match these filters.</h2>
-            <p>
-              Reset the filters or widen the current selection to see the archive again.
-            </p>
+            <p>Reset the filters or widen the current selection to see the archive again.</p>
           </div>
           <Link className="archive-reset-link" href="/articles">
             Clear filters
@@ -305,4 +303,3 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
     </main>
   )
 }
-

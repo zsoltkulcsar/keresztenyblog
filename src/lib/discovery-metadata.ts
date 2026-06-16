@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import type { MetadataRoute } from 'next'
 
 import { createArchiveContent } from '@/lib/article-archive'
+import { listDailyVerseEntries } from '@/lib/daily-verse'
+import { listSeries } from '@/lib/series'
 
 export type DiscoveryMetadataInput = {
   description: string
@@ -38,6 +40,8 @@ const discoveryRoutes: DiscoveryRoute[] = [
   { changeFrequency: 'weekly', path: '/', priority: 1 },
   { changeFrequency: 'daily', path: '/articles', priority: 0.9 },
   { changeFrequency: 'daily', path: '/search', priority: 0.5 },
+  { changeFrequency: 'weekly', path: '/series', priority: 0.8 },
+  { changeFrequency: 'daily', path: '/napi-ige', priority: 0.8 },
 ]
 
 const redirectManifest: RedirectManifestEntry[] = [
@@ -75,14 +79,13 @@ function getLatestPublishedDate() {
 
 function buildRssItems(): RssItem[] {
   const archive = createArchiveContent()
-  const latestPublishedAt = getLatestPublishedDate()
 
   return archive.articles.slice(0, 4).map((article) => ({
-      description: article.excerpt,
-      link: buildAbsoluteUrl('/articles', { category: article.category.value, series: article.series.value }),
-      pubDate: new Date(`${article.publishedAt}T00:00:00Z`).toUTCString(),
-      title: article.title,
-    }))
+    description: article.excerpt,
+    link: buildAbsoluteUrl('/articles', { category: article.category.value, series: article.series.value }),
+    pubDate: new Date(`${article.publishedAt}T00:00:00Z`).toUTCString(),
+    title: article.title,
+  }))
 }
 
 export function buildDiscoveryMetadata(input: DiscoveryMetadataInput): Metadata {
@@ -128,13 +131,29 @@ export function buildDiscoveryMetadata(input: DiscoveryMetadataInput): Metadata 
 
 export function buildSitemap(): MetadataRoute.Sitemap {
   const latestPublishedDate = new Date(`${getLatestPublishedDate()}T00:00:00Z`)
-
-  return discoveryRoutes.map((route) => ({
-    changeFrequency: route.changeFrequency,
+  const seriesRoutes = listSeries().map((series) => ({
+    changeFrequency: 'weekly' as const,
     lastModified: latestPublishedDate,
-    priority: route.priority,
-    url: buildAbsoluteUrl(route.path),
+    priority: 0.7,
+    url: buildAbsoluteUrl(`/series/${series.slug}`),
   }))
+  const dailyVerseRoutes = listDailyVerseEntries().map((entry) => ({
+    changeFrequency: 'daily' as const,
+    lastModified: new Date(`${entry.date}T00:00:00Z`),
+    priority: 0.6,
+    url: buildAbsoluteUrl(`/napi-ige/${entry.slug}`),
+  }))
+
+  return [
+    ...discoveryRoutes.map((route) => ({
+      changeFrequency: route.changeFrequency,
+      lastModified: latestPublishedDate,
+      priority: route.priority,
+      url: buildAbsoluteUrl(route.path),
+    })),
+    ...seriesRoutes,
+    ...dailyVerseRoutes,
+  ]
 }
 
 export function buildRobots(): MetadataRoute.Robots {
@@ -142,6 +161,7 @@ export function buildRobots(): MetadataRoute.Robots {
     rules: [
       {
         allow: '/',
+        userAgent: '*',
         disallow: ['/admin', '/api'],
       },
     ],
