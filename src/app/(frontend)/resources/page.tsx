@@ -1,27 +1,20 @@
 import Link from 'next/link'
 
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
 
-const resources = [
-  {
-    description: 'Curated books and essays that help readers understand Scripture with more depth.',
-    href: '/articles/how-to-read-the-bible-when-stuck',
-    title: 'Bible study aids',
-    type: 'Study guide',
-  },
-  {
-    description: 'A practical path for readers who want to move through a topic with a steady sequence.',
-    href: '/series/foundations',
-    title: 'Foundations series',
-    type: 'Series',
-  },
-  {
-    description: 'Short Scripture readings for the day with archive access and stable links.',
-    href: '/napi-ige',
-    title: 'Daily Verse archive',
-    type: 'Daily Scripture',
-  },
-]
+function typeLabel(value: string) {
+  const labels: Record<string, string> = {
+    article: 'Article',
+    book: 'Book',
+    file: 'File',
+    link: 'Link',
+    series: 'Series',
+    'study-guide': 'Study guide',
+  }
+
+  return labels[value] ?? value
+}
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
@@ -31,7 +24,9 @@ export function generateMetadata() {
   })
 }
 
-export default function ResourcesPage() {
+export default async function ResourcesPage() {
+  const resources = await loadResourceItems()
+
   return (
     <main className="archive-page">
       <header className="archive-header">
@@ -52,14 +47,14 @@ export default function ResourcesPage() {
 
       <section className="archive-grid" aria-label="Resources list">
         {resources.map((resource) => (
-          <article className="archive-item" key={resource.title}>
+          <article className="archive-item" key={resource.slug}>
             <p className="card-meta">
-              <span>{resource.type}</span>
-              <span>Curated</span>
+              <span>{typeLabel(resource.type)}</span>
+              <span>{resource.usefulness}</span>
             </p>
             <h2>{resource.title}</h2>
             <p>{resource.description}</p>
-            <Link className="archive-open-link" href={resource.href}>
+            <Link className="archive-open-link" href={buildResourceUrl(resource.slug)}>
               Open resource
             </Link>
           </article>

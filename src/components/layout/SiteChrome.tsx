@@ -5,6 +5,7 @@ const primaryLinks = [
   { href: '/articles', label: 'Articles' },
   { href: '/series', label: 'Series' },
   { href: '/napi-ige', label: 'Daily Verse' },
+  { href: '/authors', label: 'Authors' },
   { href: '/resources', label: 'Resources' },
   { href: '/about', label: 'About' },
 ]

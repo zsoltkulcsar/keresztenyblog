@@ -7,6 +7,7 @@ import { ShareTools } from '@/components/features/article/ShareTools'
 import { buildArticleUrl, createArticleDetail } from '@/lib/article-detail'
 import { createArchiveContent } from '@/lib/article-archive'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { buildAuthorUrl, loadAuthorProfileByName } from '@/lib/authors'
 
 type ArticlePageProps = {
   params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
@@ -33,7 +34,7 @@ export function generateMetadata({
 }: {
   params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
 }) {
-  return Promise.resolve(params ?? {}).then((resolvedParams) => {
+  return Promise.resolve(params ?? {}).then(async (resolvedParams) => {
     const slug = parseParams(resolvedParams).slug
     const detail = createArticleDetail(slug)
 
@@ -65,6 +66,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound()
   }
 
+  const authorProfile = await loadAuthorProfileByName(detail.author)
+
   const relatedArticles = createArchiveContent()
     .articles.filter((article) => article.slug !== slug)
     .slice(0, 3)
@@ -78,7 +81,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           <div className="article-kicker-row">
             <p className="eyebrow">{detail.category}</p>
             <p className="article-meta-inline">
-              <span>{detail.author}</span>
+              <span>
+                {authorProfile ? <Link href={buildAuthorUrl(authorProfile.slug)}>{detail.author}</Link> : detail.author}
+              </span>
               <span>{formatDate(detail.publishedAt)}</span>
               <span>{detail.readingMinutes} min read</span>
             </p>
@@ -131,7 +136,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
           <div>
             <dt>Author</dt>
-            <dd>{detail.author}</dd>
+            <dd>
+              {authorProfile ? <Link href={buildAuthorUrl(authorProfile.slug)}>{detail.author}</Link> : detail.author}
+            </dd>
           </div>
           <div>
             <dt>Published</dt>

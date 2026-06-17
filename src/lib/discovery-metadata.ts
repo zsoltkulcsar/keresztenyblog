@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import type { MetadataRoute } from 'next'
 
 import { createArchiveContent } from '@/lib/article-archive'
+import { loadAuthorProfiles } from '@/lib/authors'
 import { listDailyVerseEntries } from '@/lib/daily-verse'
+import { loadResourceItems } from '@/lib/resources'
 import { listSeries } from '@/lib/series'
 
 export type DiscoveryMetadataInput = {
@@ -131,7 +133,7 @@ export function buildDiscoveryMetadata(input: DiscoveryMetadataInput): Metadata 
   }
 }
 
-export function buildSitemap(): MetadataRoute.Sitemap {
+export async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
   const latestPublishedDate = new Date(`${getLatestPublishedDate()}T00:00:00Z`)
   const seriesRoutes = listSeries().map((series) => ({
     changeFrequency: 'weekly' as const,
@@ -145,6 +147,18 @@ export function buildSitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
     url: buildAbsoluteUrl(`/napi-ige/${entry.slug}`),
   }))
+  const authorRoutes = (await loadAuthorProfiles()).map((author) => ({
+    changeFrequency: 'monthly' as const,
+    lastModified: latestPublishedDate,
+    priority: 0.5,
+    url: buildAbsoluteUrl(`/authors/${author.slug}`),
+  }))
+  const resourceRoutes = (await loadResourceItems()).map((resource) => ({
+    changeFrequency: 'monthly' as const,
+    lastModified: latestPublishedDate,
+    priority: 0.5,
+    url: buildAbsoluteUrl(`/resources/${resource.slug}`),
+  }))
 
   return [
     ...discoveryRoutes.map((route) => ({
@@ -155,6 +169,8 @@ export function buildSitemap(): MetadataRoute.Sitemap {
     })),
     ...seriesRoutes,
     ...dailyVerseRoutes,
+    ...authorRoutes,
+    ...resourceRoutes,
   ]
 }
 

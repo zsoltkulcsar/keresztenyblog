@@ -1,21 +1,7 @@
 import Link from 'next/link'
 
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
-
-const sections = [
-  {
-    body: 'Kovasz exists to deepen understanding of the Bible, guide spiritual life, and support daily Christian growth for new and mature believers alike.',
-    title: 'Mission',
-  },
-  {
-    body: 'The publication keeps Scripture at the center of every article, series, testimony, and daily verse. Translation work from trusted partners is allowed and clearly labeled.',
-    title: 'Editorial posture',
-  },
-  {
-    body: 'The site should remain calm, serious, and readable: a dark editorial frame, strong hierarchy, and no decorative noise that competes with the text.',
-    title: 'Visual identity',
-  },
-]
+import { loadAboutPageContent } from '@/lib/about'
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
@@ -25,7 +11,17 @@ export function generateMetadata() {
   })
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const about = await loadAboutPageContent()
+
+  const sections = [
+    { body: about.manifesto, title: 'Manifesto' },
+    { body: about.mission, title: 'Mission' },
+    { body: about.doctrine, title: 'Faith and doctrine' },
+    { body: about.editorialPosture, title: 'Editorial posture' },
+    { body: about.visualIdentity, title: 'Visual identity' },
+  ]
+
   return (
     <main className="archive-page">
       <header className="archive-header">
@@ -38,8 +34,8 @@ export default function AboutPage() {
         </div>
         <div className="archive-header-meta">
           <span>Trust page</span>
-          <Link className="archive-reset-link" href="/resources">
-            Resources
+          <Link className="archive-reset-link" href="/authors">
+            Authors
           </Link>
         </div>
       </header>
@@ -55,6 +51,34 @@ export default function AboutPage() {
             <p>{section.body}</p>
           </article>
         ))}
+      </section>
+
+      <section className="about-grid" aria-label="Team and contact">
+        <article className="about-panel">
+          <p className="eyebrow">Team</p>
+          <h2>Who shapes the publication</h2>
+          <div className="about-list">
+            {about.teamMembers.map((member) => (
+              <div className="about-list-item" key={member.name}>
+                <h3>{member.name}</h3>
+                <p className="about-role">{member.role}</p>
+                <p>{member.bio}</p>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="about-panel">
+          <p className="eyebrow">Contact</p>
+          <h2>How to reach Kovasz</h2>
+          <div className="about-links">
+            {about.contactLinks.map((link) => (
+              <Link href={link.url} key={link.url}>
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </article>
       </section>
     </main>
   )

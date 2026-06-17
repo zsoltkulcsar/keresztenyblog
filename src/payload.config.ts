@@ -6,10 +6,13 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
+import { Authors } from './collections/Authors'
 import { Media } from './collections/Media'
 import { NewsletterSignups } from './collections/NewsletterSignups'
+import { Resources } from './collections/Resources'
 import { Series } from './collections/Series'
 import { DailyVerse } from './collections/DailyVerse'
+import { AboutPage } from './globals/About'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,8 +24,9 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, NewsletterSignups, Series, DailyVerse],
+  collections: [Users, Authors, Media, NewsletterSignups, Resources, Series, DailyVerse],
   editor: lexicalEditor(),
+  globals: [AboutPage],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
