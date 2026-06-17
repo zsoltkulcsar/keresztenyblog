@@ -1,12 +1,32 @@
 import type { CollectionConfig } from 'payload'
 
+import { allowEditorOrAdmin, allowPublicRead, isAdminOrEditor } from '@/payload/access'
+import { buildPreviewUrl } from '@/payload/preview'
+
 export const DailyVerse: CollectionConfig = {
   slug: 'daily-verse',
   access: {
-    read: () => true,
+    admin: allowEditorOrAdmin(),
+    create: allowEditorOrAdmin(),
+    delete: allowEditorOrAdmin(),
+    read: allowPublicRead(),
+    readVersions: allowEditorOrAdmin(),
+    unlock: allowEditorOrAdmin(),
+    update: allowEditorOrAdmin(),
   },
   admin: {
+    group: 'Content',
+    hidden: ({ user }) => !isAdminOrEditor(user as { role?: string | null } | null),
+    preview: (doc) => buildPreviewUrl('/napi-ige', doc as { date?: string | null }),
     useAsTitle: 'reference',
+  },
+  versions: {
+    drafts: {
+      autosave: false,
+      schedulePublish: true,
+      validate: true,
+    },
+    maxPerDoc: 25,
   },
   fields: [
     {
@@ -41,4 +61,3 @@ export const DailyVerse: CollectionConfig = {
     },
   ],
 }
-

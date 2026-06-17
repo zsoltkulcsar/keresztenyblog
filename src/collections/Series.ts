@@ -1,12 +1,32 @@
 import type { CollectionConfig } from 'payload'
 
+import { allowEditorOrAdmin, allowPublicRead, isAdminOrEditor } from '@/payload/access'
+import { buildPreviewUrl } from '@/payload/preview'
+
 export const Series: CollectionConfig = {
   slug: 'series',
   access: {
-    read: () => true,
+    admin: allowEditorOrAdmin(),
+    create: allowEditorOrAdmin(),
+    delete: allowEditorOrAdmin(),
+    read: allowPublicRead(),
+    readVersions: allowEditorOrAdmin(),
+    unlock: allowEditorOrAdmin(),
+    update: allowEditorOrAdmin(),
   },
   admin: {
+    group: 'Content',
+    hidden: ({ user }) => !isAdminOrEditor(user as { role?: string | null } | null),
+    preview: (doc) => buildPreviewUrl('/series', doc as { slug?: string | null }),
     useAsTitle: 'title',
+  },
+  versions: {
+    drafts: {
+      autosave: false,
+      schedulePublish: true,
+      validate: true,
+    },
+    maxPerDoc: 25,
   },
   fields: [
     {
@@ -81,4 +101,3 @@ export const Series: CollectionConfig = {
     },
   ],
 }
-

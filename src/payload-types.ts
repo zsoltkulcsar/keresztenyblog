@@ -132,6 +132,7 @@ export interface User {
   updatedAt: string;
   createdAt: string;
   email: string;
+  role: 'admin' | 'editor';
   resetPasswordToken?: string | null;
   resetPasswordExpiration?: string | null;
   salt?: string | null;
@@ -155,6 +156,8 @@ export interface User {
 export interface Media {
   id: number;
   alt: string;
+  caption?: string | null;
+  credit?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -306,6 +309,7 @@ export interface UsersSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   email?: T;
+  role?: T;
   resetPasswordToken?: T;
   resetPasswordExpiration?: T;
   salt?: T;
@@ -326,6 +330,8 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  caption?: T;
+  credit?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

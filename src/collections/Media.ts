@@ -1,9 +1,22 @@
 import type { CollectionConfig } from 'payload'
 
+import { allowEditorOrAdmin, isAdminOrEditor } from '@/payload/access'
+
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
-    read: () => true,
+    admin: allowEditorOrAdmin(),
+    create: allowEditorOrAdmin(),
+    delete: allowEditorOrAdmin(),
+    read: allowEditorOrAdmin(),
+    readVersions: allowEditorOrAdmin(),
+    update: allowEditorOrAdmin(),
+  },
+  admin: {
+    defaultColumns: ['filename', 'alt', 'caption', 'credit'],
+    group: 'Content',
+    hidden: ({ user }) => !isAdminOrEditor(user as { role?: string | null } | null),
+    useAsTitle: 'alt',
   },
   fields: [
     {
@@ -11,6 +24,17 @@ export const Media: CollectionConfig = {
       type: 'text',
       required: true,
     },
+    {
+      name: 'caption',
+      type: 'textarea',
+    },
+    {
+      name: 'credit',
+      type: 'text',
+    },
   ],
-  upload: true,
+  upload: {
+    focalPoint: true,
+    displayPreview: true,
+  },
 }
