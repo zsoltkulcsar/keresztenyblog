@@ -240,9 +240,32 @@ export interface Resource {
   id: number;
   title: string;
   slug: string;
-  type: 'study-guide' | 'book' | 'article' | 'series' | 'file' | 'link';
+  type: 'study-guide' | 'book' | 'article' | 'series' | 'file' | 'link' | 'reading-plan' | 'leader-tool';
+  featured?: boolean | null;
+  audience?: string | null;
+  topic?: string | null;
+  format?: string | null;
   description: string;
   usefulness: string;
+  ctaLabel?: string | null;
+  highlights?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  steps?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   externalUrl?: string | null;
   file?: (number | null) | Media;
   relatedArticleSlugs?:
@@ -577,8 +600,15 @@ export interface ResourcesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   type?: T;
+  featured?: T;
+  audience?: T;
+  topic?: T;
+  format?: T;
   description?: T;
   usefulness?: T;
+  ctaLabel?: T;
+  highlights?: T;
+  steps?: T;
   externalUrl?: T;
   file?: T;
   relatedArticleSlugs?: T;

@@ -3,6 +3,7 @@ import type { MetadataRoute } from 'next'
 
 import { createArchiveContent } from '@/lib/article-archive'
 import { loadAuthorProfiles } from '@/lib/authors'
+import { listBooks } from '@/lib/books'
 import { listDailyVerseEntries } from '@/lib/daily-verse'
 import { loadResourceItems } from '@/lib/resources'
 import { listSeries } from '@/lib/series'
@@ -36,13 +37,15 @@ type RssItem = {
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3000'
 const siteName = 'Kovasz'
-const siteDescription = 'Kovasz is a Hungarian Christian publication for articles, series, and study resources.'
+const siteDescription =
+  'Kovasz is a Hungarian Christian publication for articles, series, and study resources.'
 
 const discoveryRoutes: DiscoveryRoute[] = [
   { changeFrequency: 'weekly', path: '/', priority: 1 },
   { changeFrequency: 'daily', path: '/articles', priority: 0.9 },
   { changeFrequency: 'daily', path: '/search', priority: 0.5 },
   { changeFrequency: 'weekly', path: '/series', priority: 0.8 },
+  { changeFrequency: 'monthly', path: '/books', priority: 0.7 },
   { changeFrequency: 'daily', path: '/napi-ige', priority: 0.8 },
   { changeFrequency: 'monthly', path: '/resources', priority: 0.6 },
   { changeFrequency: 'monthly', path: '/about', priority: 0.4 },
@@ -54,7 +57,10 @@ const redirectManifest: RedirectManifestEntry[] = [
   { destination: '/search', permanent: true, source: '/discover' },
 ]
 
-function buildAbsoluteUrl(path: string, searchParams?: Record<string, string | number | undefined>) {
+function buildAbsoluteUrl(
+  path: string,
+  searchParams?: Record<string, string | number | undefined>,
+) {
   const url = new URL(path, siteUrl)
 
   if (searchParams) {
@@ -86,7 +92,10 @@ function buildRssItems(): RssItem[] {
 
   return archive.articles.slice(0, 4).map((article) => ({
     description: article.excerpt,
-    link: buildAbsoluteUrl('/articles', { category: article.category.value, series: article.series.value }),
+    link: buildAbsoluteUrl('/articles', {
+      category: article.category.value,
+      series: article.series.value,
+    }),
     pubDate: new Date(`${article.publishedAt}T00:00:00Z`).toUTCString(),
     title: article.title,
   }))
@@ -159,6 +168,12 @@ export async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
     url: buildAbsoluteUrl(`/resources/${resource.slug}`),
   }))
+  const bookRoutes = listBooks().map((book) => ({
+    changeFrequency: 'monthly' as const,
+    lastModified: latestPublishedDate,
+    priority: 0.55,
+    url: buildAbsoluteUrl(`/books/${book.slug}`),
+  }))
 
   return [
     ...discoveryRoutes.map((route) => ({
@@ -171,6 +186,7 @@ export async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
     ...dailyVerseRoutes,
     ...authorRoutes,
     ...resourceRoutes,
+    ...bookRoutes,
   ]
 }
 
@@ -218,6 +234,9 @@ export function buildRedirectManifest(): RedirectManifestEntry[] {
   return redirectManifest
 }
 
-export function buildDiscoveryUrl(path: string, searchParams?: Record<string, string | number | undefined>) {
+export function buildDiscoveryUrl(
+  path: string,
+  searchParams?: Record<string, string | number | undefined>,
+) {
   return buildAbsoluteUrl(path, searchParams)
 }

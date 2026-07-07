@@ -51,7 +51,26 @@ export const Resources: CollectionConfig = {
         { label: 'Series', value: 'series' },
         { label: 'File', value: 'file' },
         { label: 'Link', value: 'link' },
+        { label: 'Reading plan', value: 'reading-plan' },
+        { label: 'Leader tool', value: 'leader-tool' },
       ],
+    },
+    {
+      name: 'featured',
+      defaultValue: false,
+      type: 'checkbox',
+    },
+    {
+      name: 'audience',
+      type: 'text',
+    },
+    {
+      name: 'topic',
+      type: 'text',
+    },
+    {
+      name: 'format',
+      type: 'text',
     },
     {
       name: 'description',
@@ -62,6 +81,20 @@ export const Resources: CollectionConfig = {
       name: 'usefulness',
       required: true,
       type: 'textarea',
+    },
+    {
+      name: 'ctaLabel',
+      type: 'text',
+    },
+    {
+      name: 'highlights',
+      type: 'json',
+      defaultValue: [],
+    },
+    {
+      name: 'steps',
+      type: 'json',
+      defaultValue: [],
     },
     {
       name: 'externalUrl',

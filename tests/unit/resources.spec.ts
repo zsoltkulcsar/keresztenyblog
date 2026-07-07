@@ -17,7 +17,7 @@ describe('resources', () => {
   it('builds resource urls and exposes fallback resources', () => {
     expect(buildResourceUrl('bible-study-aids')).toBe('/resources/bible-study-aids')
     expect(getResourceItemBySlug('bible-study-aids')?.type).toBe('study-guide')
-    expect(listResourceItems()).toHaveLength(4)
+    expect(listResourceItems()).toHaveLength(10)
   })
 
   it('merges cms resources with the fallback set', async () => {

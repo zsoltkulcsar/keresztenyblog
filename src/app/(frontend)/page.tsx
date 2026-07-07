@@ -1,17 +1,31 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { buildArticleUrl } from '@/lib/article-detail'
+import { buildArticleUrl, createArticleDetail, listArticleDetailSlugs } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
-import { homepageContent } from '@/lib/homepage-content'
+import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
+import { buildSeriesUrl, listSeries } from '@/lib/series'
 
-function getSingleValue(value: string | string[] | undefined) {
-  return Array.isArray(value) ? value[0] : value
+function visualTone(slug: string, index = 0) {
+  const score = Array.from(slug).reduce((total, char) => total + char.charCodeAt(0), index)
+  return `article-visual article-visual-${score % 12}`
+}
+
+function audienceLabel(value: string) {
+  const labels: Record<string, string> = {
+    'growing-believer': 'Growing believer',
+    leader: 'Leader',
+    'mature-believer': 'Mature believer',
+    'new-believer': 'New believer',
+  }
+
+  return labels[value] ?? value
 }
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
-    description: 'Kovasz is a dark editorial Christian publication for articles, series, and study resources.',
+    description:
+      'Kovasz is a Scripture-first Christian publication for articles, series, and study resources.',
     path: '/',
     title: 'Kovasz',
   })
@@ -20,138 +34,191 @@ export function generateMetadata() {
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  searchParams?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
-  const { leadStory, latestArticles, modules } = homepageContent
-  const resolvedSearchParams = await Promise.resolve(searchParams ?? {})
-  const newsletterState = getSingleValue(resolvedSearchParams.newsletter)
+  await Promise.resolve(searchParams ?? {})
+
+  const homepageArticles = listArticleDetailSlugs()
+    .map((slug) => createArticleDetail(slug))
+    .filter((article): article is NonNullable<ReturnType<typeof createArticleDetail>> =>
+      Boolean(article),
+    )
+    .slice(0, 8)
+  const leadArticle = homepageArticles[0]
+  const editorPicks = homepageArticles.slice(1, 4)
+  const seriesIndex = listSeries().slice(0, 3)
+  const resources = (await loadResourceItems()).slice(0, 4)
 
   return (
-    <main className="front-page">
-      <section className="lead-story" aria-labelledby="lead-story-title">
-        <div className="lead-copy">
-          <p className="eyebrow">Featured article</p>
-          <h2 id="lead-story-title">Why Scripture must shape every part of Christian growth</h2>
-          <p className="deck">
-            Kovasz exists to help new believers, mature readers, and leaders deepen their
-            understanding of the Bible and walk faithfully in daily Christian life.
-          </p>
-
-          <div className="lead-meta">
-            <span>Pastoral Theology</span>
-            <span>Scripture first</span>
-            <span>12 min read</span>
-          </div>
-
-          <div className="lead-links">
-            <Link href={buildArticleUrl(leadStory.slug)}>Read the issue</Link>
-            <Link href="/articles">Browse archive</Link>
-          </div>
-        </div>
-
-        <div className="lead-visual">
-          <Image
-            alt="Kovasz editorial reference cover"
-            fill
-            priority
-            sizes="(max-width: 960px) 100vw, 52vw"
-            src="/home-hero.png"
-          />
-        </div>
-      </section>
-
-      <section className="latest-section" id="latest" aria-labelledby="latest-title">
-        <div className="section-heading">
-          <p className="eyebrow">Latest articles</p>
-          <h2 id="latest-title">Recent writing and teaching</h2>
-        </div>
-
-        <ol className="latest-grid">
-          {latestArticles.map((article) => (
-            <li className="latest-item" key={article.slug}>
-              <p className="card-meta">
-                <span>{article.category}</span>
-                <span>{article.time}</span>
-              </p>
-              <h3>{article.title}</h3>
-              <p>{article.excerpt}</p>
-              <Link href={buildArticleUrl(article.slug)}>Open article</Link>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="modules-grid" aria-label="Secondary editorial modules">
-        {modules.map((module) => (
-          <article className="module" key={module.key}>
-            <p className="eyebrow">{module.eyebrow}</p>
-            <h3>{module.title}</h3>
-            <p>{module.body}</p>
-          </article>
-        ))}
-      </section>
-
-      <section className="newsletter-band" id="newsletter" aria-labelledby="newsletter-title">
-        <div>
-          <p className="eyebrow">Newsletter</p>
-          <h2 id="newsletter-title">Get new articles, series, and study resources by email.</h2>
+    <main className="guided-home">
+      <section className="guided-hero" aria-labelledby="home-hero-title">
+        <Image
+          alt="People studying Scripture together"
+          fill
+          priority
+          sizes="100vw"
+          src="/home-hero.png"
+        />
+        <div className="guided-hero-overlay" />
+        <div className="guided-hero-copy">
+          <p className="eyebrow">Kovasz</p>
+          <h1 id="home-hero-title">Scripture-first Christian teaching for everyday faith</h1>
           <p>
-            Sign up to receive new teaching without needing to track every update manually.
+            Articles, guided series, and study resources that help readers understand the Bible,
+            grow in Christ, and live faithfully in daily life.
           </p>
-          {newsletterState === 'success' ? (
-            <p className="newsletter-status success">Thanks. Your signup was received.</p>
-          ) : newsletterState === 'invalid' ? (
-            <p className="newsletter-status error">Enter a valid email address and try again.</p>
-          ) : null}
+          <div className="guided-button-row">
+            <Link className="guided-button guided-button-primary" href="/articles">
+              Start reading
+            </Link>
+            <Link className="guided-button guided-button-secondary" href="/series">
+              Choose a series
+            </Link>
+          </div>
         </div>
-
-        <form action="/api/newsletter" method="post" className="newsletter-form">
-          <label>
-            <span>Email address</span>
-            <input autoComplete="email" name="email" placeholder="you@example.com" type="email" />
-          </label>
-          <input name="source" type="hidden" value="homepage" />
-          <button type="submit">Subscribe</button>
-        </form>
       </section>
 
-      <section className="bottom-band" id="series" aria-labelledby="series-title">
-        <div>
-          <p className="eyebrow">Series</p>
-          <h2 id="series-title">Topic-based learning paths for new and mature believers.</h2>
+      {leadArticle ? (
+        <section className="guided-reading-section" aria-labelledby="guided-reading-title">
+          <div className="guided-section-heading">
+            <p className="eyebrow">Latest and selected</p>
+            <h2 id="guided-reading-title">Read with a clear first step</h2>
+            <p>
+              The newest article is paired with a few editorial recommendations worth opening next.
+            </p>
+          </div>
+
+          <div className="guided-reading-layout">
+            <article className="guided-lead-article">
+              <div
+                className={`guided-lead-visual ${visualTone(leadArticle.slug)}`}
+                aria-hidden="true"
+              />
+              <div>
+                <p className="guided-meta">
+                  <span>{leadArticle.category}</span>
+                  <span>{leadArticle.readingMinutes} min read</span>
+                </p>
+                <h3>{leadArticle.title}</h3>
+                <p>{leadArticle.excerpt}</p>
+                <Link href={buildArticleUrl(leadArticle.slug)}>Read latest article</Link>
+              </div>
+            </article>
+
+            <aside className="guided-editor-picks" aria-label="Editor picks">
+              <div>
+                <p className="eyebrow">Editor picks</p>
+                <h3>Worth reading next</h3>
+              </div>
+              <div className="guided-pick-list">
+                {editorPicks.map((article) => (
+                  <Link href={buildArticleUrl(article.slug)} key={article.slug}>
+                    <span>{article.category}</span>
+                    <strong>{article.title}</strong>
+                    <small>{article.excerpt}</small>
+                  </Link>
+                ))}
+              </div>
+              <Link className="guided-inline-action" href="/articles">
+                Browse all articles
+              </Link>
+            </aside>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="guided-series-section" aria-labelledby="guided-series-title">
+        <div className="guided-section-heading guided-section-heading-split">
+          <div>
+            <p className="eyebrow">Guided series</p>
+            <h2 id="guided-series-title">Follow a study path instead of scattered links</h2>
+          </div>
+          <Link className="guided-inline-action" href="/series">
+            View all series
+          </Link>
         </div>
-        <p>
-          Series carry the audience distinction, while the homepage keeps the front page mixed and editorial.
-        </p>
-        <Link className="bottom-band-link" href="/series">
-          Browse series
-        </Link>
+
+        <div className="guided-series-grid">
+          {seriesIndex.map((series, index) => (
+            <article className="guided-series-card" key={series.slug}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <div>
+                <p className="guided-meta">
+                  <span>{audienceLabel(series.audience)}</span>
+                  <span>{series.articleSlugs.length} parts</span>
+                </p>
+                <h3>{series.title}</h3>
+                <p>{series.description}</p>
+              </div>
+              <Link href={buildSeriesUrl(series.slug)}>Start path</Link>
+            </article>
+          ))}
+        </div>
       </section>
 
-      <section className="bottom-band" id="resources" aria-labelledby="resources-title">
-        <div>
-          <p className="eyebrow">Resources</p>
-          <h2 id="resources-title">Study aids, books, and teaching tools.</h2>
+      <section className="guided-toolbox-section" aria-labelledby="guided-toolbox-title">
+        <div className="guided-toolbox-intro">
+          <p className="eyebrow">Resources toolbox</p>
+          <h2 id="guided-toolbox-title">Practical aids for study, prayer, and teaching</h2>
+          <p>
+            Use the resource library when an article needs a worksheet, reading plan, checklist, or
+            group-ready tool beside it.
+          </p>
+          <Link className="guided-button guided-button-primary" href="/resources">
+            Open resources
+          </Link>
         </div>
-        <p>
-          Practical material stays organized for readers who want to study Scripture more carefully and serve others well.
-        </p>
-        <Link className="bottom-band-link" href="/resources">
-          Open resources
-        </Link>
+
+        <div className="guided-resource-list">
+          {resources.map((resource) => (
+            <Link href={buildResourceUrl(resource.slug)} key={resource.slug}>
+              <span>{resource.format ?? resource.type}</span>
+              <strong>{resource.title}</strong>
+              <small>{resource.usefulness}</small>
+            </Link>
+          ))}
+        </div>
       </section>
 
-      <section className="bottom-band" id="about" aria-labelledby="about-title">
+      <section className="guided-question-section" aria-labelledby="guided-question-title">
         <div>
-          <p className="eyebrow">About</p>
-          <h2 id="about-title">Mission, doctrine, and editorial posture.</h2>
+          <p className="eyebrow">Have a question?</p>
+          <h2 id="guided-question-title">If you cannot find the answer, write to us</h2>
+          <p>
+            Some questions need more than a search result. Send us what you are wrestling with, and
+            we will consider how to answer it through an article, series, resource, or direct
+            pastoral reply.
+          </p>
         </div>
-        <p>
-          The publication is shaped around Scripture, spiritual guidance, and daily Christian life.
-        </p>
-        <Link className="bottom-band-link" href="/about">
-          Read about Kovasz
-        </Link>
+        <div className="guided-question-card">
+          <p>
+            Write with trust. Questions about Scripture, Christian life, family, ethics, and
+            spiritual growth can help shape future Kovasz content.
+          </p>
+          <div className="guided-button-row">
+            <Link className="guided-button guided-button-primary" href="/about">
+              Contact us
+            </Link>
+            <Link className="guided-button guided-button-secondary" href="/search">
+              Search first
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="guided-final-cta" aria-labelledby="guided-final-title">
+        <p className="eyebrow">Next faithful step</p>
+        <h2 id="guided-final-title">Start with the question you are carrying today</h2>
+        <div className="guided-button-row">
+          <Link className="guided-button guided-button-primary" href="/articles">
+            Browse articles
+          </Link>
+          <Link className="guided-button guided-button-secondary" href="/series">
+            Choose a series
+          </Link>
+        </div>
       </section>
     </main>
   )

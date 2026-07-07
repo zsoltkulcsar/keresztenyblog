@@ -43,6 +43,7 @@ export type ArchivePagination = {
 }
 
 export type ArchiveContent = {
+  allArticles: ArchiveArticle[]
   articles: ArchiveArticle[]
   filters: ArchiveFilters
   options: {
@@ -57,6 +58,52 @@ export type ArchiveContent = {
 }
 
 const PAGE_SIZE = 4
+
+const hungarianSeedTopics = [
+  ['Keresztyén élet', 'christian-life', 'Mindennapi kegyelem', 'mindennapi-kegyelem', 'Ima', 'ima', 'Amikor az ima előbb sóhaj, mint mondat'],
+  ['Lelkipásztori teológia', 'pastoral-theology', 'Pásztori hűség', 'pasztori-huseg', 'Gyülekezet', 'gyulekezet', 'Miért nem elég a tehetség a szolgálathoz'],
+  ['Házasság és család', 'marriage-family', 'Otthon és szövetség', 'otthon-es-szovetseg', 'Család', 'csalad', 'A türelem csendes munkája az otthonban'],
+  ['Etika', 'ethics', 'Isten előtt élni', 'isten-elott-elni', 'Munka', 'munka', 'Mit jelent hűségesnek maradni a munkahelyen'],
+  ['Bibliaolvasás', 'bible-study', 'Alapok', 'alapok', 'Szentírás', 'szentiras', 'Hogyan olvassunk lassabban és figyelmesebben'],
+  ['Szenvedés és reménység', 'suffering-hope', 'Remény a mélységben', 'remeny-a-melysegben', 'Szenvedés', 'szenvedes', 'Isten büntetése-e a fájdalmam?'],
+  ['Imádság', 'prayer', 'Imádság iskolája', 'imadsag-iskolaja', 'Imádság', 'imadsag', 'Miért hív Isten merész imádságra?'],
+  ['Kegyelem', 'grace', 'Kegyelem mélységei', 'kegyelem-melysegei', 'Kegyelem', 'kegyelem', 'Miért szabadít fel a kegyelem az önigazolástól?'],
+  ['Bűn és megtérés', 'sin-repentance', 'Rejtett szív', 'rejtett-sziv', 'Megtérés', 'megteres', 'A rejtett bűn nem marad következmények nélkül'],
+  ['Hálaadás', 'gratitude', 'Hálás élet', 'halas-elet', 'Hála', 'hala', 'Hogyan süllyeszti el a hálátlanság a szívet'],
+  ['Tanítványság', 'discipleship', 'Tanítványság útja', 'tanitvanysag-utja', 'Tanítványság', 'tanitvanysag', 'Hét jel, hogy a tanítvány tovább növekszik'],
+  ['Világnézet', 'worldview', 'Hit és gondolkodás', 'hit-es-gondolkodas', 'Gondolkodás', 'gondolkodas', 'Miért nem ellensége a gondolkodás a hitnek?'],
+] as const
+
+const hungarianSeedArchiveArticles: ArchiveArticle[] = Array.from({ length: 40 }, (_, index) => {
+  const topic = hungarianSeedTopics[index % hungarianSeedTopics.length]
+  const itemNumber = index + 1
+  const day = Math.max(1, 28 - (index % 28))
+  const slugBase = topic[6]
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  return {
+    author: [
+      { label: 'Szerkesztőség', value: 'szerkesztoseg' },
+      { label: 'Lelkipásztori műhely', value: 'lelkipasztori-muhely' },
+      { label: 'Vendégszerző', value: 'vendegszerzo' },
+    ][index % 3],
+    category: { label: topic[0], value: topic[1] },
+    excerpt: `Bibliai alapú bevezető írás: ${topic[6].toLowerCase()}.`,
+    publishedAt: `2026-05-${String(day).padStart(2, '0')}`,
+    readingMinutes: 5 + (index % 8),
+    series: { label: topic[2], value: topic[3] },
+    slug: `minta-cikk-${String(itemNumber).padStart(2, '0')}-${slugBase}`,
+    tags: [
+      { label: topic[4], value: topic[5] },
+      { label: topic[0], value: topic[1] },
+    ],
+    title: topic[6],
+  }
+})
 
 const archiveArticles: ArchiveArticle[] = [
   {
@@ -171,6 +218,7 @@ const archiveArticles: ArchiveArticle[] = [
     ],
     title: 'A testimony to the slow work of grace',
   },
+  ...hungarianSeedArchiveArticles,
 ]
 
 const sortOptions: Array<{ label: string; value: ArchiveSort }> = [
@@ -260,6 +308,7 @@ export function createArchiveContent(input: ArchiveSearchParams = {}): ArchiveCo
   const articles = totalArticles > 0 ? sorted.slice(start, start + PAGE_SIZE) : []
 
   return {
+    allArticles: sorted,
     articles,
     filters: {
       ...filters,
@@ -295,4 +344,3 @@ export function buildArchiveUrl(filters: Partial<ArchiveFilters> = {}) {
   const query = params.toString()
   return query ? `/articles?${query}` : '/articles'
 }
-

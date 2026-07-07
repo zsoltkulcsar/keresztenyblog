@@ -40,6 +40,89 @@ export type ArticleSeriesNavigation = {
   previous?: ArticleDetail
 }
 
+const hungarianSeedTopics = [
+  ['Keresztyén élet', 'Mindennapi kegyelem', 'mindennapi-kegyelem', 'Zsoltárok 23:1', 'Az Úr az én pásztorom; nem szűkölködöm.', 'Amikor az ima előbb sóhaj, mint mondat', 'Ima'],
+  ['Lelkipásztori teológia', 'Pásztori hűség', 'pasztori-huseg', '1 Péter 5:2', 'Legeltessétek az Isten közöttetek levő nyáját.', 'Miért nem elég a tehetség a szolgálathoz', 'Gyülekezet'],
+  ['Házasság és család', 'Otthon és szövetség', 'otthon-es-szovetseg', 'Kolossé 3:13', 'Viseljétek el egymást, és bocsássatok meg egymásnak.', 'A türelem csendes munkája az otthonban', 'Család'],
+  ['Etika', 'Isten előtt élni', 'isten-elott-elni', 'Mikeás 6:8', 'Mit kíván tőled az Úr? Csak azt, hogy igazságot cselekedj.', 'Mit jelent hűségesnek maradni a munkahelyen', 'Munka'],
+  ['Bibliaolvasás', 'Alapok', 'alapok', '2 Timóteus 3:16', 'A teljes Írás Istentől ihletett.', 'Hogyan olvassunk lassabban és figyelmesebben', 'Szentírás'],
+  ['Szenvedés és reménység', 'Remény a mélységben', 'remeny-a-melysegben', 'Róma 8:28', 'Akik Istent szeretik, azoknak minden javukra szolgál.', 'Isten büntetése-e a fájdalmam?', 'Szenvedés'],
+  ['Imádság', 'Imádság iskolája', 'imadsag-iskolaja', 'János 15:7', 'Kérjetek, amit csak akartok, és megadatik nektek.', 'Miért hív Isten merész imádságra?', 'Imádság'],
+  ['Kegyelem', 'Kegyelem mélységei', 'kegyelem-melysegei', 'Efézus 2:8', 'Kegyelemből van üdvösségetek hit által.', 'Miért szabadít fel a kegyelem az önigazolástól?', 'Kegyelem'],
+  ['Bűn és megtérés', 'Rejtett szív', 'rejtett-sziv', '4 Mózes 32:23', 'Gondoljátok meg, hogy vétketek utolér benneteket.', 'A rejtett bűn nem marad következmények nélkül', 'Megtérés'],
+  ['Hálaadás', 'Hálás élet', 'halas-elet', '1 Thesszalonika 5:18', 'Mindenért hálát adjatok.', 'Hogyan süllyeszti el a hálátlanság a szívet', 'Hála'],
+  ['Tanítványság', 'Tanítványság útja', 'tanitvanysag-utja', 'Máté 28:20', 'Tanítva őket, hogy megtartsák mindazt, amit parancsoltam nektek.', 'Hét jel, hogy a tanítvány tovább növekszik', 'Tanítványság'],
+  ['Világnézet', 'Hit és gondolkodás', 'hit-es-gondolkodas', '2 Korinthus 10:5', 'Foglyul ejtünk minden gondolatot a Krisztus iránti engedelmességre.', 'Miért nem ellensége a gondolkodás a hitnek?', 'Gondolkodás'],
+] as const
+
+const hungarianSeedDetails: ArticleDetail[] = Array.from({ length: 40 }, (_, index) => {
+  const topic = hungarianSeedTopics[index % hungarianSeedTopics.length]
+  const itemNumber = index + 1
+  const day = Math.max(1, 28 - (index % 28))
+  const slugBase = topic[5]
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  return {
+    author: ['Szerkesztőség', 'Lelkipásztori műhely', 'Vendégszerző'][index % 3],
+    category: topic[0],
+    coverAlt: `${topic[0]} témájú szerkesztőségi kép`,
+    coverSrc: '/home-hero.png',
+    excerpt: `Bibliai alapú bevezető írás: ${topic[5].toLowerCase()}.`,
+    publishedAt: `2026-05-${String(day).padStart(2, '0')}`,
+    readingMinutes: 5 + (index % 8),
+    scriptureBlock: {
+      reference: topic[3],
+      text: topic[4],
+    },
+    sections: [
+      {
+        heading: 'A kérdés a Szentírás előtt',
+        body: [
+          'A keresztyén olvasó nem pusztán gyors választ keres, hanem olyan gondolkodást, amelyet a Biblia formál. Ezért az első kérdés mindig az, hogy mit mond Isten igéje, és hogyan tanít minket figyelmesebben látni.',
+          'Az ilyen olvasás nem menekül a hétköznapok elől. Visszavezet a családba, a munkába, a gyülekezetbe és a csendes döntések helyére.',
+        ],
+      },
+      {
+        heading: 'Mit jelent ez a mindennapokban?',
+        body: [
+          'A hit növekedése gyakran nem látványos fordulatokból áll, hanem ismételt engedelmességből. Az ember megtanul imádkozni, bocsánatot kérni, türelmesebben beszélni, és újra Krisztushoz fordulni.',
+          'A cél az, hogy a tanítás ne maradjon elvont. Az olvasó egy konkrét kérdéssel, egy imádsággal és egy következő lépéssel álljon fel.',
+        ],
+      },
+      {
+        heading: 'Továbbgondolás',
+        body: [
+          'Érdemes a megadott igeszakaszt lassan elolvasni, majd megfigyelni, milyen ígéretet, parancsot vagy figyelmeztetést hordoz.',
+          'A lelki növekedéshez nem mindig több információ kell, hanem mélyebb figyelem arra, amit Isten már világosan kijelentett.',
+        ],
+      },
+    ],
+    series: {
+      description: 'Magyar nyelvű mintasorozat a Kovasz tartalmi és vizuális teszteléséhez.',
+      label: topic[1],
+      slug: topic[2],
+    },
+    seriesOrder: Math.floor(index / hungarianSeedTopics.length) + 1,
+    slug: `minta-cikk-${String(itemNumber).padStart(2, '0')}-${slugBase}`,
+    subtitle: 'Eredeti magyar mintacikk a Kovasz felületének tartalmi és tipográfiai teszteléséhez.',
+    studyPanel: {
+      title: 'Tanulmányozási segítség',
+      items: [
+        `Olvasd el: ${topic[3]}`,
+        'Írd le egy mondatban, mit tanít a szakasz Istenről.',
+        'Fogalmazz meg egy gyakorlati lépést a következő napra.',
+      ],
+    },
+    tags: [topic[6], topic[0]],
+    title: topic[5],
+    pullQuote: 'A bibliai tanítás akkor válik világossá, amikor a szöveg irányítja a kérdéseinket.',
+  }
+})
+
 const articleDetails: ArticleDetail[] = [
   {
     author: 'Editorial Team',
@@ -435,6 +518,7 @@ const articleDetails: ArticleDetail[] = [
     title: 'A testimony to the slow work of grace',
     pullQuote: 'The slow work of grace is still the work of grace.',
   },
+  ...hungarianSeedDetails,
 ]
 
 const articleDetailMap = new Map(articleDetails.map((article) => [article.slug, article]))
@@ -452,7 +536,7 @@ export function createArticleDetail(slug: string) {
   if (!detail) return null
 
   const archive = createArchiveContent()
-  const archiveArticle = archive.articles.find((article) => article.slug === slug)
+  const archiveArticle = archive.allArticles.find((article) => article.slug === slug)
   const seriesPeers = detail.series
     ? articleDetails.filter((article) => article.series?.slug === detail.series?.slug).sort((left, right) => (left.seriesOrder ?? 0) - (right.seriesOrder ?? 0))
     : []
@@ -467,4 +551,3 @@ export function createArticleDetail(slug: string) {
     } satisfies ArticleSeriesNavigation,
   }
 }
-

@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -6,8 +5,9 @@ import { ReadingProgress } from '@/components/features/article/ReadingProgress'
 import { ShareTools } from '@/components/features/article/ShareTools'
 import { buildArticleUrl, createArticleDetail } from '@/lib/article-detail'
 import { createArchiveContent } from '@/lib/article-archive'
-import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildAuthorUrl, loadAuthorProfileByName } from '@/lib/authors'
+import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { buildSeriesUrl } from '@/lib/series'
 
 type ArticlePageProps = {
   params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
@@ -67,159 +67,116 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   const authorProfile = await loadAuthorProfileByName(detail.author)
-
   const relatedArticles = createArchiveContent()
-    .articles.filter((article) => article.slug !== slug)
+    .articles.filter((article) => article.slug !== slug && article.category.value === detail.archiveArticle?.category.value)
     .slice(0, 3)
 
   return (
-    <main className="article-page">
+    <main className="scripture-study-page">
       <ReadingProgress />
 
-      <article className="article-shell">
-        <header className="article-header">
-          <div className="article-kicker-row">
+      <article className="scripture-study-shell">
+        <header className="scripture-study-header">
+          <div>
             <p className="eyebrow">{detail.category}</p>
-            <p className="article-meta-inline">
-              <span>
-                {authorProfile ? <Link href={buildAuthorUrl(authorProfile.slug)}>{detail.author}</Link> : detail.author}
-              </span>
+            <h1>{detail.title}</h1>
+            <p>{detail.subtitle}</p>
+          </div>
+          <aside className="scripture-study-meta">
+            <p>
+              {authorProfile ? <Link href={buildAuthorUrl(authorProfile.slug)}>{detail.author}</Link> : detail.author}
               <span>{formatDate(detail.publishedAt)}</span>
-              <span>{detail.readingMinutes} min read</span>
             </p>
-          </div>
-
-          <h1>{detail.title}</h1>
-          <p className="article-subtitle">{detail.subtitle}</p>
-
-          <div className="article-utilities">
+            <dl>
+              <div>
+                <dt>Reading</dt>
+                <dd>{detail.readingMinutes} min</dd>
+              </div>
+              <div>
+                <dt>Series</dt>
+                <dd>{detail.series?.label ?? 'Standalone'}</dd>
+              </div>
+              <div>
+                <dt>Tags</dt>
+                <dd>{detail.tags.join(' / ')}</dd>
+              </div>
+            </dl>
             <ShareTools title={detail.title} url={buildArticleUrl(detail.slug)} />
-          </div>
+          </aside>
         </header>
 
-        <section className="scripture-block" aria-labelledby="scripture-title">
+        <section className="scripture-study-anchor" aria-labelledby="scripture-title">
           <div>
             <p className="eyebrow">Scripture</p>
-            <h2 id="scripture-title">{detail.scriptureBlock.reference}</h2>
+            <span>{detail.scriptureBlock.reference}</span>
           </div>
-          <blockquote>{detail.scriptureBlock.text}</blockquote>
+          <blockquote id="scripture-title">{detail.scriptureBlock.text}</blockquote>
         </section>
 
-        <section className="article-support-grid">
-          <div className="pull-quote">
-            <p className="eyebrow">Pull quote</p>
-            <blockquote>{detail.pullQuote}</blockquote>
-          </div>
+        <section className="scripture-study-quote" aria-label="Pull quote">
+          <p className="eyebrow">Central thought</p>
+          <blockquote>{detail.pullQuote}</blockquote>
+        </section>
 
-          <aside className="study-panel">
-            <p className="eyebrow">{detail.studyPanel.title}</p>
+        <section className="scripture-study-layout">
+          <aside className="scripture-study-panel">
+            <p className="eyebrow">Study panel</p>
+            <h2>{detail.studyPanel.title}</h2>
             <ul>
               {detail.studyPanel.items.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
+            {detail.series ? (
+              <Link href={buildSeriesUrl(detail.series.slug)}>Open series path</Link>
+            ) : null}
           </aside>
+
+          <div className="scripture-study-body">
+            {detail.sections.map((section) => (
+              <section key={section.heading}>
+                <h2>{section.heading}</h2>
+                {section.body.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </section>
+            ))}
+          </div>
         </section>
 
-        <figure className="article-cover">
-          <Image alt={detail.coverAlt} fill priority sizes="(max-width: 960px) 100vw, 72vw" src={detail.coverSrc} />
-        </figure>
+        <footer className="scripture-study-footer">
+          <section>
+            <p className="eyebrow">Author and source</p>
+            <h2>{detail.author}</h2>
+            <p>
+              Published {formatDate(detail.publishedAt)} in {detail.category}. Scripture remains the anchor for the reading,
+              study notes, and suggested next steps.
+            </p>
+            <ShareTools title={detail.title} url={buildArticleUrl(detail.slug)} />
+          </section>
 
-        <dl className="article-meta-grid">
-          <div>
-            <dt>Series</dt>
-            <dd>{detail.series?.label ?? 'Standalone'}</dd>
-          </div>
-          <div>
-            <dt>Tags</dt>
-            <dd>{detail.tags.join(' · ')}</dd>
-          </div>
-          <div>
-            <dt>Author</dt>
-            <dd>
-              {authorProfile ? <Link href={buildAuthorUrl(authorProfile.slug)}>{detail.author}</Link> : detail.author}
-            </dd>
-          </div>
-          <div>
-            <dt>Published</dt>
-            <dd>{formatDate(detail.publishedAt)}</dd>
-          </div>
-        </dl>
-
-        <section className="article-body" aria-label="Article body">
-          {detail.sections.map((section) => (
-            <section key={section.heading}>
-              <h2>{section.heading}</h2>
-              {section.body.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </section>
-          ))}
-        </section>
-
-        <section className="page-links" aria-label="Article routes">
-          <Link className="page-link" href="/articles">
-            Back to archive
-          </Link>
           {detail.series ? (
-            <Link className="page-link" href="/series">
-              Browse series
-            </Link>
-          ) : null}
-          <Link className="page-link" href="/napi-ige">
-            Daily Verse
-          </Link>
-          <Link className="page-link" href="/resources">
-            Resources
-          </Link>
-          <Link className="page-link" href="/about">
-            About Kovasz
-          </Link>
-        </section>
-
-        {detail.series ? (
-          <section className="series-nav" aria-label="Series navigation">
-            <div>
-              <p className="eyebrow">Series</p>
+            <section>
+              <p className="eyebrow">Series context</p>
               <h2>{detail.series.label}</h2>
               <p>{detail.series.description}</p>
-            </div>
-            <div className="series-nav-links">
-              {detail.seriesNavigation.previous ? (
-                <Link href={buildArticleUrl(detail.seriesNavigation.previous.slug)}>
-                  Previous: {detail.seriesNavigation.previous.title}
-                </Link>
-              ) : (
-                <span>Previous: none</span>
-              )}
-              {detail.seriesNavigation.next ? (
-                <Link href={buildArticleUrl(detail.seriesNavigation.next.slug)}>
-                  Next: {detail.seriesNavigation.next.title}
-                </Link>
-              ) : (
-                <span>Next: none</span>
-              )}
-            </div>
-          </section>
-        ) : null}
+              <Link href={buildSeriesUrl(detail.series.slug)}>Continue the path</Link>
+            </section>
+          ) : null}
+        </footer>
 
-        <section className="related-section" aria-label="Related articles">
-          <div className="section-heading">
-            <p className="eyebrow">Related</p>
-            <h2>Continue reading</h2>
+        <section className="scripture-study-related" aria-label="Related reading">
+          <div>
+            <p className="eyebrow">Related reading</p>
+            <h2>Read next</h2>
           </div>
-
-          <div className="related-grid">
+          <div>
             {relatedArticles.map((article) => (
-              <article className="related-item" key={article.slug}>
-                <p className="card-meta">
-                  <span>{article.category.label}</span>
-                  <span>{article.readingMinutes} min</span>
-                </p>
-                <h3>{article.title}</h3>
-                <p>{article.excerpt}</p>
-                <Link href={buildArticleUrl(article.slug)}>Open article</Link>
-              </article>
+              <Link href={buildArticleUrl(article.slug)} key={article.slug}>
+                <span>{article.category.label}</span>
+                <strong>{article.title}</strong>
+                <small>{article.excerpt}</small>
+              </Link>
             ))}
           </div>
         </section>

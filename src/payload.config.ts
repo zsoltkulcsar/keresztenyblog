@@ -13,6 +13,7 @@ import { Resources } from './collections/Resources'
 import { Series } from './collections/Series'
 import { DailyVerse } from './collections/DailyVerse'
 import { AboutPage } from './globals/About'
+import { seedDevAdminIfNeeded } from './payload/bootstrap'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -38,4 +39,5 @@ export default buildConfig({
   }),
   sharp,
   plugins: [],
+  onInit: seedDevAdminIfNeeded,
 })

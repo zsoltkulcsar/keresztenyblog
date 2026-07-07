@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
-import { buildSeriesUrl, createSeriesOverview, listSeries } from '@/lib/series'
 import { buildArticleUrl } from '@/lib/article-detail'
+import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
+import { buildSeriesUrl, createSeriesOverview, listSeries } from '@/lib/series'
 
 function getSingleValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value
@@ -27,7 +28,9 @@ function labelFromValue(value: string) {
 export function generateMetadata({
   params,
 }: {
-  params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  params?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   return Promise.resolve(params ?? {}).then((resolvedParams) => {
     const slug = getSingleValue(resolvedParams.slug) ?? ''
@@ -53,7 +56,9 @@ export function generateMetadata({
 export default async function SeriesDetailPage({
   params,
 }: {
-  params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  params?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   const resolvedParams = await Promise.resolve(params ?? {})
   const slug = getSingleValue(resolvedParams.slug) ?? ''
@@ -63,72 +68,144 @@ export default async function SeriesDetailPage({
     notFound()
   }
 
-  const relatedSeries = listSeries().filter((item) => item.slug !== slug).slice(0, 3)
+  const relatedSeries = listSeries()
+    .filter(
+      (item) =>
+        item.slug !== slug && (item.topic === series.topic || item.audience === series.audience),
+    )
+    .slice(0, 3)
+  const relatedResources = (await loadResourceItems())
+    .filter((resource) => resource.relatedSeriesSlugs.includes(series.slug))
+    .slice(0, 4)
+  const firstArticle = series.articles[0]?.article
 
   return (
-    <main className="series-page">
-      <header className="article-header">
-        <div className="article-kicker-row">
-          <p className="eyebrow">Series</p>
-          <p className="article-meta-inline">
-            <span>{labelFromValue(series.topic)}</span>
-            <span>{labelFromValue(series.audience)}</span>
-            <span>{series.articles.length} parts</span>
-          </p>
+    <main className="discipleship-path-page">
+      <header className="discipleship-path-hero">
+        <div className="discipleship-path-title">
+          <Link className="discipleship-back-link" href="/series">
+            Series
+          </Link>
+          <p className="eyebrow">Discipleship path</p>
+          <h1>{series.title}</h1>
+          <p>{series.longDescription || series.description}</p>
+          {firstArticle ? (
+            <Link className="discipleship-primary-link" href={buildArticleUrl(firstArticle.slug)}>
+              Start first lesson
+            </Link>
+          ) : null}
         </div>
-        <h1>{series.title}</h1>
-        <p className="article-subtitle">{series.description}</p>
-        <p className="archive-summary">{series.longDescription}</p>
+
+        <aside className="discipleship-purpose-card">
+          <span>Purpose</span>
+          <h2>{series.description}</h2>
+          <dl>
+            <div>
+              <dt>Topic</dt>
+              <dd>{labelFromValue(series.topic)}</dd>
+            </div>
+            <div>
+              <dt>Audience</dt>
+              <dd>{labelFromValue(series.audience)}</dd>
+            </div>
+            <div>
+              <dt>Parts</dt>
+              <dd>{series.articles.length}</dd>
+            </div>
+          </dl>
+        </aside>
       </header>
 
-      <section className="series-detail-grid" aria-label="Series parts">
-        {series.articles.map(({ article, order }) => (
-          <article className="archive-item" key={article.slug}>
-            <p className="card-meta">
-              <span>Part {order}</span>
-              <span>{article.category}</span>
-            </p>
-            <h2>{article.title}</h2>
-            <p>{article.excerpt}</p>
-            <Link className="archive-open-link" href={buildArticleUrl(article.slug)}>
-              Open article
-            </Link>
-          </article>
-        ))}
-      </section>
+      <section className="discipleship-path-layout">
+        <div className="discipleship-path-main">
+          <section className="discipleship-path-overview" aria-label="Path overview">
+            <div>
+              <p className="eyebrow">Path at a glance</p>
+              <h2>Study rhythm</h2>
+            </div>
+            <dl>
+              <div>
+                <dt>For</dt>
+                <dd>{labelFromValue(series.audience)}</dd>
+              </div>
+              <div>
+                <dt>Main theme</dt>
+                <dd>{labelFromValue(series.topic)}</dd>
+              </div>
+              <div>
+                <dt>Rhythm</dt>
+                <dd>{series.articles.length > 2 ? 'Multi-part study' : 'Short study path'}</dd>
+              </div>
+            </dl>
+            {firstArticle ? (
+              <Link
+                className="discipleship-secondary-link"
+                href={buildArticleUrl(firstArticle.slug)}
+              >
+                Begin path
+              </Link>
+            ) : null}
+          </section>
 
-      <section className="page-links" aria-label="Series routes">
-        <Link className="page-link" href="/articles">
-          Browse archive
-        </Link>
-        <Link className="page-link" href="/napi-ige">
-          Daily Verse
-        </Link>
-        <Link className="page-link" href="/resources">
-          Resources
-        </Link>
-        <Link className="page-link" href="/about">
-          About Kovasz
-        </Link>
-      </section>
+          <section className="discipleship-path-section">
+            <div>
+              <p className="eyebrow">Ordered parts</p>
+              <h2>Follow the lessons in order</h2>
+            </div>
+            <ol className="discipleship-lesson-list">
+              {series.articles.map(({ article, order }) => (
+                <li key={article.slug}>
+                  <span>{String(order).padStart(2, '0')}</span>
+                  <div>
+                    <p>
+                      {article.category} · {article.readingMinutes} min
+                    </p>
+                    <h3>{article.title}</h3>
+                    <small>{article.excerpt}</small>
+                  </div>
+                  <Link href={buildArticleUrl(article.slug)}>Read lesson</Link>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-      <section className="related-section" aria-label="Related series">
-        <div className="section-heading">
-          <p className="eyebrow">More series</p>
-          <h2>Continue with another learning path</h2>
-        </div>
-        <div className="related-grid">
-          {relatedSeries.map((item) => (
-            <article className="related-item" key={item.slug}>
-              <p className="card-meta">
-                <span>{item.topic}</span>
-                <span>{item.audience}</span>
-              </p>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-              <Link href={buildSeriesUrl(item.slug)}>Open series</Link>
-            </article>
-          ))}
+          {relatedResources.length ? (
+            <section className="discipleship-path-section">
+              <div>
+                <p className="eyebrow">Study support</p>
+                <h2>Resources for this path</h2>
+              </div>
+              <div className="discipleship-resource-list">
+                {relatedResources.map((resource) => (
+                  <Link href={buildResourceUrl(resource.slug)} key={resource.slug}>
+                    <span>{resource.format ?? resource.type}</span>
+                    <strong>{resource.title}</strong>
+                    <small>{resource.usefulness}</small>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {relatedSeries.length ? (
+            <section className="discipleship-path-section">
+              <div>
+                <p className="eyebrow">Next path</p>
+                <h2>Continue with another series</h2>
+              </div>
+              <div className="discipleship-next-list">
+                {relatedSeries.map((item) => (
+                  <Link href={buildSeriesUrl(item.slug)} key={item.slug}>
+                    <span>{labelFromValue(item.topic)}</span>
+                    <strong>{item.title}</strong>
+                    <small>
+                      {labelFromValue(item.audience)} · {item.articleSlugs.length} parts
+                    </small>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : null}
         </div>
       </section>
     </main>
