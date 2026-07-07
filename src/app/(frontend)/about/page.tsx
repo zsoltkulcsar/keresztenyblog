@@ -40,14 +40,6 @@ export default async function AboutPage() {
             want biblical teaching that is clear, pastoral, and useful in ordinary life.
           </p>
         </div>
-        <aside className="about-hero-card" aria-label="Editorial summary">
-          <span>Editorial aim</span>
-          <strong>Scripture first. Pastoral in tone. Practical in use.</strong>
-          <p>
-            Articles, series, books, and resources are shaped to help readers ask better questions,
-            read the Bible carefully, and grow in faith.
-          </p>
-        </aside>
       </header>
 
       <section className="about-writers" aria-labelledby="about-writers-title">

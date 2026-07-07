@@ -3307,7 +3307,7 @@ img {
 
 .about-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+  grid-template-columns: minmax(0, 900px);
   gap: clamp(28px, 6vw, 76px);
   align-items: end;
   padding-top: clamp(56px, 8vw, 104px);
@@ -3432,19 +3432,20 @@ img {
 
 .about-writer-card {
   display: grid;
-  grid-template-columns: 150px minmax(0, 1fr);
-  gap: 22px;
-  align-items: start;
+  grid-template-columns: 86px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
   border: 1px solid #d9e2ea;
   border-radius: 8px;
   background: #ffffff;
-  padding: 22px;
+  padding: 20px;
 }
 
 .about-writer-photo {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  border-radius: 6px;
+  width: 86px;
+  height: 86px;
+  border: 2px solid #d9e2ea;
+  border-radius: 999px;
   object-fit: cover;
   background: #d9e2ea;
 }
@@ -7181,7 +7182,12 @@ img {
   }
 
   .about-writer-card {
-    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .about-writer-photo {
+    width: 64px;
+    height: 64px;
   }
 
   .about-topic-list {
