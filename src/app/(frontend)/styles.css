@@ -4855,6 +4855,7 @@ img {
 }
 
 .scripture-study-header,
+.scripture-study-series-banner,
 .scripture-study-layout,
 .scripture-study-footer,
 .scripture-study-related {
@@ -4929,6 +4930,51 @@ img {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin: 0;
+}
+
+.scripture-study-series-banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  border-block: 1px solid #d9e2ea;
+  background: #f6fafe;
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.scripture-study-series-banner h2,
+.scripture-study-series-banner p {
+  margin: 0;
+}
+
+.scripture-study-series-banner h2 {
+  color: #111827;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.scripture-study-series-banner > div:first-child {
+  display: grid;
+  gap: 8px;
+}
+
+.scripture-study-series-banner > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.scripture-study-series-banner a {
+  border: 1px solid #24547f;
+  border-radius: 999px;
+  color: #24547f;
+  font-weight: 800;
+  padding: 9px 12px;
+  text-decoration: none;
 }
 
 .scripture-study-meta dt {
@@ -7323,6 +7369,7 @@ img {
   .scripture-study-header,
   .scripture-study-meta dl,
   .scripture-study-anchor,
+  .scripture-study-series-banner,
   .scripture-study-layout,
   .scripture-study-footer,
   .scripture-study-related,

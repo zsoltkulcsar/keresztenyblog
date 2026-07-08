@@ -1,7 +1,8 @@
 import { createArticleDetail } from '@/lib/article-detail'
+import { editorialArticles } from '@/lib/editorial-articles'
 
-export type SeriesAudience = 'new-believer' | 'growing-believer' | 'mature-believer' | 'leader'
-export type SeriesTopic = 'pastoral-theology' | 'christian-life' | 'marriage' | 'ethics'
+export type SeriesAudience = 'all-believers' | 'families' | 'leader' | 'new-believer'
+export type SeriesTopic = 'christian-life' | 'marriage' | 'pastoral-theology'
 
 export type SeriesItem = {
   articleSlugs: string[]
@@ -16,53 +17,34 @@ export type SeriesItem = {
   topic: SeriesTopic
 }
 
-const seriesItems: SeriesItem[] = [
+const explicitSeries: SeriesItem[] = [
   {
-    articleSlugs: ['scripture-shapes-christian-growth', 'how-to-read-the-bible-when-stuck', 'the-slow-work-of-grace'],
+    articleSlugs: [
+      'what-happened-when-you-believed',
+      'how-to-read-the-bible-for-the-first-time',
+      'why-the-church-is-not-optional',
+    ],
     audience: 'new-believer',
-    description: 'A guided set of foundations for new and growing believers.',
+    description: 'A first path for readers who are learning the basic shape of Christian faith.',
     longDescription:
-      'Foundations is built for readers who need language for the basic shape of Christian growth. It starts with Scripture, then moves toward daily habits, patience, and steady formation.',
-    seoDescription: 'Foundations for new and growing believers.',
-    seoTitle: 'Foundations',
-    slug: 'foundations',
+      'Foundations for New Believers introduces salvation, Scripture, and the local church as the first stable ground for a new Christian.',
+    seoDescription: 'A first discipleship path for new Christians.',
+    seoTitle: 'Foundations for New Believers',
+    slug: 'foundations-for-new-believers',
     status: 'published',
-    title: 'Foundations',
+    title: 'Foundations for New Believers',
     topic: 'christian-life',
   },
   {
-    articleSlugs: ['daily-rhythm-for-spiritual-growth'],
-    audience: 'growing-believer',
-    description: 'Daily patterns for ordinary believers who want to keep walking faithfully.',
-    longDescription:
-      'Daily Rhythm is a short path for readers who want practical habits that preserve attention to Scripture, prayer, and daily obedience.',
-    seoDescription: 'Daily patterns for ordinary believers.',
-    seoTitle: 'Daily Rhythm',
-    slug: 'daily-rhythm',
-    status: 'published',
-    title: 'Daily Rhythm',
-    topic: 'christian-life',
-  },
-  {
-    articleSlugs: ['marriage-family-and-patient-love', 'teaching-children-the-gospel-at-home'],
-    audience: 'growing-believer',
-    description: 'Guided reflections on home, covenant, and family discipleship.',
-    longDescription:
-      'Home and Covenant focuses on the ordinary shape of Christian family life: patience, covenant love, discipleship at home, and the way Scripture holds the household together.',
-    seoDescription: 'Reflections on home, covenant, and family discipleship.',
-    seoTitle: 'Home and Covenant',
-    slug: 'home-and-covenant',
-    status: 'published',
-    title: 'Home and Covenant',
-    topic: 'marriage',
-  },
-  {
-    articleSlugs: ['leaders-need-more-than-charisma'],
+    articleSlugs: [
+      'the-elders-first-qualification-is-character-not-skill',
+      'how-to-preach-when-you-feel-unqualified',
+    ],
     audience: 'leader',
-    description: 'A series for those who lead or shape the health of the church.',
+    description: 'A path for pastors, elders, teachers, and those learning to shepherd others.',
     longDescription:
-      'Shepherding the Church is aimed at leaders and those who want to understand pastoral responsibility with more biblical depth and less performance.',
-    seoDescription: 'A series for church leaders and those who shepherd others.',
+      'Shepherding the Church focuses on the character, weakness, and responsibility of spiritual leadership.',
+    seoDescription: 'A pastoral theology path for church leaders.',
     seoTitle: 'Shepherding the Church',
     slug: 'shepherding-the-church',
     status: 'published',
@@ -71,6 +53,36 @@ const seriesItems: SeriesItem[] = [
   },
 ]
 
+const futureSeries: SeriesItem[] = [
+  {
+    articleSlugs: ['what-to-do-when-you-dont-want-to-pray'],
+    audience: 'all-believers',
+    description: 'A future path around prayer, Scripture, and ordinary spiritual habits.',
+    longDescription:
+      'Daily Rhythm can collect devotions and practical teaching on prayer, Bible reading, and repeated obedience.',
+    seoDescription: 'A future path for ordinary spiritual rhythms.',
+    seoTitle: 'Daily Rhythm',
+    slug: 'daily-rhythm',
+    status: 'published',
+    title: 'Daily Rhythm',
+    topic: 'christian-life',
+  },
+  {
+    articleSlugs: ['what-submit-to-one-another-actually-means', 'parenting-without-perfection'],
+    audience: 'families',
+    description: 'A future path for marriage, parenting, and family discipleship.',
+    longDescription:
+      'Marriage and Family can gather articles that help households practice repentance, patience, discipleship, and faithful love.',
+    seoDescription: 'A future path for Christian marriage and family life.',
+    seoTitle: 'Marriage and Family',
+    slug: 'marriage-and-family',
+    status: 'published',
+    title: 'Marriage and Family',
+    topic: 'marriage',
+  },
+]
+
+const seriesItems: SeriesItem[] = [...explicitSeries, ...futureSeries]
 const seriesMap = new Map(seriesItems.map((series) => [series.slug, series]))
 
 export function listSeries() {
@@ -93,7 +105,19 @@ export function createSeriesOverview(slug: string) {
   const series = seriesMap.get(slug)
   if (!series) return null
 
-  const articles = series.articleSlugs
+  const orderedArticleSlugs =
+    series.articleSlugs.length > 0
+      ? series.articleSlugs
+      : editorialArticles
+          .filter((article) => article.series.some((membership) => membership.slug === series.slug))
+          .sort((left, right) => {
+            const leftOrder = left.series.find((membership) => membership.slug === series.slug)?.order ?? 0
+            const rightOrder = right.series.find((membership) => membership.slug === series.slug)?.order ?? 0
+            return leftOrder - rightOrder
+          })
+          .map((article) => article.slug)
+
+  const articles = orderedArticleSlugs
     .map((articleSlug, index) => {
       const article = createArticleDetail(articleSlug)
       if (!article) return null
@@ -104,13 +128,12 @@ export function createSeriesOverview(slug: string) {
       }
     })
     .filter(Boolean) as Array<{
-      article: NonNullable<ReturnType<typeof createArticleDetail>>
-      order: number
-    }>
+    article: NonNullable<ReturnType<typeof createArticleDetail>>
+    order: number
+  }>
 
   return {
     ...series,
     articles,
   }
 }
-

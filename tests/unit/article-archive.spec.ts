@@ -7,21 +7,21 @@ describe('createArchiveContent', () => {
     const content = createArchiveContent()
 
     expect(content.totalFilteredArticles).toBeGreaterThan(0)
-    expect(content.articles[0].title).toBe('Why Scripture must shape every part of Christian growth')
+    expect(content.articles[0].title).toBe('Is It Wrong to Be Wealthy?')
     expect(content.pagination.currentPage).toBe(1)
   })
 
   it('filters by category, tag, and series', () => {
     const content = createArchiveContent({
-      series: 'home-and-covenant',
-      tag: 'family',
+      series: 'foundations-for-new-believers',
+      tag: 'new-believers',
     })
 
-    expect(content.totalFilteredArticles).toBe(2)
-    expect(content.articles.every((article) => article.series.value === 'home-and-covenant')).toBe(
-      true,
-    )
-    expect(content.articles.every((article) => article.tags.some((tag) => tag.value === 'family'))).toBe(true)
+    expect(content.totalFilteredArticles).toBe(3)
+    expect(
+      content.articles.every((article) => article.series.value === 'foundations-for-new-believers'),
+    ).toBe(true)
+    expect(content.articles.every((article) => article.tags.some((tag) => tag.value === 'new-believers'))).toBe(true)
   })
 
   it('sorts by reading time and paginates the visible results', () => {

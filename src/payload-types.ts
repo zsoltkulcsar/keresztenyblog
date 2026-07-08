@@ -69,6 +69,9 @@ export interface Config {
   collections: {
     users: User;
     authors: Author;
+    topics: Topic;
+    audiences: Audience;
+    articles: Article;
     media: Media;
     'newsletter-signups': NewsletterSignup;
     resources: Resource;
@@ -84,6 +87,9 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     authors: AuthorsSelect<false> | AuthorsSelect<true>;
+    topics: TopicsSelect<false> | TopicsSelect<true>;
+    audiences: AudiencesSelect<false> | AudiencesSelect<true>;
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'newsletter-signups': NewsletterSignupsSelect<false> | NewsletterSignupsSelect<true>;
     resources: ResourcesSelect<false> | ResourcesSelect<true>;
@@ -223,14 +229,139 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "newsletter-signups".
+ * via the `definition` "topics".
  */
-export interface NewsletterSignup {
+export interface Topic {
   id: number;
-  email: string;
-  source: string;
+  title: string;
+  slug: string;
+  description?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audiences".
+ */
+export interface Audience {
+  id: number;
+  title: string;
+  slug: string;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles".
+ */
+export interface Article {
+  id: number;
+  title: string;
+  slug: string;
+  subtitle?: string | null;
+  excerpt: string;
+  format: 'teaching' | 'devotion' | 'testimony' | 'reflection';
+  author?: (number | null) | Author;
+  topics?: (number | Topic)[] | null;
+  audiences?: (number | Audience)[] | null;
+  tags?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  mainScripture: string;
+  scriptureText: string;
+  pullQuote?: string | null;
+  body: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  studyQuestions?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  seriesMemberships?:
+    | {
+        series: number | Series;
+        order: number;
+        id?: string | null;
+      }[]
+    | null;
+  relatedResources?: (number | Resource)[] | null;
+  relatedBooks?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  sourceNote?: string | null;
+  status: 'draft' | 'published';
+  publishedAt?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "series".
+ */
+export interface Series {
+  id: number;
+  title: string;
+  slug: string;
+  topic?: (number | Topic)[] | null;
+  audience?: (number | Audience)[] | null;
+  description: string;
+  longDescription?: string | null;
+  status: 'draft' | 'published';
+  cover?: (number | null) | Media;
+  articleSlugs?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  orderedArticles?:
+    | {
+        article: number | Article;
+        order: number;
+        id?: string | null;
+      }[]
+    | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -293,32 +424,14 @@ export interface Resource {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "series".
+ * via the `definition` "newsletter-signups".
  */
-export interface Series {
+export interface NewsletterSignup {
   id: number;
-  title: string;
-  slug: string;
-  topic: 'pastoral-theology' | 'christian-life' | 'marriage' | 'ethics';
-  audience: 'new-believer' | 'growing-believer' | 'mature-believer' | 'leader';
-  description: string;
-  longDescription?: string | null;
-  status: 'draft' | 'published';
-  cover?: (number | null) | Media;
-  articleSlugs?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  seoTitle?: string | null;
-  seoDescription?: string | null;
+  email: string;
+  source: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -460,6 +573,18 @@ export interface PayloadLockedDocument {
         value: number | Author;
       } | null)
     | ({
+        relationTo: 'topics';
+        value: number | Topic;
+      } | null)
+    | ({
+        relationTo: 'audiences';
+        value: number | Audience;
+      } | null)
+    | ({
+        relationTo: 'articles';
+        value: number | Article;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -564,6 +689,65 @@ export interface AuthorsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "topics_select".
+ */
+export interface TopicsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audiences_select".
+ */
+export interface AudiencesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles_select".
+ */
+export interface ArticlesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  subtitle?: T;
+  excerpt?: T;
+  format?: T;
+  author?: T;
+  topics?: T;
+  audiences?: T;
+  tags?: T;
+  mainScripture?: T;
+  scriptureText?: T;
+  pullQuote?: T;
+  body?: T;
+  studyQuestions?: T;
+  seriesMemberships?:
+    | T
+    | {
+        series?: T;
+        order?: T;
+        id?: T;
+      };
+  relatedResources?: T;
+  relatedBooks?: T;
+  sourceNote?: T;
+  status?: T;
+  publishedAt?: T;
+  seoTitle?: T;
+  seoDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -632,6 +816,13 @@ export interface SeriesSelect<T extends boolean = true> {
   status?: T;
   cover?: T;
   articleSlugs?: T;
+  orderedArticles?:
+    | T
+    | {
+        article?: T;
+        order?: T;
+        id?: T;
+      };
   seoTitle?: T;
   seoDescription?: T;
   updatedAt?: T;
@@ -795,6 +986,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'authors';
           value: number | Author;
+        } | null)
+      | ({
+          relationTo: 'articles';
+          value: number | Article;
         } | null)
       | ({
           relationTo: 'resources';

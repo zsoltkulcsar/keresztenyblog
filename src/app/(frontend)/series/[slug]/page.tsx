@@ -14,6 +14,8 @@ function labelFromValue(value: string) {
   const labels: Record<string, string> = {
     'christian-life': 'Christian Life',
     ethics: 'Ethics',
+    'all-believers': 'All believers',
+    families: 'Families',
     'growing-believer': 'Growing believer',
     leader: 'Leader',
     marriage: 'Marriage',

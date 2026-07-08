@@ -6,12 +6,15 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
+import { Articles } from './collections/Articles'
+import { Audiences } from './collections/Audiences'
 import { Authors } from './collections/Authors'
 import { Media } from './collections/Media'
 import { NewsletterSignups } from './collections/NewsletterSignups'
 import { Resources } from './collections/Resources'
 import { Series } from './collections/Series'
 import { DailyVerse } from './collections/DailyVerse'
+import { Topics } from './collections/Topics'
 import { AboutPage } from './globals/About'
 import { seedDevAdminIfNeeded } from './payload/bootstrap'
 
@@ -25,7 +28,18 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Authors, Media, NewsletterSignups, Resources, Series, DailyVerse],
+  collections: [
+    Users,
+    Authors,
+    Topics,
+    Audiences,
+    Articles,
+    Media,
+    NewsletterSignups,
+    Resources,
+    Series,
+    DailyVerse,
+  ],
   editor: lexicalEditor(),
   globals: [AboutPage],
   secret: process.env.PAYLOAD_SECRET || '',

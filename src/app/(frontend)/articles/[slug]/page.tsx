@@ -105,6 +105,25 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </aside>
         </header>
 
+        {detail.series ? (
+          <section className="scripture-study-series-banner" aria-label="Series placement">
+            <div>
+              <p className="eyebrow">Part {detail.seriesOrder ?? 1}</p>
+              <h2>This article belongs to {detail.series.label}</h2>
+              <p>{detail.series.description}</p>
+            </div>
+            <div>
+              <Link href={buildSeriesUrl(detail.series.slug)}>Start from beginning</Link>
+              {detail.seriesNavigation.previous ? (
+                <Link href={buildArticleUrl(detail.seriesNavigation.previous.slug)}>Previous</Link>
+              ) : null}
+              {detail.seriesNavigation.next ? (
+                <Link href={buildArticleUrl(detail.seriesNavigation.next.slug)}>Next</Link>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
+
         <section className="scripture-study-anchor" aria-labelledby="scripture-title">
           <div>
             <p className="eyebrow">Scripture</p>
@@ -161,6 +180,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <h2>{detail.series.label}</h2>
               <p>{detail.series.description}</p>
               <Link href={buildSeriesUrl(detail.series.slug)}>Continue the path</Link>
+            </section>
+          ) : null}
+
+          {detail.relatedResource || detail.relatedBook ? (
+            <section>
+              <p className="eyebrow">Study next</p>
+              <h2>Related helps</h2>
+              {detail.relatedResource ? <p>Resource: {detail.relatedResource}</p> : null}
+              {detail.relatedBook ? <p>Book: {detail.relatedBook}</p> : null}
             </section>
           ) : null}
         </footer>

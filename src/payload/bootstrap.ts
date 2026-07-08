@@ -11,8 +11,9 @@ export async function seedDevAdminIfNeeded(payload: Payload): Promise<void> {
     return
   }
 
-  await payload.delete({
+  const existing = await payload.find({
     collection: 'users',
+    limit: 1,
     where: {
       email: {
         equals: DEV_ADMIN.email,
@@ -21,12 +22,35 @@ export async function seedDevAdminIfNeeded(payload: Payload): Promise<void> {
     overrideAccess: true,
   })
 
-  await payload.create({
-    collection: 'users',
-    data: DEV_ADMIN,
-    draft: true,
-    overrideAccess: true,
-  })
+  const existingUser = existing.docs[0]
+
+  if (existingUser?.id) {
+    await payload.update({
+      id: existingUser.id,
+      collection: 'users',
+      data: {
+        password: DEV_ADMIN.password,
+        role: DEV_ADMIN.role,
+      },
+      overrideAccess: true,
+    })
+    return
+  }
+
+  try {
+    await payload.create({
+      collection: 'users',
+      data: DEV_ADMIN,
+      draft: true,
+      overrideAccess: true,
+    })
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('email')) {
+      return
+    }
+
+    throw error
+  }
 
   payload.logger.info('Seeded local dev admin user dev@payloadcms.com / test')
 }

@@ -19,7 +19,7 @@ describe('authors', () => {
     expect(buildAuthorUrl('editorial-team')).toBe('/authors/editorial-team')
     expect(getAuthorProfileBySlug('editorial-team')?.name).toBe('Editorial Team')
     expect(listAuthorProfiles()).toHaveLength(3)
-    expect(listPublishedArticleRefsForAuthor('Editorial Team')).toHaveLength(3)
+    expect(listPublishedArticleRefsForAuthor('Editorial Team')).toHaveLength(5)
   })
 
   it('merges cms author profiles with the fallback set', async () => {

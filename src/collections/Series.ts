@@ -42,25 +42,15 @@ export const Series: CollectionConfig = {
     },
     {
       name: 'topic',
-      required: true,
-      type: 'select',
-      options: [
-        { label: 'Pastoral Theology', value: 'pastoral-theology' },
-        { label: 'Christian Life', value: 'christian-life' },
-        { label: 'Marriage', value: 'marriage' },
-        { label: 'Ethics', value: 'ethics' },
-      ],
+      hasMany: true,
+      relationTo: 'topics',
+      type: 'relationship',
     },
     {
       name: 'audience',
-      required: true,
-      type: 'select',
-      options: [
-        { label: 'New believer', value: 'new-believer' },
-        { label: 'Growing believer', value: 'growing-believer' },
-        { label: 'Mature believer', value: 'mature-believer' },
-        { label: 'Leader', value: 'leader' },
-      ],
+      hasMany: true,
+      relationTo: 'audiences',
+      type: 'relationship',
     },
     {
       name: 'description',
@@ -90,6 +80,14 @@ export const Series: CollectionConfig = {
       name: 'articleSlugs',
       type: 'json',
       defaultValue: [],
+    },
+    {
+      name: 'orderedArticles',
+      type: 'array',
+      fields: [
+        { name: 'article', relationTo: 'articles', required: true, type: 'relationship' },
+        { name: 'order', required: true, type: 'number' },
+      ],
     },
     {
       name: 'seoTitle',

@@ -1,3 +1,5 @@
+import { editorialArticles } from '@/lib/editorial-articles'
+
 export type ArchiveFacet = {
   label: string
   value: string
@@ -7,6 +9,7 @@ export type ArchiveArticle = {
   author: ArchiveFacet
   category: ArchiveFacet
   excerpt: string
+  format: ArchiveFacet
   publishedAt: string
   readingMinutes: number
   series: ArchiveFacet
@@ -20,6 +23,7 @@ export type ArchiveSort = 'latest' | 'oldest' | 'reading-time' | 'title'
 export type ArchiveSearchParams = {
   author?: string
   category?: string
+  format?: string
   page?: string
   series?: string
   sort?: string
@@ -29,6 +33,7 @@ export type ArchiveSearchParams = {
 export type ArchiveFilters = {
   author: string
   category: string
+  format: string
   page: number
   series: string
   sort: ArchiveSort
@@ -49,6 +54,7 @@ export type ArchiveContent = {
   options: {
     authors: ArchiveFacet[]
     categories: ArchiveFacet[]
+    formats: ArchiveFacet[]
     series: ArchiveFacet[]
     sortOptions: Array<{ label: string; value: ArchiveSort }>
     tags: ArchiveFacet[]
@@ -59,167 +65,28 @@ export type ArchiveContent = {
 
 const PAGE_SIZE = 4
 
-const hungarianSeedTopics = [
-  ['Keresztyén élet', 'christian-life', 'Mindennapi kegyelem', 'mindennapi-kegyelem', 'Ima', 'ima', 'Amikor az ima előbb sóhaj, mint mondat'],
-  ['Lelkipásztori teológia', 'pastoral-theology', 'Pásztori hűség', 'pasztori-huseg', 'Gyülekezet', 'gyulekezet', 'Miért nem elég a tehetség a szolgálathoz'],
-  ['Házasság és család', 'marriage-family', 'Otthon és szövetség', 'otthon-es-szovetseg', 'Család', 'csalad', 'A türelem csendes munkája az otthonban'],
-  ['Etika', 'ethics', 'Isten előtt élni', 'isten-elott-elni', 'Munka', 'munka', 'Mit jelent hűségesnek maradni a munkahelyen'],
-  ['Bibliaolvasás', 'bible-study', 'Alapok', 'alapok', 'Szentírás', 'szentiras', 'Hogyan olvassunk lassabban és figyelmesebben'],
-  ['Szenvedés és reménység', 'suffering-hope', 'Remény a mélységben', 'remeny-a-melysegben', 'Szenvedés', 'szenvedes', 'Isten büntetése-e a fájdalmam?'],
-  ['Imádság', 'prayer', 'Imádság iskolája', 'imadsag-iskolaja', 'Imádság', 'imadsag', 'Miért hív Isten merész imádságra?'],
-  ['Kegyelem', 'grace', 'Kegyelem mélységei', 'kegyelem-melysegei', 'Kegyelem', 'kegyelem', 'Miért szabadít fel a kegyelem az önigazolástól?'],
-  ['Bűn és megtérés', 'sin-repentance', 'Rejtett szív', 'rejtett-sziv', 'Megtérés', 'megteres', 'A rejtett bűn nem marad következmények nélkül'],
-  ['Hálaadás', 'gratitude', 'Hálás élet', 'halas-elet', 'Hála', 'hala', 'Hogyan süllyeszti el a hálátlanság a szívet'],
-  ['Tanítványság', 'discipleship', 'Tanítványság útja', 'tanitvanysag-utja', 'Tanítványság', 'tanitvanysag', 'Hét jel, hogy a tanítvány tovább növekszik'],
-  ['Világnézet', 'worldview', 'Hit és gondolkodás', 'hit-es-gondolkodas', 'Gondolkodás', 'gondolkodas', 'Miért nem ellensége a gondolkodás a hitnek?'],
-] as const
+const formatLabels = {
+  devotion: 'Devotion',
+  reflection: 'Reflection',
+  teaching: 'Teaching',
+  testimony: 'Testimony',
+} as const
 
-const hungarianSeedArchiveArticles: ArchiveArticle[] = Array.from({ length: 40 }, (_, index) => {
-  const topic = hungarianSeedTopics[index % hungarianSeedTopics.length]
-  const itemNumber = index + 1
-  const day = Math.max(1, 28 - (index % 28))
-  const slugBase = topic[6]
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-
-  return {
-    author: [
-      { label: 'Szerkesztőség', value: 'szerkesztoseg' },
-      { label: 'Lelkipásztori műhely', value: 'lelkipasztori-muhely' },
-      { label: 'Vendégszerző', value: 'vendegszerzo' },
-    ][index % 3],
-    category: { label: topic[0], value: topic[1] },
-    excerpt: `Bibliai alapú bevezető írás: ${topic[6].toLowerCase()}.`,
-    publishedAt: `2026-05-${String(day).padStart(2, '0')}`,
-    readingMinutes: 5 + (index % 8),
-    series: { label: topic[2], value: topic[3] },
-    slug: `minta-cikk-${String(itemNumber).padStart(2, '0')}-${slugBase}`,
-    tags: [
-      { label: topic[4], value: topic[5] },
-      { label: topic[0], value: topic[1] },
-    ],
-    title: topic[6],
-  }
-})
-
-const archiveArticles: ArchiveArticle[] = [
-  {
-    author: { label: 'Editorial Team', value: 'editorial-team' },
-    category: { label: 'Pastoral Theology', value: 'pastoral-theology' },
-    excerpt: 'How shepherding, doctrine, and presence shape healthy church life.',
-    publishedAt: '2026-06-14',
-    readingMinutes: 8,
-    series: { label: 'Foundations', value: 'foundations' },
-    slug: 'scripture-shapes-christian-growth',
-    tags: [
-      { label: 'Scripture', value: 'scripture' },
-      { label: 'Discipleship', value: 'discipleship' },
-    ],
-    title: 'Why Scripture must shape every part of Christian growth',
+const archiveArticles: ArchiveArticle[] = editorialArticles.map((article) => ({
+  author: toFacet(article.author),
+  category: toFacet(article.category),
+  excerpt: article.excerpt,
+  format: {
+    label: formatLabels[article.format],
+    value: article.format,
   },
-  {
-    author: { label: 'Editorial Team', value: 'editorial-team' },
-    category: { label: 'Christian Life', value: 'christian-life' },
-    excerpt: 'A grounded pattern for prayer, Scripture, and habits that last.',
-    publishedAt: '2026-06-10',
-    readingMinutes: 6,
-    series: { label: 'Daily Rhythm', value: 'daily-rhythm' },
-    slug: 'daily-rhythm-for-spiritual-growth',
-    tags: [
-      { label: 'Prayer', value: 'prayer' },
-      { label: 'Habits', value: 'habits' },
-    ],
-    title: 'A daily rhythm for spiritual growth',
-  },
-  {
-    author: { label: 'Guest Contributor', value: 'guest-contributor' },
-    category: { label: 'Marriage', value: 'marriage' },
-    excerpt: 'What covenant love looks like when the week is busy and the heart is tired.',
-    publishedAt: '2026-06-08',
-    readingMinutes: 10,
-    series: { label: 'Home and Covenant', value: 'home-and-covenant' },
-    slug: 'marriage-family-and-patient-love',
-    tags: [
-      { label: 'Marriage', value: 'marriage' },
-      { label: 'Family', value: 'family' },
-    ],
-    title: 'Marriage, family, and patient love',
-  },
-  {
-    author: { label: 'Pastoral Desk', value: 'pastoral-desk' },
-    category: { label: 'Ethics', value: 'ethics' },
-    excerpt: 'When Christian conviction meets work, speech, and public life.',
-    publishedAt: '2026-06-06',
-    readingMinutes: 7,
-    series: { label: 'Living Before God', value: 'living-before-god' },
-    slug: 'ethics-in-everyday-decisions',
-    tags: [
-      { label: 'Ethics', value: 'ethics' },
-      { label: 'Work', value: 'work' },
-    ],
-    title: 'Ethics in everyday decisions',
-  },
-  {
-    author: { label: 'Editorial Team', value: 'editorial-team' },
-    category: { label: 'Christian Life', value: 'christian-life' },
-    excerpt: 'What to do when you know the passage but still feel stuck.',
-    publishedAt: '2026-06-03',
-    readingMinutes: 9,
-    series: { label: 'Foundations', value: 'foundations' },
-    slug: 'how-to-read-the-bible-when-stuck',
-    tags: [
-      { label: 'Scripture', value: 'scripture' },
-      { label: 'Study', value: 'study' },
-    ],
-    title: 'How to read the Bible when you feel stuck',
-  },
-  {
-    author: { label: 'Pastoral Desk', value: 'pastoral-desk' },
-    category: { label: 'Pastoral Theology', value: 'pastoral-theology' },
-    excerpt: 'Why faithful leadership depends on steadiness more than charisma.',
-    publishedAt: '2026-06-01',
-    readingMinutes: 11,
-    series: { label: 'Shepherding the Church', value: 'shepherding-the-church' },
-    slug: 'leaders-need-more-than-charisma',
-    tags: [
-      { label: 'Leadership', value: 'leadership' },
-      { label: 'Church', value: 'church' },
-    ],
-    title: 'When leaders need more than charisma',
-  },
-  {
-    author: { label: 'Guest Contributor', value: 'guest-contributor' },
-    category: { label: 'Christian Life', value: 'christian-life' },
-    excerpt: 'Teaching children the gospel is ordinary work that still matters deeply.',
-    publishedAt: '2026-05-28',
-    readingMinutes: 7,
-    series: { label: 'Home and Covenant', value: 'home-and-covenant' },
-    slug: 'teaching-children-the-gospel-at-home',
-    tags: [
-      { label: 'Family', value: 'family' },
-      { label: 'Discipleship', value: 'discipleship' },
-    ],
-    title: 'Teaching children the gospel at home',
-  },
-  {
-    author: { label: 'Editorial Team', value: 'editorial-team' },
-    category: { label: 'Pastoral Theology', value: 'pastoral-theology' },
-    excerpt: 'A testimony to patience, repentance, and the slow work of grace.',
-    publishedAt: '2026-05-24',
-    readingMinutes: 12,
-    series: { label: 'Foundations', value: 'foundations' },
-    slug: 'the-slow-work-of-grace',
-    tags: [
-      { label: 'Testimony', value: 'testimony' },
-      { label: 'Grace', value: 'grace' },
-    ],
-    title: 'A testimony to the slow work of grace',
-  },
-  ...hungarianSeedArchiveArticles,
-]
+  publishedAt: article.publishedAt,
+  readingMinutes: article.readingMinutes,
+  series: article.series[0] ? toFacet(article.series[0].label, article.series[0].slug) : toFacet('Standalone'),
+  slug: article.slug,
+  tags: [...article.tags, ...article.topic, ...article.audience].map((tag) => toFacet(tag)),
+  title: article.title,
+}))
 
 const sortOptions: Array<{ label: string; value: ArchiveSort }> = [
   { label: 'Latest first', value: 'latest' },
@@ -227,6 +94,19 @@ const sortOptions: Array<{ label: string; value: ArchiveSort }> = [
   { label: 'Shortest reads', value: 'reading-time' },
   { label: 'Title A to Z', value: 'title' },
 ]
+
+function toFacet(label: string, value = label): ArchiveFacet {
+  return {
+    label,
+    value: value
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, ''),
+  }
+}
 
 function normalizeValue(value: string | undefined) {
   return value?.trim().toLowerCase() ?? ''
@@ -254,10 +134,11 @@ function filterArticles(articles: ArchiveArticle[], filters: ArchiveFilters) {
     const categoryMatch = !filters.category || normalizeValue(article.category.value) === filters.category
     const seriesMatch = !filters.series || normalizeValue(article.series.value) === filters.series
     const authorMatch = !filters.author || normalizeValue(article.author.value) === filters.author
+    const formatMatch = !filters.format || normalizeValue(article.format.value) === filters.format
     const tagMatch =
       !filters.tag || article.tags.some((tag) => normalizeValue(tag.value) === filters.tag)
 
-    return categoryMatch && seriesMatch && authorMatch && tagMatch
+    return categoryMatch && seriesMatch && authorMatch && formatMatch && tagMatch
   })
 }
 
@@ -293,6 +174,7 @@ export function createArchiveContent(input: ArchiveSearchParams = {}): ArchiveCo
   const filters: ArchiveFilters = {
     author: normalizeValue(input.author),
     category: normalizeValue(input.category),
+    format: normalizeValue(input.format),
     page: parsePage(input.page),
     series: normalizeValue(input.series),
     sort: resolveSort(input.sort),
@@ -317,6 +199,7 @@ export function createArchiveContent(input: ArchiveSearchParams = {}): ArchiveCo
     options: {
       authors: uniqueFacets(archiveArticles, (article) => article.author),
       categories: uniqueFacets(archiveArticles, (article) => article.category),
+      formats: uniqueFacets(archiveArticles, (article) => article.format),
       series: uniqueFacets(archiveArticles, (article) => article.series),
       sortOptions,
       tags: uniqueFacets(archiveArticles, (article) => article.tags),
@@ -336,6 +219,7 @@ export function buildArchiveUrl(filters: Partial<ArchiveFilters> = {}) {
 
   if (filters.author) params.set('author', filters.author)
   if (filters.category) params.set('category', filters.category)
+  if (filters.format) params.set('format', filters.format)
   if (filters.series) params.set('series', filters.series)
   if (filters.sort && filters.sort !== 'latest') params.set('sort', filters.sort)
   if (filters.tag) params.set('tag', filters.tag)
