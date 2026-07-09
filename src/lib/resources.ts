@@ -1,4 +1,5 @@
 import { getCmsPayload } from '@/lib/server/payload'
+import { relationTitle } from '@/lib/cms-content'
 
 export type ResourceType =
   | 'article'
@@ -121,7 +122,8 @@ const fallbackResources: ResourceItem[] = [
   {
     audience: 'Small group leaders',
     ctaLabel: 'Open leader tool',
-    description: 'A practical outline for preparing a Bible discussion without turning it into a lecture.',
+    description:
+      'A practical outline for preparing a Bible discussion without turning it into a lecture.',
     format: 'Leader worksheet',
     highlights: ['group questions', 'text-first flow', 'pastoral application'],
     relatedArticleSlugs: ['how-to-read-the-bible-when-stuck'],
@@ -131,7 +133,8 @@ const fallbackResources: ResourceItem[] = [
     title: 'Small group discussion guide',
     topic: 'Leadership',
     type: 'leader-tool',
-    usefulness: 'Helps leaders ask better questions and keep the group anchored in the biblical text.',
+    usefulness:
+      'Helps leaders ask better questions and keep the group anchored in the biblical text.',
     steps: [
       'Mark the main movement of the passage before writing questions.',
       'Prepare one observation, one interpretation, and one application question.',
@@ -141,7 +144,8 @@ const fallbackResources: ResourceItem[] = [
   {
     audience: 'Married couples and families',
     ctaLabel: 'Open reading plan',
-    description: 'A short household reading rhythm for families who want Scripture to shape ordinary days.',
+    description:
+      'A short household reading rhythm for families who want Scripture to shape ordinary days.',
     format: 'Reading plan',
     highlights: ['family rhythm', 'short readings', 'conversation prompts'],
     relatedArticleSlugs: ['daily-rhythm-for-spiritual-growth'],
@@ -161,7 +165,8 @@ const fallbackResources: ResourceItem[] = [
   {
     audience: 'Readers with hard questions',
     ctaLabel: 'Open resource',
-    description: 'A curated starting point for ethical questions where Scripture, wisdom, and pastoral care meet.',
+    description:
+      'A curated starting point for ethical questions where Scripture, wisdom, and pastoral care meet.',
     format: 'Curated link list',
     highlights: ['ethics', 'discernment', 'pastoral care'],
     relatedArticleSlugs: ['scripture-shapes-christian-growth'],
@@ -181,7 +186,8 @@ const fallbackResources: ResourceItem[] = [
   {
     audience: 'Mature believers',
     ctaLabel: 'Open recommendation',
-    description: 'A compact book path for readers who want to grow in prayer, doctrine, and daily obedience.',
+    description:
+      'A compact book path for readers who want to grow in prayer, doctrine, and daily obedience.',
     externalUrl: 'https://www.desiringgod.org/books',
     format: 'Book list',
     highlights: ['recommended books', 'spiritual growth', 'doctrine'],
@@ -202,7 +208,8 @@ const fallbackResources: ResourceItem[] = [
   {
     audience: 'Church leaders',
     ctaLabel: 'Open checklist',
-    description: 'A ministry checklist for evaluating whether a teaching plan serves formation, not only information.',
+    description:
+      'A ministry checklist for evaluating whether a teaching plan serves formation, not only information.',
     format: 'Checklist',
     highlights: ['teaching planning', 'formation', 'leader review'],
     relatedArticleSlugs: [],
@@ -212,7 +219,8 @@ const fallbackResources: ResourceItem[] = [
     title: 'Teaching plan checklist',
     topic: 'Pastoral theology',
     type: 'leader-tool',
-    usefulness: 'Gives leaders a simple grid for connecting doctrine, Scripture, prayer, and practice.',
+    usefulness:
+      'Gives leaders a simple grid for connecting doctrine, Scripture, prayer, and practice.',
     steps: [
       'Name the biblical text and the central truth clearly.',
       'Define the hoped-for response in belief, affection, and action.',
@@ -222,7 +230,8 @@ const fallbackResources: ResourceItem[] = [
   {
     audience: 'Readers in prayer',
     ctaLabel: 'Open study guide',
-    description: 'A quiet guide for using the Psalms when words are hard and prayer feels scattered.',
+    description:
+      'A quiet guide for using the Psalms when words are hard and prayer feels scattered.',
     format: 'Devotional guide',
     highlights: ['Psalms', 'prayer', 'lament and praise'],
     relatedArticleSlugs: ['daily-rhythm-for-spiritual-growth'],
@@ -232,7 +241,8 @@ const fallbackResources: ResourceItem[] = [
     title: 'Praying with the Psalms',
     topic: 'Prayer',
     type: 'study-guide',
-    usefulness: 'Shows readers how Scripture can give language to grief, repentance, trust, and praise.',
+    usefulness:
+      'Shows readers how Scripture can give language to grief, repentance, trust, and praise.',
     steps: [
       'Choose a psalm that matches the honest state of your heart.',
       'Pray one line at a time, turning the words toward God.',
@@ -243,24 +253,35 @@ const fallbackResources: ResourceItem[] = [
 
 function normalizeResource(doc: any): ResourceItem {
   const file = doc.file
-  const fileHref = typeof file === 'object' && file && 'url' in file && file.url ? String(file.url) : null
+  const fileHref =
+    typeof file === 'object' && file && 'url' in file && file.url ? String(file.url) : null
+  const audienceFromRelation = Array.isArray(doc.audiences)
+    ? doc.audiences.map(relationTitle).filter(Boolean).join(' / ')
+    : ''
+  const topicFromRelation = Array.isArray(doc.topics)
+    ? doc.topics.map(relationTitle).filter(Boolean).join(' / ')
+    : ''
 
   return {
     description: String(doc.description ?? ''),
-    audience: doc.audience ? String(doc.audience) : undefined,
+    audience: audienceFromRelation || (doc.audience ? String(doc.audience) : undefined),
     ctaLabel: doc.ctaLabel ? String(doc.ctaLabel) : undefined,
     externalUrl: doc.externalUrl ? String(doc.externalUrl) : null,
     fileHref,
     featured: Boolean(doc.featured),
     format: doc.format ? String(doc.format) : undefined,
     highlights: Array.isArray(doc.highlights) ? doc.highlights.map(String) : [],
-    relatedArticleSlugs: Array.isArray(doc.relatedArticleSlugs) ? doc.relatedArticleSlugs.map(String) : [],
-    relatedSeriesSlugs: Array.isArray(doc.relatedSeriesSlugs) ? doc.relatedSeriesSlugs.map(String) : [],
+    relatedArticleSlugs: Array.isArray(doc.relatedArticleSlugs)
+      ? doc.relatedArticleSlugs.map(String)
+      : [],
+    relatedSeriesSlugs: Array.isArray(doc.relatedSeriesSlugs)
+      ? doc.relatedSeriesSlugs.map(String)
+      : [],
     slug: String(doc.slug ?? ''),
     status: doc.status === 'published' ? 'published' : 'draft',
     steps: Array.isArray(doc.steps) ? doc.steps.map(String) : [],
     title: String(doc.title ?? ''),
-    topic: doc.topic ? String(doc.topic) : undefined,
+    topic: topicFromRelation || (doc.topic ? String(doc.topic) : undefined),
     type: doc.type as ResourceType,
     usefulness: String(doc.usefulness ?? ''),
   }

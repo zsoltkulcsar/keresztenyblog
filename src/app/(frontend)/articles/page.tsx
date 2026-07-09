@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { buildArchiveUrl, createArchiveContent, type ArchiveFilters } from '@/lib/article-archive'
+import { buildArchiveUrl, loadArchiveContent, type ArchiveFilters } from '@/lib/article-archive'
 import { buildArticleUrl } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 
@@ -123,7 +123,7 @@ const readingGuides = [
 
 export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
   const resolvedSearchParams = await Promise.resolve(searchParams ?? {})
-  const archive = createArchiveContent(resolveSearchParams(resolvedSearchParams))
+  const archive = await loadArchiveContent(resolveSearchParams(resolvedSearchParams))
   const filterSummary = [
     archive.filters.category && optionLabel(archive.filters.category, archive.options.categories),
     archive.filters.series && optionLabel(archive.filters.series, archive.options.series),

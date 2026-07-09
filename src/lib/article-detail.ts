@@ -1,5 +1,6 @@
-import { createArchiveContent } from '@/lib/article-archive'
-import { editorialArticles } from '@/lib/editorial-articles'
+import { createArchiveContent, loadArchiveContent } from '@/lib/article-archive'
+import { loadCmsEditorialArticles } from '@/lib/cms-content'
+import { editorialArticles, type EditorialArticleSeed } from '@/lib/editorial-articles'
 
 export type ArticleSeriesContext = {
   description: string
@@ -44,59 +45,58 @@ export type ArticleSeriesNavigation = {
   previous?: ArticleDetail
 }
 
-const articleDetails: ArticleDetail[] = editorialArticles.map((article) => ({
-  author: article.author,
-  category: article.category,
-  coverAlt: `${article.title} editorial cover`,
-  coverSrc: '/home-hero.png',
-  excerpt: article.excerpt,
-  format: article.format,
-  publishedAt: article.publishedAt,
-  readingMinutes: article.readingMinutes,
-  relatedBook: article.relatedBook,
-  relatedResource: article.relatedResource,
-  scriptureBlock: {
-    reference: article.mainScripture,
-    text: article.scriptureText,
-  },
-  sections: article.body,
-  series: article.series[0]
-    ? {
-        description: article.series[0].description,
-        label: article.series[0].label,
-        slug: article.series[0].slug,
-      }
-    : undefined,
-  seriesOrder: article.series[0]?.order,
-  slug: article.slug,
-  subtitle: article.subtitle,
-  studyPanel: {
-    items: article.studyQuestions,
-    title: article.format === 'devotion' ? 'Reflection questions' : 'Study questions',
-  },
-  tags: [...article.tags, ...article.topic, ...article.audience],
-  title: article.title,
-  pullQuote: article.pullQuote,
-}))
+type ArticleArchiveContent = ReturnType<typeof createArchiveContent>
 
-const articleDetailMap = new Map(articleDetails.map((article) => [article.slug, article]))
-
-export function buildArticleUrl(slug: string) {
-  return `/articles/${slug}`
+function toArticleDetail(article: EditorialArticleSeed): ArticleDetail {
+  return {
+    author: article.author,
+    category: article.category,
+    coverAlt: `${article.title} editorial cover`,
+    coverSrc: '/home-hero.png',
+    excerpt: article.excerpt,
+    format: article.format,
+    publishedAt: article.publishedAt,
+    readingMinutes: article.readingMinutes,
+    relatedBook: article.relatedBook,
+    relatedResource: article.relatedResource,
+    scriptureBlock: {
+      reference: article.mainScripture,
+      text: article.scriptureText,
+    },
+    sections: article.body,
+    series: article.series[0]
+      ? {
+          description: article.series[0].description,
+          label: article.series[0].label,
+          slug: article.series[0].slug,
+        }
+      : undefined,
+    seriesOrder: article.series[0]?.order,
+    slug: article.slug,
+    subtitle: article.subtitle,
+    studyPanel: {
+      items: article.studyQuestions,
+      title: article.format === 'devotion' ? 'Reflection questions' : 'Study questions',
+    },
+    tags: [...article.tags, ...article.topic, ...article.audience],
+    title: article.title,
+    pullQuote: article.pullQuote,
+  }
 }
 
-export function listArticleDetailSlugs() {
-  return articleDetails.map((article) => article.slug)
-}
+const articleDetails: ArticleDetail[] = editorialArticles.map(toArticleDetail)
 
-export function createArticleDetail(slug: string) {
-  const detail = articleDetailMap.get(slug)
+function resolveArticleDetail(
+  slug: string,
+  details: ArticleDetail[],
+  archive: ArticleArchiveContent,
+) {
+  const detail = details.find((article) => article.slug === slug)
   if (!detail) return null
 
-  const archive = createArchiveContent()
   const archiveArticle = archive.allArticles.find((article) => article.slug === slug)
   const seriesPeers = detail.series
-    ? articleDetails
+    ? details
         .filter((article) => article.series?.slug === detail.series?.slug)
         .sort((left, right) => (left.seriesOrder ?? 0) - (right.seriesOrder ?? 0))
     : []
@@ -110,4 +110,34 @@ export function createArticleDetail(slug: string) {
       previous: currentIndex >= 0 ? seriesPeers[currentIndex - 1] : undefined,
     } satisfies ArticleSeriesNavigation,
   }
+}
+
+export function buildArticleUrl(slug: string) {
+  return `/articles/${slug}`
+}
+
+export function listArticleDetailSlugs() {
+  return articleDetails.map((article) => article.slug)
+}
+
+export async function listPublicArticleDetailSlugs() {
+  const cmsArticles = await loadCmsEditorialArticles()
+  return cmsArticles ? cmsArticles.map((article) => article.slug) : listArticleDetailSlugs()
+}
+
+export function createArticleDetail(slug: string) {
+  return resolveArticleDetail(slug, articleDetails, createArchiveContent())
+}
+
+export async function loadArticleDetail(slug: string) {
+  const cmsArticles = await loadCmsEditorialArticles()
+  if (!cmsArticles) return createArticleDetail(slug)
+
+  const details = cmsArticles.map(toArticleDetail)
+  return resolveArticleDetail(slug, details, await loadArchiveContent())
+}
+
+export async function loadArticleDetails() {
+  const cmsArticles = await loadCmsEditorialArticles()
+  return cmsArticles ? cmsArticles.map(toArticleDetail) : articleDetails
 }

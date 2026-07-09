@@ -3,14 +3,16 @@ import { notFound } from 'next/navigation'
 
 import { ReadingProgress } from '@/components/features/article/ReadingProgress'
 import { ShareTools } from '@/components/features/article/ShareTools'
-import { buildArticleUrl, createArticleDetail } from '@/lib/article-detail'
-import { createArchiveContent } from '@/lib/article-archive'
+import { buildArticleUrl, loadArticleDetail } from '@/lib/article-detail'
+import { loadArchiveContent } from '@/lib/article-archive'
 import { buildAuthorUrl, loadAuthorProfileByName } from '@/lib/authors'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildSeriesUrl } from '@/lib/series'
 
 type ArticlePageProps = {
-  params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  params?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }
 
 function getSingleValue(value: string | string[] | undefined) {
@@ -18,9 +20,13 @@ function getSingleValue(value: string | string[] | undefined) {
 }
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(
-    new Date(`${value}T00:00:00Z`),
-  )
+  const dateValue = value.includes('T') ? value : `${value}T00:00:00Z`
+
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(dateValue))
 }
 
 function parseParams(params: Record<string, string | string[] | undefined>) {
@@ -32,11 +38,13 @@ function parseParams(params: Record<string, string | string[] | undefined>) {
 export function generateMetadata({
   params,
 }: {
-  params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  params?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   return Promise.resolve(params ?? {}).then(async (resolvedParams) => {
     const slug = parseParams(resolvedParams).slug
-    const detail = createArticleDetail(slug)
+    const detail = await loadArticleDetail(slug)
 
     if (!detail) {
       return buildDiscoveryMetadata({
@@ -60,15 +68,19 @@ export function generateMetadata({
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const resolvedParams = await Promise.resolve(params ?? {})
   const { slug } = parseParams(resolvedParams)
-  const detail = createArticleDetail(slug)
+  const detail = await loadArticleDetail(slug)
 
   if (!detail || !detail.archiveArticle) {
     notFound()
   }
 
   const authorProfile = await loadAuthorProfileByName(detail.author)
-  const relatedArticles = createArchiveContent()
-    .articles.filter((article) => article.slug !== slug && article.category.value === detail.archiveArticle?.category.value)
+  const relatedArchive = await loadArchiveContent()
+  const relatedArticles = relatedArchive.articles
+    .filter(
+      (article) =>
+        article.slug !== slug && article.category.value === detail.archiveArticle?.category.value,
+    )
     .slice(0, 3)
 
   return (
@@ -84,7 +96,11 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
           <aside className="scripture-study-meta">
             <p>
-              {authorProfile ? <Link href={buildAuthorUrl(authorProfile.slug)}>{detail.author}</Link> : detail.author}
+              {authorProfile ? (
+                <Link href={buildAuthorUrl(authorProfile.slug)}>{detail.author}</Link>
+              ) : (
+                detail.author
+              )}
               <span>{formatDate(detail.publishedAt)}</span>
             </p>
             <dl>
@@ -168,8 +184,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <p className="eyebrow">Author and source</p>
             <h2>{detail.author}</h2>
             <p>
-              Published {formatDate(detail.publishedAt)} in {detail.category}. Scripture remains the anchor for the reading,
-              study notes, and suggested next steps.
+              Published {formatDate(detail.publishedAt)} in {detail.category}. Scripture remains the
+              anchor for the reading, study notes, and suggested next steps.
             </p>
             <ShareTools title={detail.title} url={buildArticleUrl(detail.slug)} />
           </section>

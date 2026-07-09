@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { buildArticleUrl, createArticleDetail } from '@/lib/article-detail'
+import { buildArticleUrl, loadArticleDetail } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import {
   buildResourceUrl,
@@ -113,8 +113,11 @@ export default async function ResourceDetailPage({
   }
 
   const action = resourceAction(resource)
-  const articleLinks = resource.relatedArticleSlugs
-    .map((articleSlug) => createArticleDetail(articleSlug))
+  const articleLinks = (
+    await Promise.all(
+      resource.relatedArticleSlugs.map((articleSlug) => loadArticleDetail(articleSlug)),
+    )
+  )
     .filter(Boolean)
     .map((article) => article!)
   const relatedResources = (await loadResourceItems())

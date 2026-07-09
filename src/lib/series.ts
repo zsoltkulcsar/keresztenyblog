@@ -1,8 +1,16 @@
-import { createArticleDetail } from '@/lib/article-detail'
+import { createArticleDetail, loadArticleDetail } from '@/lib/article-detail'
+import { loadCmsSeriesItems } from '@/lib/cms-content'
 import { editorialArticles } from '@/lib/editorial-articles'
 
-export type SeriesAudience = 'all-believers' | 'families' | 'leader' | 'new-believer'
-export type SeriesTopic = 'christian-life' | 'marriage' | 'pastoral-theology'
+export type SeriesAudience =
+  | 'all-believers'
+  | 'families'
+  | 'growing-believer'
+  | 'leader'
+  | 'mature-believer'
+  | 'new-believer'
+  | string
+export type SeriesTopic = 'christian-life' | 'ethics' | 'marriage' | 'pastoral-theology' | string
 
 export type SeriesItem = {
   articleSlugs: string[]
@@ -83,18 +91,53 @@ const futureSeries: SeriesItem[] = [
 ]
 
 const seriesItems: SeriesItem[] = [...explicitSeries, ...futureSeries]
-const seriesMap = new Map(seriesItems.map((series) => [series.slug, series]))
+
+function sortSeries(items: SeriesItem[]) {
+  return [...items].sort((left, right) => left.title.localeCompare(right.title))
+}
+
+function uniqueSeriesValues(items: SeriesItem[], select: (series: SeriesItem) => string) {
+  return [...new Map(items.map((series) => [select(series), select(series)])).values()]
+}
+
+function getOrderedFallbackSlugs(series: SeriesItem) {
+  return series.articleSlugs.length > 0
+    ? series.articleSlugs
+    : editorialArticles
+        .filter((article) => article.series.some((membership) => membership.slug === series.slug))
+        .sort((left, right) => {
+          const leftOrder =
+            left.series.find((membership) => membership.slug === series.slug)?.order ?? 0
+          const rightOrder =
+            right.series.find((membership) => membership.slug === series.slug)?.order ?? 0
+          return leftOrder - rightOrder
+        })
+        .map((article) => article.slug)
+}
 
 export function listSeries() {
-  return [...seriesItems].sort((left, right) => left.title.localeCompare(right.title))
+  return sortSeries(seriesItems)
+}
+
+export async function loadSeries() {
+  const cmsSeries = await loadCmsSeriesItems()
+  return cmsSeries ? sortSeries(cmsSeries) : listSeries()
 }
 
 export function listSeriesTopics() {
-  return [...new Map(seriesItems.map((series) => [series.topic, series.topic])).values()]
+  return uniqueSeriesValues(seriesItems, (series) => series.topic)
+}
+
+export async function loadSeriesTopics() {
+  return uniqueSeriesValues(await loadSeries(), (series) => series.topic)
 }
 
 export function listSeriesAudiences() {
-  return [...new Map(seriesItems.map((series) => [series.audience, series.audience])).values()]
+  return uniqueSeriesValues(seriesItems, (series) => series.audience)
+}
+
+export async function loadSeriesAudiences() {
+  return uniqueSeriesValues(await loadSeries(), (series) => series.audience)
 }
 
 export function buildSeriesUrl(slug: string) {
@@ -102,22 +145,10 @@ export function buildSeriesUrl(slug: string) {
 }
 
 export function createSeriesOverview(slug: string) {
-  const series = seriesMap.get(slug)
+  const series = seriesItems.find((item) => item.slug === slug)
   if (!series) return null
 
-  const orderedArticleSlugs =
-    series.articleSlugs.length > 0
-      ? series.articleSlugs
-      : editorialArticles
-          .filter((article) => article.series.some((membership) => membership.slug === series.slug))
-          .sort((left, right) => {
-            const leftOrder = left.series.find((membership) => membership.slug === series.slug)?.order ?? 0
-            const rightOrder = right.series.find((membership) => membership.slug === series.slug)?.order ?? 0
-            return leftOrder - rightOrder
-          })
-          .map((article) => article.slug)
-
-  const articles = orderedArticleSlugs
+  const articles = getOrderedFallbackSlugs(series)
     .map((articleSlug, index) => {
       const article = createArticleDetail(articleSlug)
       if (!article) return null
@@ -129,6 +160,36 @@ export function createSeriesOverview(slug: string) {
     })
     .filter(Boolean) as Array<{
     article: NonNullable<ReturnType<typeof createArticleDetail>>
+    order: number
+  }>
+
+  return {
+    ...series,
+    articles,
+  }
+}
+
+export async function loadSeriesOverview(slug: string) {
+  const cmsSeries = await loadCmsSeriesItems()
+  if (!cmsSeries) return createSeriesOverview(slug)
+
+  const series = cmsSeries.find((item) => item.slug === slug)
+  if (!series) return null
+
+  const articles = (
+    await Promise.all(
+      getOrderedFallbackSlugs(series).map(async (articleSlug, index) => {
+        const article = await loadArticleDetail(articleSlug)
+        if (!article) return null
+
+        return {
+          article,
+          order: index + 1,
+        }
+      }),
+    )
+  ).filter(Boolean) as Array<{
+    article: NonNullable<Awaited<ReturnType<typeof loadArticleDetail>>>
     order: number
   }>
 

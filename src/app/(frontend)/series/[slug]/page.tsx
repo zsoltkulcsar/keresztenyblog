@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { buildArticleUrl } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
-import { buildSeriesUrl, createSeriesOverview, listSeries } from '@/lib/series'
+import { buildSeriesUrl, loadSeries, loadSeriesOverview } from '@/lib/series'
 
 function getSingleValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value
@@ -27,31 +27,30 @@ function labelFromValue(value: string) {
   return labels[value] ?? value
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params?:
     | Record<string, string | string[] | undefined>
     | Promise<Record<string, string | string[] | undefined>>
 }) {
-  return Promise.resolve(params ?? {}).then((resolvedParams) => {
-    const slug = getSingleValue(resolvedParams.slug) ?? ''
-    const series = createSeriesOverview(slug)
+  const resolvedParams = await Promise.resolve(params ?? {})
+  const slug = getSingleValue(resolvedParams.slug) ?? ''
+  const series = await loadSeriesOverview(slug)
 
-    if (!series) {
-      return buildDiscoveryMetadata({
-        description: 'Series not found',
-        noIndex: true,
-        path: buildSeriesUrl(slug),
-        title: 'Series not found',
-      })
-    }
-
+  if (!series) {
     return buildDiscoveryMetadata({
-      description: series.longDescription || series.description,
+      description: 'Series not found',
+      noIndex: true,
       path: buildSeriesUrl(slug),
-      title: series.seoTitle || series.title,
+      title: 'Series not found',
     })
+  }
+
+  return buildDiscoveryMetadata({
+    description: series.longDescription || series.description,
+    path: buildSeriesUrl(slug),
+    title: series.seoTitle || series.title,
   })
 }
 
@@ -64,13 +63,13 @@ export default async function SeriesDetailPage({
 }) {
   const resolvedParams = await Promise.resolve(params ?? {})
   const slug = getSingleValue(resolvedParams.slug) ?? ''
-  const series = createSeriesOverview(slug)
+  const series = await loadSeriesOverview(slug)
 
   if (!series) {
     notFound()
   }
 
-  const relatedSeries = listSeries()
+  const relatedSeries = (await loadSeries())
     .filter(
       (item) =>
         item.slug !== slug && (item.topic === series.topic || item.audience === series.audience),

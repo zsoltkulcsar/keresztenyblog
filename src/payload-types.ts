@@ -374,7 +374,9 @@ export interface Resource {
   type: 'study-guide' | 'book' | 'article' | 'series' | 'file' | 'link' | 'reading-plan' | 'leader-tool';
   featured?: boolean | null;
   audience?: string | null;
+  audiences?: (number | Audience)[] | null;
   topic?: string | null;
+  topics?: (number | Topic)[] | null;
   format?: string | null;
   description: string;
   usefulness: string;
@@ -786,7 +788,9 @@ export interface ResourcesSelect<T extends boolean = true> {
   type?: T;
   featured?: T;
   audience?: T;
+  audiences?: T;
   topic?: T;
+  topics?: T;
   format?: T;
   description?: T;
   usefulness?: T;

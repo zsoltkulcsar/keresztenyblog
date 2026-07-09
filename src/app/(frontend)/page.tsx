@@ -1,10 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { buildArticleUrl, createArticleDetail, listArticleDetailSlugs } from '@/lib/article-detail'
+import { buildArticleUrl, loadArticleDetails } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
-import { buildSeriesUrl, listSeries } from '@/lib/series'
+import { buildSeriesUrl, loadSeries } from '@/lib/series'
 
 function visualTone(slug: string, index = 0) {
   const score = Array.from(slug).reduce((total, char) => total + char.charCodeAt(0), index)
@@ -40,15 +40,10 @@ export default async function HomePage({
 }) {
   await Promise.resolve(searchParams ?? {})
 
-  const homepageArticles = listArticleDetailSlugs()
-    .map((slug) => createArticleDetail(slug))
-    .filter((article): article is NonNullable<ReturnType<typeof createArticleDetail>> =>
-      Boolean(article),
-    )
-    .slice(0, 8)
+  const homepageArticles = (await loadArticleDetails()).slice(0, 8)
   const leadArticle = homepageArticles[0]
   const editorPicks = homepageArticles.slice(1, 4)
-  const seriesIndex = listSeries().slice(0, 3)
+  const seriesIndex = (await loadSeries()).slice(0, 3)
   const resources = (await loadResourceItems()).slice(0, 4)
 
   return (

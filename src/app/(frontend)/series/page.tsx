@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
-import { buildSeriesUrl, listSeries, listSeriesAudiences, listSeriesTopics } from '@/lib/series'
+import { buildSeriesUrl, loadSeries, loadSeriesAudiences, loadSeriesTopics } from '@/lib/series'
 
 function labelFromValue(value: string) {
   const labels: Record<string, string> = {
@@ -52,7 +52,9 @@ export default async function SeriesPage({
   const topic = getSingleValue(resolvedSearchParams.topic)
   const audience = getSingleValue(resolvedSearchParams.audience)
 
-  const allSeries = listSeries()
+  const allSeries = await loadSeries()
+  const seriesTopics = await loadSeriesTopics()
+  const seriesAudiences = await loadSeriesAudiences()
   const items = allSeries.filter((series) => {
     const topicMatch = !topic || series.topic === topic
     const audienceMatch = !audience || series.audience === audience
@@ -87,7 +89,7 @@ export default async function SeriesPage({
             <span>Topic</span>
             <select name="topic" defaultValue={topic ?? ''}>
               <option value="">All topics</option>
-              {listSeriesTopics().map((value) => (
+              {seriesTopics.map((value) => (
                 <option key={value} value={value}>
                   {labelFromValue(value)}
                 </option>
@@ -99,7 +101,7 @@ export default async function SeriesPage({
             <span>Audience</span>
             <select name="audience" defaultValue={audience ?? ''}>
               <option value="">All audiences</option>
-              {listSeriesAudiences().map((value) => (
+              {seriesAudiences.map((value) => (
                 <option key={value} value={value}>
                   {labelFromValue(value)}
                 </option>

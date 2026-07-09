@@ -1,4 +1,6 @@
 import { editorialArticles } from '@/lib/editorial-articles'
+import { loadCmsEditorialArticles } from '@/lib/cms-content'
+import type { EditorialArticleSeed } from '@/lib/editorial-articles'
 
 export type ArchiveFacet = {
   label: string
@@ -72,21 +74,27 @@ const formatLabels = {
   testimony: 'Testimony',
 } as const
 
-const archiveArticles: ArchiveArticle[] = editorialArticles.map((article) => ({
-  author: toFacet(article.author),
-  category: toFacet(article.category),
-  excerpt: article.excerpt,
-  format: {
-    label: formatLabels[article.format],
-    value: article.format,
-  },
-  publishedAt: article.publishedAt,
-  readingMinutes: article.readingMinutes,
-  series: article.series[0] ? toFacet(article.series[0].label, article.series[0].slug) : toFacet('Standalone'),
-  slug: article.slug,
-  tags: [...article.tags, ...article.topic, ...article.audience].map((tag) => toFacet(tag)),
-  title: article.title,
-}))
+function toArchiveArticle(article: EditorialArticleSeed): ArchiveArticle {
+  return {
+    author: toFacet(article.author),
+    category: toFacet(article.category),
+    excerpt: article.excerpt,
+    format: {
+      label: formatLabels[article.format],
+      value: article.format,
+    },
+    publishedAt: article.publishedAt,
+    readingMinutes: article.readingMinutes,
+    series: article.series[0]
+      ? toFacet(article.series[0].label, article.series[0].slug)
+      : toFacet('Standalone'),
+    slug: article.slug,
+    tags: [...article.tags, ...article.topic, ...article.audience].map((tag) => toFacet(tag)),
+    title: article.title,
+  }
+}
+
+const archiveArticles: ArchiveArticle[] = editorialArticles.map(toArchiveArticle)
 
 const sortOptions: Array<{ label: string; value: ArchiveSort }> = [
   { label: 'Latest first', value: 'latest' },
@@ -112,7 +120,10 @@ function normalizeValue(value: string | undefined) {
   return value?.trim().toLowerCase() ?? ''
 }
 
-function uniqueFacets(items: ArchiveArticle[], select: (article: ArchiveArticle) => ArchiveFacet | ArchiveFacet[]) {
+function uniqueFacets(
+  items: ArchiveArticle[],
+  select: (article: ArchiveArticle) => ArchiveFacet | ArchiveFacet[],
+) {
   const map = new Map<string, ArchiveFacet>()
 
   for (const article of items) {
@@ -131,7 +142,8 @@ function uniqueFacets(items: ArchiveArticle[], select: (article: ArchiveArticle)
 
 function filterArticles(articles: ArchiveArticle[], filters: ArchiveFilters) {
   return articles.filter((article) => {
-    const categoryMatch = !filters.category || normalizeValue(article.category.value) === filters.category
+    const categoryMatch =
+      !filters.category || normalizeValue(article.category.value) === filters.category
     const seriesMatch = !filters.series || normalizeValue(article.series.value) === filters.series
     const authorMatch = !filters.author || normalizeValue(article.author.value) === filters.author
     const formatMatch = !filters.format || normalizeValue(article.format.value) === filters.format
@@ -151,7 +163,9 @@ function sortArticles(articles: ArchiveArticle[], sort: ArchiveSort) {
     case 'reading-time':
       return sorted.sort((left, right) => {
         const byReadingTime = left.readingMinutes - right.readingMinutes
-        return byReadingTime !== 0 ? byReadingTime : right.publishedAt.localeCompare(left.publishedAt)
+        return byReadingTime !== 0
+          ? byReadingTime
+          : right.publishedAt.localeCompare(left.publishedAt)
       })
     case 'title':
       return sorted.sort((left, right) => left.title.localeCompare(right.title))
@@ -170,7 +184,10 @@ function resolveSort(sort: string | undefined): ArchiveSort {
   return sortOptions.some((option) => option.value === sort) ? (sort as ArchiveSort) : 'latest'
 }
 
-export function createArchiveContent(input: ArchiveSearchParams = {}): ArchiveContent {
+export function createArchiveContent(
+  input: ArchiveSearchParams = {},
+  sourceArticles = archiveArticles,
+): ArchiveContent {
   const filters: ArchiveFilters = {
     author: normalizeValue(input.author),
     category: normalizeValue(input.category),
@@ -181,7 +198,7 @@ export function createArchiveContent(input: ArchiveSearchParams = {}): ArchiveCo
     tag: normalizeValue(input.tag),
   }
 
-  const filtered = filterArticles(archiveArticles, filters)
+  const filtered = filterArticles(sourceArticles, filters)
   const sorted = sortArticles(filtered, filters.sort)
   const totalArticles = sorted.length
   const totalPages = Math.max(1, Math.ceil(totalArticles / PAGE_SIZE))
@@ -197,12 +214,12 @@ export function createArchiveContent(input: ArchiveSearchParams = {}): ArchiveCo
       page: currentPage,
     },
     options: {
-      authors: uniqueFacets(archiveArticles, (article) => article.author),
-      categories: uniqueFacets(archiveArticles, (article) => article.category),
-      formats: uniqueFacets(archiveArticles, (article) => article.format),
-      series: uniqueFacets(archiveArticles, (article) => article.series),
+      authors: uniqueFacets(sourceArticles, (article) => article.author),
+      categories: uniqueFacets(sourceArticles, (article) => article.category),
+      formats: uniqueFacets(sourceArticles, (article) => article.format),
+      series: uniqueFacets(sourceArticles, (article) => article.series),
       sortOptions,
-      tags: uniqueFacets(archiveArticles, (article) => article.tags),
+      tags: uniqueFacets(sourceArticles, (article) => article.tags),
     },
     pagination: {
       currentPage,
@@ -212,6 +229,13 @@ export function createArchiveContent(input: ArchiveSearchParams = {}): ArchiveCo
     },
     totalFilteredArticles: totalArticles,
   }
+}
+
+export async function loadArchiveContent(input: ArchiveSearchParams = {}) {
+  const cmsArticles = await loadCmsEditorialArticles()
+  if (!cmsArticles) return createArchiveContent(input)
+
+  return createArchiveContent(input, cmsArticles.map(toArchiveArticle))
 }
 
 export function buildArchiveUrl(filters: Partial<ArchiveFilters> = {}) {

@@ -65,8 +65,20 @@ export const Resources: CollectionConfig = {
       type: 'text',
     },
     {
+      name: 'audiences',
+      hasMany: true,
+      relationTo: 'audiences',
+      type: 'relationship',
+    },
+    {
       name: 'topic',
       type: 'text',
+    },
+    {
+      name: 'topics',
+      hasMany: true,
+      relationTo: 'topics',
+      type: 'relationship',
     },
     {
       name: 'format',
