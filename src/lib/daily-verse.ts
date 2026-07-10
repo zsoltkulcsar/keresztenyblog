@@ -61,4 +61,3 @@ export function createDailyVerseEntry(slug: string) {
 export function buildDailyVerseUrl(slug: string) {
   return `/napi-ige/${slug}`
 }
-

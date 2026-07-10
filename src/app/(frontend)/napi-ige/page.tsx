@@ -22,7 +22,9 @@ export function generateMetadata() {
 export default async function DailyVerseArchive({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  searchParams?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   const resolvedSearchParams = await Promise.resolve(searchParams ?? {})
   const page = Number.parseInt(getSingleValue(resolvedSearchParams.page) ?? '1', 10)
@@ -96,7 +98,11 @@ export default async function DailyVerseArchive({
           <Link
             aria-disabled={safePage === totalPages}
             className="pagination-link"
-            href={safePage === totalPages ? `/napi-ige?page=${totalPages}` : `/napi-ige?page=${safePage + 1}`}
+            href={
+              safePage === totalPages
+                ? `/napi-ige?page=${totalPages}`
+                : `/napi-ige?page=${safePage + 1}`
+            }
             tabIndex={safePage === totalPages ? -1 : 0}
           >
             Next
@@ -106,4 +112,3 @@ export default async function DailyVerseArchive({
     </main>
   )
 }
-

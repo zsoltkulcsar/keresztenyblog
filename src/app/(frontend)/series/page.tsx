@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildSeriesUrl, loadSeries, loadSeriesAudiences, loadSeriesTopics } from '@/lib/series'
 
+export const dynamic = 'force-dynamic'
+
 function labelFromValue(value: string) {
   const labels: Record<string, string> = {
     'christian-life': 'Christian Life',

@@ -25,4 +25,3 @@ export function parseNewsletterSignup(input: NewsletterSignupInput): NewsletterS
     source: input.source?.trim() || 'homepage',
   }
 }
-

@@ -1,4 +1,4 @@
-import { buildArticleUrl, createArticleDetail, listArticleDetailSlugs } from '@/lib/article-detail'
+import { createArticleDetail, listArticleDetailSlugs } from '@/lib/article-detail'
 import { getCmsPayload } from '@/lib/server/payload'
 
 export type AuthorLink = {
@@ -24,31 +24,65 @@ const fallbackAuthorProfiles: AuthorProfile[] = [
       'daily-rhythm-for-spiritual-growth',
       'the-slow-work-of-grace',
     ],
-    bio: 'Editorial writing focused on Scripture, Christian growth, and the shape of ordinary faithfulness.',
+    bio: 'Placeholder profile for the senior pastor who gives theological direction, pastoral review, and final editorial oversight. Replace this with the pastor biography and photo before launch.',
+    links: [{ label: 'Articles', url: '/articles' }],
+    name: 'Senior Pastor',
+    photoAlt: 'Senior pastor profile placeholder',
+    photoSrc: '/author-placeholder.svg',
+    role: 'Lead pastoral editor',
+    slug: 'senior-pastor',
+  },
+  {
+    articleSlugs: ['marriage-family-and-patient-love', 'teaching-children-the-gospel-at-home'],
+    bio: 'Placeholder profile for the editor responsible for shaping teaching articles, series structure, and practical discipleship resources for families and growing believers.',
+    links: [{ label: 'Series', url: '/series/home-and-covenant' }],
+    name: 'Editorial Pastor',
+    photoAlt: 'Editorial pastor profile placeholder',
+    photoSrc: '/author-placeholder.svg',
+    role: 'Teaching editor',
+    slug: 'editorial-pastor',
+  },
+  {
+    articleSlugs: ['ethics-in-everyday-decisions', 'leaders-need-more-than-charisma'],
+    bio: 'Placeholder profile for a reviewer focused on doctrine, ethics, church leadership, and the clarity of Scripture-first editorial standards.',
+    links: [{ label: 'Series', url: '/series/shepherding-the-church' }],
+    name: 'Theological Reviewer',
+    photoAlt: 'Theological reviewer profile placeholder',
+    photoSrc: '/author-placeholder.svg',
+    role: 'Doctrine and ethics reviewer',
+    slug: 'theological-reviewer',
+  },
+  {
+    articleSlugs: [
+      'scripture-shapes-christian-growth',
+      'daily-rhythm-for-spiritual-growth',
+      'the-slow-work-of-grace',
+    ],
+    bio: 'Compatibility profile for starter articles authored before the pastoral editor profiles are replaced with real people.',
     links: [{ label: 'Articles', url: '/articles' }],
     name: 'Editorial Team',
-    photoAlt: 'Kovasz editorial team portrait',
-    photoSrc: '/home-hero.png',
+    photoAlt: 'Editorial team profile placeholder',
+    photoSrc: '/author-placeholder.svg',
     role: 'Editorial team',
     slug: 'editorial-team',
   },
   {
     articleSlugs: ['marriage-family-and-patient-love', 'teaching-children-the-gospel-at-home'],
-    bio: 'Guest writing on home, covenant, and the practical work of discipleship in the family.',
+    bio: 'Compatibility profile for starter family and relationship articles.',
     links: [{ label: 'Series', url: '/series/home-and-covenant' }],
     name: 'Guest Contributor',
-    photoAlt: 'Guest contributor portrait',
-    photoSrc: '/home-hero.png',
+    photoAlt: 'Guest contributor profile placeholder',
+    photoSrc: '/author-placeholder.svg',
     role: 'Guest contributor',
     slug: 'guest-contributor',
   },
   {
     articleSlugs: ['ethics-in-everyday-decisions', 'leaders-need-more-than-charisma'],
-    bio: 'Pastoral reflections on leadership, ethics, and the church’s public witness.',
+    bio: 'Compatibility profile for starter pastoral theology and ethics articles.',
     links: [{ label: 'Series', url: '/series/shepherding-the-church' }],
     name: 'Pastoral Desk',
-    photoAlt: 'Pastoral desk portrait',
-    photoSrc: '/home-hero.png',
+    photoAlt: 'Pastoral desk profile placeholder',
+    photoSrc: '/author-placeholder.svg',
     role: 'Pastoral editor',
     slug: 'pastoral-desk',
   },
@@ -64,8 +98,14 @@ function normalizeAuthorLink(url?: string | null, label?: string | null): Author
 
 function normalizeAuthorProfile(doc: any): AuthorProfile {
   const photo = doc.photo
-  const photoSrc = typeof photo === 'object' && photo && 'url' in photo && photo.url ? String(photo.url) : '/home-hero.png'
-  const photoAlt = typeof photo === 'object' && photo && 'alt' in photo && photo.alt ? String(photo.alt) : `${doc.name} portrait`
+  const photoSrc =
+    typeof photo === 'object' && photo && 'url' in photo && photo.url
+      ? String(photo.url)
+      : '/author-placeholder.svg'
+  const photoAlt =
+    typeof photo === 'object' && photo && 'alt' in photo && photo.alt
+      ? String(photo.alt)
+      : `${doc.name} portrait`
 
   const links = [
     normalizeAuthorLink(doc.website, 'Website'),

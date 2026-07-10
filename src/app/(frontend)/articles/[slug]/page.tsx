@@ -8,6 +8,9 @@ import { loadArchiveContent } from '@/lib/article-archive'
 import { buildAuthorUrl, loadAuthorProfileByName } from '@/lib/authors'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildSeriesUrl } from '@/lib/series'
+import { buildTaxonomyUrl } from '@/lib/taxonomy'
+
+export const dynamic = 'force-dynamic'
 
 type ArticlePageProps = {
   params?:
@@ -111,6 +114,26 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               <div>
                 <dt>Series</dt>
                 <dd>{detail.series?.label ?? 'Standalone'}</dd>
+              </div>
+              <div>
+                <dt>Topics</dt>
+                <dd className="scripture-study-facet-list">
+                  {detail.archiveArticle.topics.map((topic) => (
+                    <Link href={buildTaxonomyUrl('topic', topic.value)} key={topic.value}>
+                      {topic.label}
+                    </Link>
+                  ))}
+                </dd>
+              </div>
+              <div>
+                <dt>Readers</dt>
+                <dd className="scripture-study-facet-list">
+                  {detail.archiveArticle.audiences.map((audience) => (
+                    <Link href={buildTaxonomyUrl('audience', audience.value)} key={audience.value}>
+                      {audience.label}
+                    </Link>
+                  ))}
+                </dd>
               </div>
               <div>
                 <dt>Tags</dt>

@@ -39,7 +39,9 @@ function typeLabel(type: string) {
 export function generateMetadata({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  searchParams?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   return Promise.resolve(searchParams ?? {}).then((resolvedSearchParams) => {
     const q = getSingleValue(resolvedSearchParams.q)?.trim() ?? ''
@@ -65,13 +67,17 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <p className="eyebrow">Search</p>
           <h1>Search the publication</h1>
           <p className="archive-intro">
-            Search across articles, series, authors, resources, and Daily Verse. The query stays
-            in the URL so the result can be shared or reopened later.
+            Search across articles, series, authors, resources, and Daily Verse. The query stays in
+            the URL so the result can be shared or reopened later.
           </p>
         </div>
 
         <div className="archive-header-meta">
-          <span>{search.hasQuery ? `${search.totalResults} result${search.totalResults === 1 ? '' : 's'}` : 'No recent searches'}</span>
+          <span>
+            {search.hasQuery
+              ? `${search.totalResults} result${search.totalResults === 1 ? '' : 's'}`
+              : 'No recent searches'}
+          </span>
           <Link className="archive-reset-link" href="/search">
             Reset search
           </Link>
@@ -111,7 +117,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <p className="eyebrow">Recent searches</p>
             <h2>No recent searches are stored yet.</h2>
             <p>
-              Search is tuned for editorial discovery, so a short topic or biblical phrase usually works best.
+              Search is tuned for editorial discovery, so a short topic or biblical phrase usually
+              works best.
             </p>
           </div>
           <Link className="archive-reset-link" href={buildSearchUrl('scripture')}>
@@ -140,7 +147,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <p className="eyebrow">No results</p>
             <h2>No matches found for &quot;{search.query}&quot;.</h2>
             <p>
-              Try a broader topic, a shorter phrase, or a different category like Scripture, family, or leadership.
+              Try a broader topic, a shorter phrase, or a different category like Scripture, family,
+              or leadership.
             </p>
           </div>
           <Link className="archive-reset-link" href="/search">

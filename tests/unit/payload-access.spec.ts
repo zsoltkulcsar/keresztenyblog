@@ -35,7 +35,10 @@ describe('payload access helpers', () => {
   it('allows the first admin creation while blocking later public creation', async () => {
     const createAccess = allowFirstAdminOrAdminOnly()
     const payload = {
-      count: vi.fn().mockResolvedValueOnce({ totalDocs: 0 }).mockResolvedValueOnce({ totalDocs: 2 }),
+      count: vi
+        .fn()
+        .mockResolvedValueOnce({ totalDocs: 0 })
+        .mockResolvedValueOnce({ totalDocs: 2 }),
     }
 
     await expect(createAccess({ req: { payload, user: null } as never })).resolves.toBe(true)

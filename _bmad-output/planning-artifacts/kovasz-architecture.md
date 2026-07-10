@@ -10,6 +10,7 @@ project_name: bbb
 user_name: Zsolt.kulcsar
 date: 2026-06-16
 status: draft
+updated: 2026-07-10
 ---
 
 # Kovasz Architecture Decision Document
@@ -22,17 +23,17 @@ Build Kovasz as a content-first Next.js application with Payload CMS embedded in
 
 Recommended stack:
 
-| Layer | Choice | Reason |
-|---|---|---|
-| Web app | Next.js App Router + TypeScript | SEO, server rendering, route-level metadata, static/dynamic mix, strong React path |
-| CMS/Admin | Payload CMS | Admin, auth, collections, rich text, media, REST/GraphQL/local APIs in one app |
-| Database | PostgreSQL via Payload adapter | Relational consistency for Authors, Articles, Series, Categories, Tags, Resources |
-| Styling | Tailwind CSS + small component library | Keeps the custom editorial identity without heavy UI abstraction |
-| Rich text | Payload Lexical rich text | Needed for long theological articles, quotes, footnotes, callouts |
-| Media | Payload upload collection + object storage | Cover images, author photos, PDFs, resources |
-| Search MVP | PostgreSQL full-text search or Payload query layer | Enough for small/medium publication; defer Meilisearch/Algolia |
-| Email | Provider adapter, initially Resend or Mailerlite | Newsletter capture without building mail infrastructure |
-| Testing | Vitest for units, Playwright for critical flows | Public routing, search, article rendering, admin publish flow |
+| Layer      | Choice                                             | Reason                                                                             |
+| ---------- | -------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Web app    | Next.js App Router + TypeScript                    | SEO, server rendering, route-level metadata, static/dynamic mix, strong React path |
+| CMS/Admin  | Payload CMS                                        | Admin, auth, collections, rich text, media, REST/GraphQL/local APIs in one app     |
+| Database   | PostgreSQL via Payload adapter                     | Relational consistency for Authors, Articles, Series, Categories, Tags, Resources  |
+| Styling    | Tailwind CSS + small component library             | Keeps the custom editorial identity without heavy UI abstraction                   |
+| Rich text  | Payload Lexical rich text                          | Needed for long theological articles, quotes, footnotes, callouts                  |
+| Media      | Payload upload collection + object storage         | Cover images, author photos, PDFs, resources                                       |
+| Search MVP | PostgreSQL full-text search or Payload query layer | Enough for small/medium publication; defer Meilisearch/Algolia                     |
+| Email      | Provider adapter, initially Resend or Mailerlite   | Newsletter capture without building mail infrastructure                            |
+| Testing    | Vitest for units, Playwright for critical flows    | Public routing, search, article rendering, admin publish flow                      |
 
 ## 2. Why Not Keep React SPA + Separate FastAPI by Default
 
@@ -88,6 +89,12 @@ app/
     sorozatok/
       page.tsx
       [slug]/page.tsx
+    topics/
+      page.tsx
+      [slug]/page.tsx
+    audiences/
+      page.tsx
+      [slug]/page.tsx
     napi-ige/page.tsx
     forrasok/page.tsx
     kereses/page.tsx
@@ -115,29 +122,34 @@ Route names can remain Hungarian publicly. Internal folders may use ASCII if pre
 
 ### 6.1 Collections
 
-| Collection | Key Fields |
-|---|---|
-| Users | email, password/session fields, role |
-| Authors | name, slug, role, bio, photo, links, active |
-| Categories | title, slug, description, color/accent |
-| Tags | title, slug |
-| Series | title, slug, description, coverImage, status, SEO, orderedArticles |
-| Articles | title, slug, subtitle, excerpt, body, author, category, tags, series, seriesOrder, scriptureReferences, coverImage, featured, status, publishedAt, updatedAt, SEO |
-| DailyVerses | date, scriptureText, reference, note, status |
-| Resources | title, slug, type, description, fileOrUrl, relatedArticles, relatedSeries, tags, status |
-| Media | file, alt, caption, credit, focalPoint |
-| Redirects | fromPath, toPath, permanent |
-| NewsletterSignups | email, source, createdAt, consent |
-| SiteSettings | homepage curation, issue label, navigation, footer, social links |
+| Collection        | Key Fields                                                                                                                                                        |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Users             | email, password/session fields, role                                                                                                                              |
+| Authors           | name, slug, role, bio, photo, links, active                                                                                                                       |
+| Categories        | title, slug, description, color/accent                                                                                                                            |
+| Tags              | title, slug                                                                                                                                                       |
+| Topics            | title/name, slug, description, active/status                                                                                                                       |
+| Audiences         | title/name, slug, description, active/status                                                                                                                       |
+| Series            | title, slug, description, coverImage, status, SEO, orderedArticles, topic, audience                                                                               |
+| Articles          | title, slug, subtitle, excerpt, body, author, category, tags, topic, audience, series, seriesOrder, scriptureReferences, coverImage, featured, status, publishedAt, updatedAt, SEO |
+| DailyVerses       | date, scriptureText, reference, note, status                                                                                                                      |
+| Resources         | title, slug, type, description, fileOrUrl, relatedArticles, relatedSeries, tags, status                                                                           |
+| Media             | file, alt, caption, credit, focalPoint                                                                                                                            |
+| Redirects         | fromPath, toPath, permanent                                                                                                                                       |
+| NewsletterSignups | email, source, createdAt, consent                                                                                                                                 |
+| SiteSettings      | homepage curation, issue label, navigation, footer, social links                                                                                                  |
 
 ### 6.2 Relationships
 
 - Article has one Author.
 - Article has one Category.
 - Article has many Tags.
+- Article can reference shared Topics and Audiences.
 - Article has zero or one primary Series.
 - Series has many Articles through explicit order.
+- Series can reference shared Topics and Audiences and should expose ordered membership back to Article Detail.
 - Resource can reference Articles and Series.
+- Resource can reference shared Topics and Audiences while preserving legacy text fields during migration.
 - Media can attach to Articles, Authors, Series, and Resources.
 
 ## 7. Publishing Workflow
@@ -165,14 +177,15 @@ Publishing behavior:
 
 ## 8. Rendering Strategy
 
-| Surface | Strategy |
-|---|---|
-| Home | Static or cached server rendering, revalidate after content updates |
-| Article Detail | Static/cached server rendering with dynamic metadata |
-| Article Archive | Server rendered with search params and pagination |
-| Search | Server rendered query page; client enhancement optional |
-| Admin | Payload dynamic admin |
-| RSS/Sitemap | Route handlers or metadata file conventions |
+| Surface         | Strategy                                                            |
+| --------------- | ------------------------------------------------------------------- |
+| Home            | Static or cached server rendering, revalidate after content updates |
+| Article Detail  | Static/cached server rendering with dynamic metadata                |
+| Article Archive | Server rendered with search params and pagination                   |
+| Topic/Audience  | Dynamic server rendering over CMS-backed loaders with static fallback |
+| Search          | Server rendered query page; client enhancement optional             |
+| Admin           | Payload dynamic admin                                               |
+| RSS/Sitemap     | Route handlers or metadata file conventions                         |
 
 Next.js official docs support route-level metadata via `metadata` and `generateMetadata`, and sitemap generation via `sitemap.(xml|js|ts)`. Use those conventions instead of custom ad hoc files.
 
@@ -187,6 +200,7 @@ Each public content page should include:
 - Breadcrumb JSON-LD where useful.
 - `lastModified` in sitemap.
 - RSS item for published Articles.
+- Topic and Audience index/detail routes in sitemap when they have public content.
 
 Slug policy:
 
@@ -201,6 +215,7 @@ MVP:
 - Store normalized searchable fields for Article, Series, Author, Resource, and DailyVerse.
 - Use PostgreSQL full-text capabilities or Payload query filters.
 - Support query plus filters for category, author, series, tag, and Scripture reference.
+- Keep shared Topic and Audience taxonomy normalization in a server-side helper so cross-content discovery can aggregate Articles, Series, and Resources consistently.
 
 Upgrade path:
 
@@ -314,14 +329,14 @@ E2E tests:
 
 ## 17. Risks
 
-| Risk | Mitigation |
-|---|---|
-| Visual identity becomes too heavy for reading | Article pages use calmer layout than homepage |
-| Payload customization expands too much | Keep admin close to CMS defaults for MVP |
-| Rich text rendering becomes inconsistent | Define supported block set and renderer tests early |
-| Slug changes break links | Redirect collection and publish hook |
-| Search quality disappoints | Add search abstraction and upgrade path |
-| Theological content policy is undefined | Add editorial policy before public contributor workflows |
+| Risk                                          | Mitigation                                               |
+| --------------------------------------------- | -------------------------------------------------------- |
+| Visual identity becomes too heavy for reading | Article pages use calmer layout than homepage            |
+| Payload customization expands too much        | Keep admin close to CMS defaults for MVP                 |
+| Rich text rendering becomes inconsistent      | Define supported block set and renderer tests early      |
+| Slug changes break links                      | Redirect collection and publish hook                     |
+| Search quality disappoints                    | Add search abstraction and upgrade path                  |
+| Theological content policy is undefined       | Add editorial policy before public contributor workflows |
 
 ## 18. Open Architecture Questions
 

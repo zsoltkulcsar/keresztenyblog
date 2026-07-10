@@ -18,35 +18,43 @@ assessor: Codex
 ### PRD Files Found
 
 **Whole Documents:**
+
 - `kovasz-prd.md`
 
 **Sharded Documents:**
+
 - `prds/prd-bbb-2026-06-16/`
 
 ### Architecture Files Found
 
 **Whole Documents:**
+
 - `architecture.md`
 - `kovasz-architecture.md`
 
 **Sharded Documents:**
+
 - None found
 
 ### Epics & Stories Files Found
 
 **Whole Documents:**
+
 - `epics.md`
 - `kovasz-epics.md`
 
 **Sharded Documents:**
+
 - None found
 
 ### UX Design Files Found
 
 **Whole Documents:**
+
 - `kovasz-ux-design.md`
 
 **Sharded Documents:**
+
 - `ux-designs/ux-bbb-2026-06-16/`
   - `DESIGN.md`
   - `EXPERIENCE.md`
@@ -139,28 +147,28 @@ The PRD is complete enough for implementation planning. It defines the product a
 
 ### Coverage Matrix
 
-| FR Number | PRD Requirement | Epic Coverage | Status |
-| --- | --- | --- | --- |
-| FR1 | Render a publication masthead with brand, primary navigation, search entry point, and featured content. | Epic 1, Story 1.1 | ✓ Covered |
-| FR2 | Curate homepage sections with editorial picks and automatic fallback to latest published content. | Epic 1, Story 1.2 | ✓ Covered |
-| FR3 | Browse a paginated article archive with filters for category, series, author, tag, and sort order. | Epic 1, Story 1.3 | ✓ Covered |
-| FR4 | Search Articles, Series, Authors, Daily Verses, and Resources. | Epic 1, Story 1.4 | ✓ Covered |
-| FR5 | Render article detail pages with title, subtitle, author, date, category, reading time, cover image, body, Scripture references, pull quotes, footnotes, and related content. | Epic 2, Story 2.1 | ✓ Covered |
-| FR6 | Show previous/next series navigation and full series context on article pages when the article belongs to a series. | Epic 2, Story 2.2 | ✓ Covered |
-| FR7 | Provide reader utilities such as share/copy and reading progress without layout shift. | Epic 2, Story 2.3 | ✓ Covered |
-| FR8 | Manage series with title, slug, description, cover image, status, ordered article list, and SEO fields. | Epic 3, Story 3.1 | ✓ Covered |
-| FR9 | Publish series pages that show ordered parts, publication dates, progress cues, and are indexable. | Epic 3, Story 3.2 | ✓ Covered |
-| FR10 | Manage date-bound Daily Verse entries with Scripture text, reference, optional note, and status. | Epic 3, Story 3.3 | ✓ Covered |
-| FR11 | Render a Daily Verse archive with stable URLs and pagination. | Epic 3, Story 3.4 | ✓ Covered |
-| FR12 | Publish resource items with type, title, description, link or file, optional related article or series, and tags. | Epic 5, Story 5.3 | ✓ Covered |
-| FR13 | Manage author profiles with name, slug, role, bio, photo, links, and active status. | Epic 5, Story 5.1 | ✓ Covered |
-| FR14 | Publish About page content including manifesto, mission, faith/doctrine, team, and contact information. | Epic 5, Story 5.2 | ✓ Covered |
-| FR15 | Authenticate admins securely with Admin and Editor roles. | Epic 4, Story 4.1 | ✓ Covered |
-| FR16 | Support drafts, previews, publishing, unpublishing, and scheduling in the editorial workflow. | Epic 4, Story 4.2 | ✓ Covered |
-| FR17 | Upload and manage media with alt text, caption, credit, and focal point. | Epic 4, Story 4.3 | ✓ Covered |
-| FR18 | Generate route metadata including title, description, canonical URL, Open Graph data, and Article schema where applicable. | Epic 1, Story 1.5 | ✓ Covered |
-| FR19 | Generate RSS and sitemap outputs for published public content. | Epic 1, Story 1.5 | ✓ Covered |
-| FR20 | Capture newsletter interest through an email signup form. | Epic 1, Story 1.6 | ✓ Covered |
+| FR Number | PRD Requirement                                                                                                                                                               | Epic Coverage     | Status    |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | --------- |
+| FR1       | Render a publication masthead with brand, primary navigation, search entry point, and featured content.                                                                       | Epic 1, Story 1.1 | ✓ Covered |
+| FR2       | Curate homepage sections with editorial picks and automatic fallback to latest published content.                                                                             | Epic 1, Story 1.2 | ✓ Covered |
+| FR3       | Browse a paginated article archive with filters for category, series, author, tag, and sort order.                                                                            | Epic 1, Story 1.3 | ✓ Covered |
+| FR4       | Search Articles, Series, Authors, Daily Verses, and Resources.                                                                                                                | Epic 1, Story 1.4 | ✓ Covered |
+| FR5       | Render article detail pages with title, subtitle, author, date, category, reading time, cover image, body, Scripture references, pull quotes, footnotes, and related content. | Epic 2, Story 2.1 | ✓ Covered |
+| FR6       | Show previous/next series navigation and full series context on article pages when the article belongs to a series.                                                           | Epic 2, Story 2.2 | ✓ Covered |
+| FR7       | Provide reader utilities such as share/copy and reading progress without layout shift.                                                                                        | Epic 2, Story 2.3 | ✓ Covered |
+| FR8       | Manage series with title, slug, description, cover image, status, ordered article list, and SEO fields.                                                                       | Epic 3, Story 3.1 | ✓ Covered |
+| FR9       | Publish series pages that show ordered parts, publication dates, progress cues, and are indexable.                                                                            | Epic 3, Story 3.2 | ✓ Covered |
+| FR10      | Manage date-bound Daily Verse entries with Scripture text, reference, optional note, and status.                                                                              | Epic 3, Story 3.3 | ✓ Covered |
+| FR11      | Render a Daily Verse archive with stable URLs and pagination.                                                                                                                 | Epic 3, Story 3.4 | ✓ Covered |
+| FR12      | Publish resource items with type, title, description, link or file, optional related article or series, and tags.                                                             | Epic 5, Story 5.3 | ✓ Covered |
+| FR13      | Manage author profiles with name, slug, role, bio, photo, links, and active status.                                                                                           | Epic 5, Story 5.1 | ✓ Covered |
+| FR14      | Publish About page content including manifesto, mission, faith/doctrine, team, and contact information.                                                                       | Epic 5, Story 5.2 | ✓ Covered |
+| FR15      | Authenticate admins securely with Admin and Editor roles.                                                                                                                     | Epic 4, Story 4.1 | ✓ Covered |
+| FR16      | Support drafts, previews, publishing, unpublishing, and scheduling in the editorial workflow.                                                                                 | Epic 4, Story 4.2 | ✓ Covered |
+| FR17      | Upload and manage media with alt text, caption, credit, and focal point.                                                                                                      | Epic 4, Story 4.3 | ✓ Covered |
+| FR18      | Generate route metadata including title, description, canonical URL, Open Graph data, and Article schema where applicable.                                                    | Epic 1, Story 1.5 | ✓ Covered |
+| FR19      | Generate RSS and sitemap outputs for published public content.                                                                                                                | Epic 1, Story 1.5 | ✓ Covered |
+| FR20      | Capture newsletter interest through an email signup form.                                                                                                                     | Epic 1, Story 1.6 | ✓ Covered |
 
 ### Missing Requirements
 

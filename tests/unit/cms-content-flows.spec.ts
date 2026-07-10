@@ -24,7 +24,7 @@ const cmsSeries = {
 
 const cmsArticle = {
   audiences: [{ slug: 'new-believers', title: 'New Believers' }],
-  author: { slug: 'editorial-team', title: 'Editorial Team' },
+  author: { slug: 'editorial-team', name: 'Editorial Team' },
   body: {
     root: {
       children: [
@@ -47,7 +47,7 @@ const cmsArticle = {
   relatedBooks: ['CMS Book'],
   relatedResources: [{ slug: 'cms-resource', title: 'CMS Resource' }],
   scriptureText: 'CMS scripture text',
-  seriesMemberships: [{ order: 1, series: cmsSeries }],
+  seriesMemberships: [],
   slug: 'cms-article',
   status: 'published',
   studyQuestions: ['CMS question?'],
@@ -82,6 +82,7 @@ describe('CMS-backed public content flows', () => {
 
     expect(archive.articles[0].title).toBe('CMS Article')
     expect(detail?.title).toBe('CMS Article')
+    expect(detail?.author).toBe('Editorial Team')
     expect(detail?.series?.label).toBe('CMS Foundations')
   })
 

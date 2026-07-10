@@ -5,6 +5,7 @@ type RelationDoc = {
   description?: string | null
   id?: number | string
   label?: string | null
+  name?: string | null
   slug?: string | null
   title?: string | null
 }
@@ -80,7 +81,7 @@ export function relationSlug(value: RelationDoc | number | string | null | undef
 
 export function relationTitle(value: RelationDoc | number | string | null | undefined) {
   if (!isRecord(value)) return ''
-  return String(value.title ?? value.label ?? value.slug ?? '')
+  return String(value.title ?? value.label ?? value.name ?? value.slug ?? '')
 }
 
 function relationDescription(value: RelationDoc | number | string | null | undefined) {
@@ -98,6 +99,46 @@ function relationSlugs(values: Array<RelationDoc | number | string> | null | und
 
 function arrayOfStrings(value: unknown) {
   return Array.isArray(value) ? value.map(String).filter(Boolean) : []
+}
+
+function articleSlugFromSeriesItem(item: NonNullable<CmsSeriesDoc['orderedArticles']>[number]) {
+  const article = item.article
+  return isRecord(article) ? String(article.slug ?? '') : ''
+}
+
+function buildSeriesMembershipMap(seriesDocs: CmsSeriesDoc[]) {
+  const membershipMap = new Map<string, NonNullable<CmsArticleDoc['seriesMemberships']>>()
+
+  for (const series of seriesDocs) {
+    const orderedArticles = (series.orderedArticles ?? []).slice().sort((left, right) => {
+      return Number(left.order ?? 0) - Number(right.order ?? 0)
+    })
+
+    orderedArticles.forEach((item, index) => {
+      const articleSlug = articleSlugFromSeriesItem(item)
+      if (!articleSlug) return
+
+      const memberships = membershipMap.get(articleSlug) ?? []
+      memberships.push({
+        order: Number(item.order ?? index + 1),
+        series,
+      })
+      membershipMap.set(articleSlug, memberships)
+    })
+  }
+
+  return membershipMap
+}
+
+function applySeriesOwnedMemberships(articles: CmsArticleDoc[], series: CmsSeriesDoc[]) {
+  const membershipMap = buildSeriesMembershipMap(series)
+
+  return articles.map((article) => {
+    const slug = String(article.slug ?? '')
+    const seriesMemberships = membershipMap.get(slug)
+
+    return seriesMemberships?.length ? { ...article, seriesMemberships } : article
+  })
 }
 
 function paragraphText(node: Record<string, unknown>) {
@@ -287,7 +328,9 @@ export async function loadCmsEditorialArticles() {
   const cms = await loadCmsArticlesAndSeries()
   if (!cms?.articles.length) return null
 
-  const articles = cms.articles.map(normalizeCmsArticle).filter(Boolean) as EditorialArticleSeed[]
+  const articles = applySeriesOwnedMemberships(cms.articles, cms.series)
+    .map(normalizeCmsArticle)
+    .filter(Boolean) as EditorialArticleSeed[]
   return articles.length > 0 ? articles : null
 }
 

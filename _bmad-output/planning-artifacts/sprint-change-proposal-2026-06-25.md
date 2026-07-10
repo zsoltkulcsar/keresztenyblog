@@ -3,19 +3,24 @@
 ## 1. Issue Summary
 
 ### Triggering issue
+
 The current Kovasz implementation is functionally complete enough to read and navigate, but the public-facing design and information architecture no longer match the approved visual reference board at `C:\Users\zsolt.kulcsar\.codex\generated_images\019ed007-759f-7080-9071-f62167358a9e\ig_0bc45cdc40c65233016a31444a9e408191a3ecf3d0486897df.png`.
 
 ### What changed
+
 The app drifted into a workable product shell, but the layout rhythm, density, masthead treatment, and page composition do not reflect the reference. The mismatch is most visible on:
+
 - homepage hierarchy and module density
 - article detail structure and scripture emphasis
 - series page layout and filter treatment
 - admin dashboard split-view composition
 
 ### Core problem
+
 This is a design-system and navigation correction, not a feature request. The product direction is still valid, but the implementation needs to be reined back to the approved reference so the public surfaces feel like the same publication system.
 
 ### Evidence
+
 - The reference board uses a strong dark publication frame, compact editorial modules, and denser hierarchy.
 - The current implementation has already advanced beyond that visual system.
 - The user explicitly wants the implementation corrected to match the reference before further feature work.
@@ -25,23 +30,28 @@ This is a design-system and navigation correction, not a feature request. The pr
 ### 2.1 Current epic impact
 
 **Epic 1: Foundation and Content Platform**
+
 - No scope change required.
 - The implementation foundation is still valid.
 
 **Epic 2: Public Editorial Site**
+
 - Impacted directly.
 - Homepage, navigation, and visual frame need correction.
 - Existing public routes should be visually aligned to the reference.
 
 **Epic 3: Reading, Series, and Daily Verse**
+
 - Impacted directly.
 - Article detail and series pages need structural and hierarchy adjustments.
 
 **Epic 4: Admin Publishing Workflow**
+
 - Impacted directly.
 - Admin overview, list, and editor views need layout alignment to the reference board.
 
 **Epic 5: Discovery, SEO, and Launch Readiness**
+
 - Minor indirect impact only.
 - Navigation changes may slightly affect route labels and page metadata, but the core discovery model remains valid.
 
@@ -82,6 +92,7 @@ The PRD still holds. The issue does not contradict the product goals. However, t
 No architecture changes are required.
 
 Impacted architecture areas:
+
 - Route composition and navigation labels
 - Component layout for the public site
 - Admin page density and split view
@@ -93,6 +104,7 @@ No technology stack change is needed.
 The UI/UX specification needs correction emphasis, not a rewrite.
 
 Specific UX areas requiring revision:
+
 - homepage visual hierarchy
 - dark masthead and footer treatment
 - article page block ordering
@@ -103,6 +115,7 @@ Specific UX areas requiring revision:
 ### 3.4 Other artifacts
 
 Potential secondary updates:
+
 - story files for Epic 2, 3, and 4
 - implementation notes for navigation labels
 - design handoff doc
@@ -120,6 +133,7 @@ The issue can be addressed by modifying existing stories and adding a correction
 **Risk level:** Medium
 
 Why viable:
+
 - The core product already exists.
 - The mismatch is largely visual and structural.
 - The approved reference is clear enough to guide correction.
@@ -134,6 +148,7 @@ Rolling back implemented features would not solve the real problem. The issue is
 **Risk level:** High
 
 Why not viable:
+
 - Rollback would destroy working product surface area.
 - It would not guarantee a better match to the reference.
 - It would slow momentum without improving the actual correction target.
@@ -148,6 +163,7 @@ The MVP scope is still sound. The problem is not scope, it is execution style an
 **Risk level:** Low
 
 Why not needed:
+
 - The planned product remains the same.
 - The correction is inside the existing scope.
 - No feature cuts are required.
@@ -157,6 +173,7 @@ Why not needed:
 **Selected approach:** Option 1 - Direct Adjustment
 
 **Justification:**
+
 - Keeps the current product momentum.
 - Preserves the approved feature set.
 - Focuses the next work on navigation and design-system alignment.
@@ -171,20 +188,24 @@ The implementation needs a public UI correction so the homepage, article pages, 
 ### 5.2 Epic and artifact adjustment needs
 
 **Epic 2 changes**
+
 - Strengthen homepage as a dark publication front page.
 - Tighten module spacing and hierarchy.
 - Ensure public navigation matches the reference.
 
 **Epic 3 changes**
+
 - Rework article pages to make scripture, pull quote, and study panel more dominant.
 - Rebalance article metadata and image placement.
 - Make series pages read more like study paths and less like generic archives.
 
 **Epic 4 changes**
+
 - Rework admin dashboard into a denser split-view operational workspace.
 - Improve list density and editor preview adjacency.
 
 **Artifact updates**
+
 - Update UX design notes with the corrected layout system.
 - Update affected story files to include visual alignment acceptance criteria.
 
@@ -197,6 +218,7 @@ Direct adjustment is the right path because the issue is constrained and visuall
 The MVP remains intact.
 
 High-level action plan:
+
 1. Lock the reference image as the source of truth.
 2. Correct public navigation and masthead treatment.
 3. Recompose homepage, article, and series layouts to match the reference board.
@@ -206,15 +228,18 @@ High-level action plan:
 ### 5.5 Agent handoff plan
 
 **Developer agent**
+
 - Implement the layout and navigation corrections.
 - Update the relevant route components and shared layout pieces.
 - Validate visually against the reference board.
 
 **Product Owner / Developer**
+
 - Update story files and acceptance criteria if needed.
 - Re-sequence remaining work if the correction affects priorities.
 
 **Product Manager / Architect**
+
 - Not required unless the correction reveals a deeper product scope issue.
 
 ## 6. Final Review and Handoff
@@ -242,6 +267,7 @@ No sprint-status file is available in the current workspace. No automated status
 ### 6.5 Next steps
 
 If approved, the next work should be a visual correction pass on:
+
 - homepage
 - article detail
 - series

@@ -21,7 +21,11 @@ describe('createArchiveContent', () => {
     expect(
       content.articles.every((article) => article.series.value === 'foundations-for-new-believers'),
     ).toBe(true)
-    expect(content.articles.every((article) => article.tags.some((tag) => tag.value === 'new-believers'))).toBe(true)
+    expect(
+      content.articles.every((article) =>
+        article.tags.some((tag) => tag.value === 'new-believers'),
+      ),
+    ).toBe(true)
   })
 
   it('sorts by reading time and paginates the visible results', () => {

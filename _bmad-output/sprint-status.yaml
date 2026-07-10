@@ -1,0 +1,93 @@
+project: bbb
+updated: 2026-07-10
+source_of_truth_note: >
+  Recreated during BMAD documentation reconciliation. Story statuses reflect
+  current implementation evidence from code, tests, and implementation artifacts,
+  not a fully formal historical sprint ledger.
+
+epics:
+  - id: 1
+    title: Foundation and Content Platform
+    status: review
+    stories:
+      - id: 1.1
+        title: Scaffold Next.js and Payload app
+        status: review
+      - id: 1.2
+        title: Define core collections
+        status: review
+      - id: 1.3
+        title: Seed prototype content
+        status: review
+  - id: 2
+    title: Public Editorial Site
+    status: review
+    stories:
+      - id: 2.1
+        title: Implement global layout and masthead
+        status: review
+      - id: 2.2
+        title: Implement homepage modules
+        status: review
+      - id: 2.3
+        title: Implement archive and filters
+        status: review
+      - id: 2.4
+        title: Implement topic and audience discovery hubs
+        status: done
+        artifact: _bmad-output/implementation-artifacts/spec-topic-audience-discovery-flows.md
+  - id: 3
+    title: Reading, Series, and Daily Verse
+    status: partial
+    stories:
+      - id: 3.1
+        title: Implement article detail page
+        status: review
+      - id: 3.2
+        title: Implement series list and detail
+        status: review
+      - id: 3.3
+        title: Implement Napi Ige
+        status: deferred
+      - id: 3.4
+        title: Render Daily Verse archive
+        status: deferred
+  - id: 4
+    title: Admin Publishing Workflow
+    status: review
+    stories:
+      - id: 4.1
+        title: Implement auth and roles
+        status: review
+      - id: 4.2
+        title: Implement draft, preview, publish
+        status: review
+      - id: 4.3
+        title: Implement media workflow
+        status: review
+  - id: 5
+    title: Discovery, SEO, and Launch Readiness
+    status: review
+    stories:
+      - id: 5.1
+        title: Implement search
+        status: review
+      - id: 5.2
+        title: Implement metadata, sitemap, RSS, and redirects
+        status: review
+      - id: 5.3
+        title: Add tests and production checks
+        status: review
+
+implemented_specs:
+  - id: cms-backed-content-flows
+    status: done
+    artifact: _bmad-output/implementation-artifacts/spec-cms-backed-content-flows.md
+  - id: topic-audience-discovery-flows
+    status: done
+    artifact: _bmad-output/implementation-artifacts/spec-topic-audience-discovery-flows.md
+
+known_reconciliation_notes:
+  - Daily Verse remains deferred in current product direction even though older PRD and epic text still include it as MVP scope.
+  - Books are intentionally unchanged by the CMS-backed content reconciliation.
+  - Several older story files remain in review because they need formal checkpoint closure before being marked done.

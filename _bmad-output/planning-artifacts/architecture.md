@@ -269,6 +269,7 @@ npx create-payload-app
 ### Naming Patterns
 
 **Database Naming Conventions:**
+
 - Payload collection slugs use lowercase singular nouns: `article`, `series`, `author`, `resource`, `dailyVerse`, `translationSource`, `category`, `tag`, `user`
 - TypeScript field names and config keys use `camelCase`
 - Route segments use lowercase kebab-case plural URLs: `/articles`, `/series`, `/daily-verse`, `/resources`, `/authors`
@@ -276,6 +277,7 @@ npx create-payload-app
 - Index and migration names use lowercase snake_case with a stable prefix: `articles_slug_idx`, `series_order_idx`
 
 **API Naming Conventions:**
+
 - Route handlers are named by route purpose, not by HTTP verb in the filename
 - Public JSON endpoints use plural resource names where possible: `/api/articles`, `/api/series`
 - Query params use `camelCase` in the app layer: `searchQuery`, `seriesSlug`, `authorSlug`
@@ -283,6 +285,7 @@ npx create-payload-app
 - Headers and low-level protocol names stay standards-based; no custom header naming unless necessary
 
 **Code Naming Conventions:**
+
 - React components use `PascalCase`: `ArticleCard`, `SeriesFilterBar`, `AdminDashboard`
 - Hooks use `useCamelCase`: `useReadingProgress`, `useArticleSearch`
 - Functions use `camelCase`: `formatScriptureReference`, `buildArticleMetadata`
@@ -293,6 +296,7 @@ npx create-payload-app
 ### Structure Patterns
 
 **Project Organization:**
+
 - Public routes live in the Next.js App Router under route groups
 - Payload configuration and collection definitions live at project root or a clearly named config area
 - Shared UI components live separately from route-specific components
@@ -300,6 +304,7 @@ npx create-payload-app
 - Server-only helpers are separated from client-safe helpers
 
 **File Structure Patterns:**
+
 - `app/` contains route groups, layouts, pages, and route handlers
 - `src/components/` contains reusable UI components
 - `src/features/` contains feature-oriented code such as article rendering, series navigation, search, and admin tools
@@ -311,12 +316,14 @@ npx create-payload-app
 ### Format Patterns
 
 **API Response Formats:**
+
 - Route handlers use a consistent JSON wrapper: `{ data, error, meta }`
 - Errors use `{ error: { code, message, details? } }`
 - Success responses include `meta` only when pagination or context matters
 - Public content rendering in server components should prefer typed domain objects over ad hoc response wrappers
 
 **Data Exchange Formats:**
+
 - JSON field names use `camelCase`
 - Dates use ISO 8601 strings
 - Booleans use `true` / `false`
@@ -327,12 +334,14 @@ npx create-payload-app
 ### Communication Patterns
 
 **Event System Patterns:**
+
 - No app-wide event bus unless introduced later
 - Component callbacks use `onX` naming: `onSearch`, `onPublish`, `onFilterChange`
 - Derived UI actions use `handleX` naming in component bodies
 - Any future content events should be noun-based past tense: `articlePublished`, `seriesUpdated`, `resourceLinked`
 
 **State Management Patterns:**
+
 - Local component state first
 - URL state for filters, search, and pagination
 - Server state fetched on the server where possible
@@ -342,6 +351,7 @@ npx create-payload-app
 ### Process Patterns
 
 **Error Handling Patterns:**
+
 - Validation errors stay inline near the field that caused them
 - Non-blocking system messages may use toast or banner
 - Missing content returns a proper not-found state, not a blank page
@@ -350,6 +360,7 @@ npx create-payload-app
 - Public errors should be readable, short, and non-technical
 
 **Loading State Patterns:**
+
 - Use skeletons for page-level loading
 - Use button spinners for local actions
 - Keep reading pages stable while loading related content
@@ -359,6 +370,7 @@ npx create-payload-app
 ### Enforcement Guidelines
 
 **All AI Agents MUST:**
+
 - Use the same content model names, route names, and field naming conventions
 - Keep server-only logic out of client components
 - Preserve camelCase in TypeScript and JSON, kebab-case in public URLs
@@ -366,6 +378,7 @@ npx create-payload-app
 - Treat translations, series ordering, and scripture references as first-class model concerns
 
 **Pattern Enforcement:**
+
 - Verify new code against these rules during review
 - Record any violation in the architecture decision log
 - Update patterns only when a real conflict appears across multiple files or agents
@@ -373,6 +386,7 @@ npx create-payload-app
 ### Pattern Examples
 
 **Good Examples:**
+
 - `ArticleCard.tsx`
 - `/articles/[slug]`
 - `isPublishing`
@@ -382,6 +396,7 @@ npx create-payload-app
 - `useReadingProgress`
 
 **Anti-Patterns:**
+
 - `article-card.tsx` exporting multiple unrelated components
 - `/article/[id]` for public editorial content
 - snake_case JSON in the app layer
@@ -705,26 +720,31 @@ bbb/
 **Feature/Epic Mapping**
 
 **Epic 1: Foundation and Content Platform**
+
 - Lives in: `payload.config.ts`, `src/collections/*`, `src/globals/*`, `src/payload/*`, `scripts/*`
 - Shared components: `src/lib/server/payload.ts`, `src/lib/server/db.ts`, `src/lib/shared/validation.ts`
 - Tests: `tests/unit/*`, `tests/integration/*`, `tests/e2e/admin-auth.spec.ts`
 
 **Epic 2: Public Editorial Site**
+
 - Lives in: `src/app/(site)`, `src/components/layout/*`, `src/components/features/home/*`, `src/components/features/search/*`
 - Shared components: `SiteHeader`, `SiteFooter`, `PageShell`, `SearchBar`
 - Tests: `tests/e2e/homepage.spec.ts`, `tests/e2e/search.spec.ts`
 
 **Epic 3: Reading, Series, and Daily Verse**
+
 - Lives in: `src/app/(site)/articles`, `src/app/(site)/series`, `src/app/(site)/napi-ige`, `src/components/features/article/*`, `src/components/features/series/*`
 - Shared components: `RichTextRenderer`, `ScriptureBlock`, `StudyPanel`, `ReadingProgress`
 - Tests: `tests/e2e/article.spec.ts`, `tests/e2e/series.spec.ts`, `tests/unit/scripture.test.ts`
 
 **Epic 4: Admin Publishing Workflow**
+
 - Lives in: `src/app/(payload)/admin`, `src/components/features/admin/*`, `src/collections/Users.ts`, `src/payload/access/*`
 - Shared components: `AdminDashboard`, `ContentList`, `QuickCreateActions`, `ModerationPanel`
 - Tests: `tests/e2e/admin-auth.spec.ts`, `tests/e2e/publish-flow.spec.ts`
 
 **Epic 5: Discovery, SEO, and Launch Readiness**
+
 - Lives in: `src/app/(site)/rss.xml`, `src/app/(site)/sitemap.xml`, `src/app/(site)/robots.txt`, `src/lib/server/metadata.ts`, `src/lib/server/rss.ts`, `src/lib/server/sitemap.ts`
 - Shared components: `src/lib/server/redirects.ts`, `src/collections/Redirects.ts`
 - Tests: `tests/unit/metadata.test.ts`, `tests/integration/redirects.test.ts`
@@ -732,30 +752,36 @@ bbb/
 **Cross-Cutting Concerns**
 
 **Authentication System**
+
 - Components: `src/app/(payload)/admin`, `src/payload/access/*`
 - Services: `src/lib/server/auth.ts`
 - Tests: `tests/e2e/admin-auth.spec.ts`
 
 **Scripture Rendering**
+
 - Components: `src/components/content/ScriptureReference.tsx`, `src/components/features/article/ScriptureBlock.tsx`
 - Helpers: `src/lib/shared/scripture.ts`
 - Collection fields: `src/payload/fields/scriptureReferences.ts`
 
 **Translations**
+
 - Components: article page and admin editor side panels
 - Fields: `src/payload/fields/translationSource.ts`
 - Import tooling: `scripts/import-translations.ts`
 
 **SEO and Syndication**
+
 - Components: route handlers for metadata outputs
 - Services: `src/lib/server/metadata.ts`, `src/lib/server/rss.ts`, `src/lib/server/sitemap.ts`
 
 **Search and Filters**
+
 - Components: `src/components/features/search/*`, `src/components/features/series/SeriesFilterBar.tsx`
 - Services: `src/lib/server/search.ts`
 - State: URL-driven query params
 
 **Moderation and Future User Posting**
+
 - Components: `src/components/features/admin/ModerationPanel.tsx`
 - Access: `src/payload/access/*`
 - Data: future comment/post collections can be added beside current editorial collections without changing the public site boundary
@@ -790,12 +816,14 @@ bbb/
 ### File Organization Patterns
 
 **Configuration Files**
+
 - Root config files stay at repository root for build and tool discovery.
 - Payload config stays in `payload.config.ts`.
 - App-level runtime config stays in `src/app/layout.tsx`, `next.config.ts`, and environment files.
 - CI workflows live in `.github/workflows/`.
 
 **Source Organization**
+
 - `src/app` handles routing and page composition.
 - `src/collections` handles CMS data definitions.
 - `src/globals` handles site-wide editorial settings.
@@ -807,6 +835,7 @@ bbb/
 - `src/hooks` contains React hooks that are not feature-specific.
 
 **Test Organization**
+
 - Unit tests live in `tests/unit`.
 - Integration tests live in `tests/integration`.
 - End-to-end tests live in `tests/e2e`.
@@ -814,6 +843,7 @@ bbb/
 - Critical editorial and reading flows get E2E coverage first.
 
 **Asset Organization**
+
 - Static public assets stay in `public/`.
 - Design tokens and theme CSS stay in `src/styles/`.
 - Media managed by the CMS stays out of `public/` and is treated as application content.
@@ -821,18 +851,21 @@ bbb/
 ### Development Workflow Integration
 
 **Development Server Structure**
+
 - One local app serves both public site and CMS.
 - Public routes and admin routes are available in the same Next.js process.
 - Payload admin is reachable from the same codebase, so content and rendering stay aligned.
 - Local development should support seeded content and editor preview without extra infrastructure.
 
 **Build Process Structure**
+
 - TypeScript compilation, linting, and tests run against the same source tree.
 - Build output remains Next.js-managed; there is no separate front-end bundle pipeline.
 - Content schema changes are centralized in collection definitions and Payload migrations/hooks.
 - Revalidation, sitemap, RSS, and metadata generation happen from server routes or helpers.
 
 **Deployment Structure**
+
 - Deploy the Next.js app and the Payload runtime together as one application.
 - Provision PostgreSQL and object storage as managed external services.
 - Environment variables configure database, auth, preview, storage, and analytics.
@@ -925,6 +958,7 @@ No unresolved architectural conflicts were found. The main future-facing concern
 **Confidence Level:** high
 
 **Key Strengths:**
+
 - Clear CMS-first architecture with a real admin and content model
 - Strong separation between public reader experience and editorial tooling
 - Relational data model fits the publication’s content and future growth
@@ -932,6 +966,7 @@ No unresolved architectural conflicts were found. The main future-facing concern
 - Concrete project tree and file boundaries for implementation agents
 
 **Areas for Future Enhancement:**
+
 - Add a dedicated moderation workflow once user posting becomes real
 - Swap in a dedicated search engine if content volume grows
 - Refine infrastructure choices after deployment provider selection

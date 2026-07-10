@@ -28,7 +28,9 @@ describe('discovery metadata', () => {
     const redirects = buildRedirectManifest()
 
     expect(sitemap.length).toBeGreaterThanOrEqual(22)
-    expect(sitemap.some((entry) => entry.url.endsWith('/series/foundations-for-new-believers'))).toBe(true)
+    expect(
+      sitemap.some((entry) => entry.url.endsWith('/series/foundations-for-new-believers')),
+    ).toBe(true)
     expect(sitemap.some((entry) => entry.url.endsWith('/napi-ige/2026-06-16'))).toBe(true)
     expect(sitemap.some((entry) => entry.url.endsWith('/resources'))).toBe(true)
     expect(sitemap.some((entry) => entry.url.endsWith('/resources/bible-study-aids'))).toBe(true)

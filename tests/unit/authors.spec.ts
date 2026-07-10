@@ -18,7 +18,7 @@ describe('authors', () => {
   it('builds author urls and exposes fallback profiles', () => {
     expect(buildAuthorUrl('editorial-team')).toBe('/authors/editorial-team')
     expect(getAuthorProfileBySlug('editorial-team')?.name).toBe('Editorial Team')
-    expect(listAuthorProfiles()).toHaveLength(3)
+    expect(listAuthorProfiles()).toHaveLength(6)
     expect(listPublishedArticleRefsForAuthor('Editorial Team')).toHaveLength(5)
   })
 

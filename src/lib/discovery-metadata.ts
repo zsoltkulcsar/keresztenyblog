@@ -7,6 +7,7 @@ import { listBooks } from '@/lib/books'
 import { listDailyVerseEntries } from '@/lib/daily-verse'
 import { loadResourceItems } from '@/lib/resources'
 import { listSeries } from '@/lib/series'
+import { loadTaxonomyIndex } from '@/lib/taxonomy'
 
 export type DiscoveryMetadataInput = {
   description: string
@@ -45,6 +46,8 @@ const discoveryRoutes: DiscoveryRoute[] = [
   { changeFrequency: 'daily', path: '/articles', priority: 0.9 },
   { changeFrequency: 'daily', path: '/search', priority: 0.5 },
   { changeFrequency: 'weekly', path: '/series', priority: 0.8 },
+  { changeFrequency: 'weekly', path: '/topics', priority: 0.65 },
+  { changeFrequency: 'weekly', path: '/audiences', priority: 0.65 },
   { changeFrequency: 'monthly', path: '/books', priority: 0.7 },
   { changeFrequency: 'daily', path: '/napi-ige', priority: 0.8 },
   { changeFrequency: 'monthly', path: '/resources', priority: 0.6 },
@@ -168,6 +171,10 @@ export async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
     url: buildAbsoluteUrl(`/resources/${resource.slug}`),
   }))
+  const [topicRoutes, audienceRoutes] = await Promise.all([
+    loadTaxonomyIndex('topic'),
+    loadTaxonomyIndex('audience'),
+  ])
   const bookRoutes = listBooks().map((book) => ({
     changeFrequency: 'monthly' as const,
     lastModified: latestPublishedDate,
@@ -186,6 +193,18 @@ export async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
     ...dailyVerseRoutes,
     ...authorRoutes,
     ...resourceRoutes,
+    ...topicRoutes.map((topic) => ({
+      changeFrequency: 'weekly' as const,
+      lastModified: latestPublishedDate,
+      priority: 0.55,
+      url: buildAbsoluteUrl(`/topics/${topic.value}`),
+    })),
+    ...audienceRoutes.map((audience) => ({
+      changeFrequency: 'weekly' as const,
+      lastModified: latestPublishedDate,
+      priority: 0.55,
+      url: buildAbsoluteUrl(`/audiences/${audience.value}`),
+    })),
     ...bookRoutes,
   ]
 }

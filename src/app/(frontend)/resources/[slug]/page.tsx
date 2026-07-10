@@ -12,6 +12,8 @@ import {
 } from '@/lib/resources'
 import { buildSeriesUrl } from '@/lib/series'
 
+export const dynamic = 'force-dynamic'
+
 const typeLabels: Record<ResourceType, string> = {
   article: 'Article',
   book: 'Book',

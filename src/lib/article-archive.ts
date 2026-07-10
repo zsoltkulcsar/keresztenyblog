@@ -8,6 +8,7 @@ export type ArchiveFacet = {
 }
 
 export type ArchiveArticle = {
+  audiences: ArchiveFacet[]
   author: ArchiveFacet
   category: ArchiveFacet
   excerpt: string
@@ -18,6 +19,7 @@ export type ArchiveArticle = {
   slug: string
   tags: ArchiveFacet[]
   title: string
+  topics: ArchiveFacet[]
 }
 
 export type ArchiveSort = 'latest' | 'oldest' | 'reading-time' | 'title'
@@ -76,6 +78,7 @@ const formatLabels = {
 
 function toArchiveArticle(article: EditorialArticleSeed): ArchiveArticle {
   return {
+    audiences: article.audience.map((audience) => toFacet(audience)),
     author: toFacet(article.author),
     category: toFacet(article.category),
     excerpt: article.excerpt,
@@ -91,6 +94,7 @@ function toArchiveArticle(article: EditorialArticleSeed): ArchiveArticle {
     slug: article.slug,
     tags: [...article.tags, ...article.topic, ...article.audience].map((tag) => toFacet(tag)),
     title: article.title,
+    topics: article.topic.map((topic) => toFacet(topic)),
   }
 }
 

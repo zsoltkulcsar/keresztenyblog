@@ -1,7 +1,14 @@
 import Link from 'next/link'
 
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
-import { buildResourceUrl, loadResourceItems, type ResourceItem, type ResourceType } from '@/lib/resources'
+import {
+  buildResourceUrl,
+  loadResourceItems,
+  type ResourceItem,
+  type ResourceType,
+} from '@/lib/resources'
+
+export const dynamic = 'force-dynamic'
 
 const typeLabels: Record<ResourceType, string> = {
   article: 'Article',
@@ -76,7 +83,9 @@ export function generateMetadata() {
 export default async function ResourcesPage({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  searchParams?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   const resolvedSearchParams = await Promise.resolve(searchParams ?? {})
   const selectedType = activeType(resolvedSearchParams)
@@ -86,8 +95,12 @@ export default async function ResourcesPage({
     : allResources
   const featuredResource = allResources.find((resource) => resource.featured) ?? allResources[0]
   const newBelieverResource = findByAudience(allResources, 'new') ?? allResources[0]
-  const leaderResource = findByAudience(allResources, 'leader') ?? allResources.find((resource) => resource.type === 'leader-tool')
-  const familyResource = findByAudience(allResources, 'famil') ?? allResources.find((resource) => resource.topic === 'Family')
+  const leaderResource =
+    findByAudience(allResources, 'leader') ??
+    allResources.find((resource) => resource.type === 'leader-tool')
+  const familyResource =
+    findByAudience(allResources, 'famil') ??
+    allResources.find((resource) => resource.topic === 'Family')
   const groupedResources = groupByType(visibleResources)
   const availableTypes = groupByType(allResources).map(([type]) => type)
 
@@ -157,7 +170,11 @@ export default async function ResourcesPage({
             All
           </Link>
           {availableTypes.map((type) => (
-            <Link aria-current={selectedType === type ? 'page' : undefined} href={filterUrl(type)} key={type}>
+            <Link
+              aria-current={selectedType === type ? 'page' : undefined}
+              href={filterUrl(type)}
+              key={type}
+            >
               {typeLabel(type)}
             </Link>
           ))}
@@ -170,7 +187,9 @@ export default async function ResourcesPage({
             <div className="toolbox-shelf-heading">
               <div>
                 <p className="eyebrow">{typeLabel(type)}</p>
-                <h2>{resources.length} useful {resources.length === 1 ? 'resource' : 'resources'}</h2>
+                <h2>
+                  {resources.length} useful {resources.length === 1 ? 'resource' : 'resources'}
+                </h2>
               </div>
               <Link href={filterUrl(type)}>Filter shelf</Link>
             </div>

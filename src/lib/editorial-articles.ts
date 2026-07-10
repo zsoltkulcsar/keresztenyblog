@@ -101,7 +101,8 @@ export const editorialArticles: EditorialArticleSeed[] = [
       'But God, being rich in mercy, because of the great love with which he loved us, even when we were dead in our trespasses, made us alive together with Christ — by grace you have been saved.',
     series: [
       {
-        description: 'A first path for readers who are learning the basic shape of Christian faith.',
+        description:
+          'A first path for readers who are learning the basic shape of Christian faith.',
         label: 'Foundations for New Believers',
         order: 1,
         slug: 'foundations-for-new-believers',
@@ -160,7 +161,8 @@ export const editorialArticles: EditorialArticleSeed[] = [
     scriptureText: 'Your word is a lamp to my feet and a light to my path.',
     series: [
       {
-        description: 'A first path for readers who are learning the basic shape of Christian faith.',
+        description:
+          'A first path for readers who are learning the basic shape of Christian faith.',
         label: 'Foundations for New Believers',
         order: 2,
         slug: 'foundations-for-new-believers',
@@ -220,7 +222,8 @@ export const editorialArticles: EditorialArticleSeed[] = [
       'Let us consider how to stir one another up to love and good works, not neglecting to meet together.',
     series: [
       {
-        description: 'A first path for readers who are learning the basic shape of Christian faith.',
+        description:
+          'A first path for readers who are learning the basic shape of Christian faith.',
         label: 'Foundations for New Believers',
         order: 3,
         slug: 'foundations-for-new-believers',
@@ -234,7 +237,8 @@ export const editorialArticles: EditorialArticleSeed[] = [
       'What would a healthy church need to look like for you to trust again?',
       'What is your next step toward belonging to a local church?',
     ],
-    subtitle: 'What the local church is, why it matters, and what to look for when you do not have one',
+    subtitle:
+      'What the local church is, why it matters, and what to look for when you do not have one',
     tags: ['church', 'community', 'fellowship', 'membership', 'discipleship'],
     title: 'Why the Church Is Not Optional',
     topic: ['Church Life', 'Discipleship', 'Community'],
@@ -276,8 +280,7 @@ export const editorialArticles: EditorialArticleSeed[] = [
     readingMinutes: 12,
     relatedBook: 'Habits of Grace by David Mathis',
     relatedResource: 'A Daily Rhythm Guide',
-    scriptureText:
-      'One who is faithful in a very little is also faithful in much.',
+    scriptureText: 'One who is faithful in a very little is also faithful in much.',
     series: [],
     slug: 'the-boring-faithfulness-god-honors',
     studyQuestions: [
@@ -287,7 +290,8 @@ export const editorialArticles: EditorialArticleSeed[] = [
       'Where have years of small obedience produced fruit?',
       'What does plodding look like this week?',
     ],
-    subtitle: 'Why the unglamorous rhythms of ordinary obedience are the backbone of the Christian life',
+    subtitle:
+      'Why the unglamorous rhythms of ordinary obedience are the backbone of the Christian life',
     tags: ['faithfulness', 'perseverance', 'ordinary life', 'obedience'],
     title: 'The Boring Faithfulness God Honors',
     topic: ['Spiritual Growth', 'Faithfulness', 'Obedience'],
@@ -324,8 +328,7 @@ export const editorialArticles: EditorialArticleSeed[] = [
     format: 'devotion',
     mainScripture: 'Romans 8:26-27',
     publishedAt: '2026-07-05',
-    pullQuote:
-      'When you cannot find the words, the Spirit is already praying what you need.',
+    pullQuote: 'When you cannot find the words, the Spirit is already praying what you need.',
     readingMinutes: 10,
     relatedBook: 'A Praying Life by Paul Miller',
     relatedResource: 'A Guide to Praying the Psalms',
@@ -382,8 +385,7 @@ export const editorialArticles: EditorialArticleSeed[] = [
     readingMinutes: 13,
     relatedBook: 'Every Good Endeavor by Timothy Keller',
     relatedResource: 'A Theology of Work Reading List',
-    scriptureText:
-      'Whatever you do, work heartily, as for the Lord and not for men.',
+    scriptureText: 'Whatever you do, work heartily, as for the Lord and not for men.',
     series: [],
     slug: 'does-god-care-about-my-work',
     studyQuestions: [
@@ -483,8 +485,7 @@ export const editorialArticles: EditorialArticleSeed[] = [
     format: 'reflection',
     mainScripture: 'Deuteronomy 6:4-9',
     publishedAt: '2026-07-08',
-    pullQuote:
-      'Your children do not need a perfect parent. They need a real one.',
+    pullQuote: 'Your children do not need a perfect parent. They need a real one.',
     readingMinutes: 13,
     relatedBook: 'Shepherding a Child’s Heart by Tedd Tripp',
     relatedResource: 'A Simple Family Worship Guide',
@@ -536,8 +537,7 @@ export const editorialArticles: EditorialArticleSeed[] = [
     format: 'teaching',
     mainScripture: '1 Timothy 3:1-7; Titus 1:5-9',
     publishedAt: '2026-07-09',
-    pullQuote:
-      'The church does not need more talented leaders. It needs more trustworthy ones.',
+    pullQuote: 'The church does not need more talented leaders. It needs more trustworthy ones.',
     readingMinutes: 15,
     relatedBook: 'Biblical Eldership by Alexander Strauch',
     relatedResource: 'Elder Self-Assessment Checklist',
@@ -601,8 +601,7 @@ export const editorialArticles: EditorialArticleSeed[] = [
     readingMinutes: 13,
     relatedBook: 'The Supremacy of God in Preaching by John Piper',
     relatedResource: 'A Preacher’s Weekly Preparation Checklist',
-    scriptureText:
-      'I was with you in weakness and in fear and much trembling.',
+    scriptureText: 'I was with you in weakness and in fear and much trembling.',
     series: [
       {
         description: 'A path for pastors, elders, teachers, and those learning to shepherd others.',

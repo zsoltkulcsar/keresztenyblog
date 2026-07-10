@@ -2,7 +2,7 @@
 title: Kovasz UX Direction
 status: draft
 created: 2026-06-16
- updated: 2026-06-25
+updated: 2026-07-10
 sources:
   - ../../PROJECT.md
   - ../../des1.png
@@ -53,19 +53,22 @@ The site should not become an art/design blog. `des1.png` is useful for layout e
 - Long-form article reading is the core experience. It should be calm, high contrast, and stable.
 - Admin is a work surface. It should be dense, predictable, and quieter than the public editorial site.
 - Search and archive browsing are first-class, because theological writing has long shelf life.
+- Topic and Audience browsing are cross-content discovery paths, not another archive clone. They should help readers answer "what should I read for this need?" by grouping matching Articles, Series, and Resources.
 
 ## Key Surfaces
 
-| Surface | UX Purpose |
-|---|---|
-| Home | Publication front page with masthead, lead article, series, resources, newsletter, and archive cues |
-| Articles | Filterable archive for all editorial content |
-| Article Detail | Long-form reading with Scripture references, series context, author trust, and related content |
-| Series | Ordered theological study hubs |
-| Resources | Useful non-article material |
-| Search | Fast recovery of older content by title, topic, author, tag, and Scripture reference |
-| About | Editorial trust, mission, and theological posture |
-| Admin | Structured publishing workflow |
+| Surface        | UX Purpose                                                                                          |
+| -------------- | --------------------------------------------------------------------------------------------------- |
+| Home           | Publication front page with masthead, lead article, series, resources, newsletter, and archive cues |
+| Articles       | Filterable archive for all editorial content                                                        |
+| Article Detail | Long-form reading with Scripture references, series context, author trust, and related content      |
+| Series         | Ordered theological study hubs                                                                      |
+| Resources      | Useful non-article material                                                                         |
+| Topics         | Cross-content discovery by theological theme or life question                                        |
+| Audiences      | Cross-content discovery by reader maturity, role, or life situation                                  |
+| Search         | Fast recovery of older content by title, topic, author, tag, and Scripture reference                |
+| About          | Editorial trust, mission, and theological posture                                                   |
+| Admin          | Structured publishing workflow                                                                      |
 
 ## Open UX Questions
 

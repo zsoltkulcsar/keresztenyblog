@@ -37,4 +37,3 @@ export async function POST(request: Request) {
 
   return redirectBack(request, { newsletter: 'success' })
 }
-

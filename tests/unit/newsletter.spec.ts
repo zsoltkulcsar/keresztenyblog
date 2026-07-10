@@ -16,4 +16,3 @@ describe('newsletter signup', () => {
     expect(parseNewsletterSignup({ email: 'not-an-email' })).toBeNull()
   })
 })
-

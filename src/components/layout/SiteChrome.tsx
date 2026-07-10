@@ -2,13 +2,11 @@
 
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { useState } from 'react'
 
 const primaryLinks = [
   { href: '/articles', label: 'Articles' },
   { href: '/series', label: 'Series' },
   { href: '/resources', label: 'Resources' },
-  { href: '/books', label: 'Books' },
   { href: '/about', label: 'About' },
 ]
 
@@ -20,56 +18,29 @@ const footerGroups = [
       { href: '/resources', label: 'Resources' },
       { href: '/books', label: 'Books' },
       { href: '/about', label: 'About' },
-      { href: '/search', label: 'Search' },
     ],
     title: 'Read',
   },
   {
     links: [
-      { href: '/series', label: 'For new believers' },
-      { href: '/series', label: 'For mature believers' },
-      { href: '/books', label: 'Recommended books' },
-      { href: '/resources', label: 'Scripture studies' },
-      { href: '/articles', label: 'Topical guides' },
+      { href: '/topics', label: 'Topics' },
+      { href: '/audiences', label: 'Audiences' },
+      { href: '/audiences/new-believers', label: 'New believers' },
+      { href: '/topics/pastoral-theology', label: 'Pastoral theology' },
     ],
-    title: 'Learn',
+    title: 'Discover',
   },
   {
     links: [
       { href: '/about', label: 'Contact us' },
-      { href: '/resources', label: 'Submit a question' },
       { href: '/about', label: 'Our team' },
-      { href: '/about', label: 'Support' },
-      { href: '/about', label: 'Help center' },
-    ],
-    title: 'About Kovasz',
-  },
-  {
-    links: [
-      { href: '/about', label: 'FAQ' },
-      { href: '/search', label: 'Feedback' },
-      { href: '/about', label: 'Report an issue' },
-      { href: '/about', label: 'Privacy policy' },
-      { href: '/about', label: 'Terms of service' },
-    ],
-    title: 'Help',
-  },
-  {
-    links: [
-      { href: '/articles', label: 'Articles' },
-      { href: '/series', label: 'Series' },
-      { href: '/resources', label: 'Resources' },
-      { href: '/books', label: 'Books' },
-      { href: '/about', label: 'About' },
       { href: '/search', label: 'Search' },
     ],
-    title: 'Explore',
+    title: 'About',
   },
 ]
 
 export function SiteChrome({ children }: { children: ReactNode }) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-
   return (
     <div className="site-shell">
       <header className="site-header">
@@ -105,39 +76,23 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         </div>
 
         <div className="site-header-actions">
-          <form
-            action="/search"
-            className={`site-header-search ${isSearchOpen ? 'is-open' : ''}`}
-            method="get"
-            role="search"
-          >
-            <label htmlFor="site-header-search">Search</label>
-            <input
-              id="site-header-search"
-              name="q"
-              placeholder="Search"
-              tabIndex={isSearchOpen ? 0 : -1}
-              type="search"
-            />
-          </form>
-          <button
-            aria-controls="site-header-search"
-            aria-expanded={isSearchOpen}
-            aria-label="Open search"
-            className="site-search-link"
-            onClick={() => setIsSearchOpen((open) => !open)}
-            type="button"
-          >
-            <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-              <path
-                d="m20 20-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.8"
-              />
-            </svg>
-          </button>
+          <details className="site-search-popover">
+            <summary aria-label="Open search" className="site-search-link">
+              <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                <path
+                  d="m20 20-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.8"
+                />
+              </svg>
+            </summary>
+            <form action="/search" className="site-header-search" method="get" role="search">
+              <label htmlFor="site-header-search">Search</label>
+              <input id="site-header-search" name="q" placeholder="Search" type="search" />
+            </form>
+          </details>
         </div>
       </header>
 
@@ -165,9 +120,8 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         <div className="site-footer-bottom">
           <p>2026 Kovasz. All rights reserved.</p>
           <div>
-            <Link href="/about">Privacy policy</Link>
-            <Link href="/about">Terms of service</Link>
-            <Link href="/about">Cookie settings</Link>
+            <Link href="/about">Contact</Link>
+            <Link href="/search">Search</Link>
           </div>
         </div>
       </footer>

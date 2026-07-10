@@ -2,7 +2,7 @@
 title: Kovasz Hungarian Christian Blog PRD
 status: draft
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-07-10
 sources:
   - ../../PROJECT.md
   - ../../des1.png
@@ -79,6 +79,13 @@ The product should be easy to maintain by editors. A writer should be able to cr
   - **Climax:** Results show enough context to choose the right article.
   - **Resolution:** They land on the article or series page.
 
+- **UJ-6. Daniel browses by topic or audience.**
+  - **Persona + context:** Daniel wants help with a specific area such as prayer, marriage, pastoral theology, or new-believer foundations.
+  - **Entry state:** He arrives from search, a sitemap route, or a topic/audience link surfaced on an article, series, or resource.
+  - **Path:** He opens a Topic or Audience landing page and sees matching Articles, Series, and Resources grouped by content type.
+  - **Climax:** He can choose the most appropriate next step without needing to understand the whole archive structure.
+  - **Resolution:** Topics and Audiences become cross-content discovery hubs, not just article filters.
+
 ## 3. Glossary
 
 - **Article**: A published or draft editorial item. Includes essay, devotional, sermon, Bible study, church history, culture article, or resource.
@@ -88,6 +95,8 @@ The product should be easy to maintain by editors. A writer should be able to cr
 - **Author**: Public writer profile attached to Articles.
 - **Category**: Editorial classification such as theology, devotion, sermon, Bible study, church history, or culture.
 - **Tag**: Flexible keyword used for search and related content.
+- **Topic**: First-class editorial taxonomy shared across Articles, Series, Resources, and Books where appropriate. Examples: Pastoral Theology, Prayer, Marriage, Ethics.
+- **Audience**: First-class reader taxonomy shared across content types. Examples: New Believers, Mature Believers, Leaders, Families.
 - **Scripture Reference**: Bible book, chapter, and verse reference attached to an Article or Daily Verse.
 - **Resource**: Useful non-article content, such as reading lists, PDFs, study aids, or curated links. [ASSUMPTION: Resources are needed because the user asked for "other useful things."]
 
@@ -102,6 +111,7 @@ The product should be easy to maintain by editors. A writer should be able to cr
 The system must render a first-viewport publication masthead with brand, issue/imprint metadata, primary navigation, search entry point, and featured content.
 
 **Consequences:**
+
 - Brand name is prominent on mobile and desktop.
 - First viewport hints at at least one content section below the fold.
 - Navigation includes Articles, Series, Napi Ige, Resources, About, and Search.
@@ -111,6 +121,7 @@ The system must render a first-viewport publication masthead with brand, issue/i
 Editors can mark Articles, Series, Daily Verse, and Resources for homepage placement.
 
 **Consequences:**
+
 - Homepage can show latest content automatically.
 - Homepage can override latest ordering with explicit editorial picks.
 - Empty editorial slots degrade to latest published content.
@@ -124,6 +135,7 @@ Editors can mark Articles, Series, Daily Verse, and Resources for homepage place
 Readers can view a paginated Article archive with filters for Category, Series, Author, Tag, and sort order.
 
 **Consequences:**
+
 - Filter state is reflected in the URL.
 - Empty filtered results show a helpful state and reset option.
 
@@ -132,8 +144,20 @@ Readers can view a paginated Article archive with filters for Category, Series, 
 Readers can search Articles, Series, Authors, Daily Verses, and Resources.
 
 **Consequences:**
+
 - Search results include title, excerpt, type, author, date, category, and matched context.
 - MVP may use database-backed full-text search; external search service is deferred until content volume requires it.
+
+#### FR-4A: Browse by Topic and Audience
+
+Readers can browse first-class Topic and Audience landing pages that aggregate matching Articles, Series, and Resources.
+
+**Consequences:**
+
+- `/topics` and `/audiences` list available taxonomy entries with content counts.
+- `/topics/[slug]` and `/audiences/[slug]` show matching published content grouped by type.
+- Topic and Audience detail routes are included in sitemap/discovery output.
+- Static starter data remains a fallback when CMS content is unavailable.
 
 ### 4.3 Article Reading Experience
 
@@ -144,6 +168,7 @@ Readers can search Articles, Series, Authors, Daily Verses, and Resources.
 The system must render title, subtitle, author, date, category, reading time, cover image, body, Scripture references, pull quotes, footnotes, and related content.
 
 **Consequences:**
+
 - Article body supports headings, block quotes, lists, links, footnotes, images, and callouts.
 - Article page includes structured metadata for SEO and sharing.
 
@@ -152,6 +177,7 @@ The system must render title, subtitle, author, date, category, reading time, co
 When an Article belongs to a Series, the article page must show previous/next parts and the full series context.
 
 **Consequences:**
+
 - Series order is deterministic.
 - Article page links back to Series detail.
 
@@ -160,6 +186,7 @@ When an Article belongs to a Series, the article page must show previous/next pa
 Readers can copy/share article links and see reading progress.
 
 **Consequences:**
+
 - Share uses browser-native share when available and clipboard fallback when not.
 - Reading progress is non-blocking and does not shift layout.
 
@@ -172,6 +199,7 @@ Readers can copy/share article links and see reading progress.
 Editors can create and edit Series with title, slug, description, cover image, status, ordered Article list, and SEO fields.
 
 **Consequences:**
+
 - Public series list shows all published Series.
 - Series detail shows Articles in configured order.
 
@@ -180,6 +208,7 @@ Editors can create and edit Series with title, slug, description, cover image, s
 Readers can browse Series pages with description, part list, publication dates, and progress cues.
 
 **Consequences:**
+
 - Series pages are indexable.
 - Series part order remains stable across archive sorting changes.
 
@@ -192,6 +221,7 @@ Readers can browse Series pages with description, part list, publication dates, 
 Editors can create date-bound Daily Verse entries with Scripture text, reference, optional note, and status.
 
 **Consequences:**
+
 - Only one published Daily Verse should be primary for a date.
 - Homepage shows today's verse or the latest published fallback.
 
@@ -200,6 +230,7 @@ Editors can create date-bound Daily Verse entries with Scripture text, reference
 Readers can browse past Daily Verse entries by date.
 
 **Consequences:**
+
 - Archive is paginated.
 - Direct URLs are stable.
 
@@ -212,6 +243,7 @@ Readers can browse past Daily Verse entries by date.
 Editors can publish Resources with type, title, description, link or file, optional related Article or Series, and tags.
 
 **Consequences:**
+
 - Resource types include PDF, reading list, external link, study guide, and announcement.
 - Resources are searchable and can appear on the homepage.
 
@@ -224,6 +256,7 @@ Editors can publish Resources with type, title, description, link or file, optio
 Editors can create Author profiles with name, slug, role, bio, photo, links, and active status.
 
 **Consequences:**
+
 - Article pages link to Author pages.
 - Author pages list all published Articles by that Author.
 
@@ -232,6 +265,7 @@ Editors can create Author profiles with name, slug, role, bio, photo, links, and
 Editors can manage manifesto, confession/positioning text, team overview, and contact information.
 
 **Consequences:**
+
 - About page content is editable without code deployment.
 - The page remains visually aligned with editorial style.
 
@@ -244,6 +278,7 @@ Editors can manage manifesto, confession/positioning text, team overview, and co
 Editors and admins can sign in securely.
 
 **Consequences:**
+
 - MVP must replace mock session storage auth with real authenticated sessions.
 - Roles include Admin and Editor.
 
@@ -252,6 +287,7 @@ Editors and admins can sign in securely.
 Editors can save drafts, preview content, publish, unpublish, and schedule publication.
 
 **Consequences:**
+
 - Draft content is not public.
 - Preview requires authentication or a time-limited preview mechanism.
 
@@ -260,6 +296,7 @@ Editors can save drafts, preview content, publish, unpublish, and schedule publi
 Editors can upload images and files with alt text, caption, credit, and focal point.
 
 **Consequences:**
+
 - Image upload supports resizing/optimization path.
 - Public pages never render images without alt text unless explicitly marked decorative.
 
@@ -272,6 +309,7 @@ Editors can upload images and files with alt text, caption, credit, and focal po
 The system must generate title, description, canonical URL, Open Graph data, and Article schema where applicable.
 
 **Consequences:**
+
 - Article and Series pages have unique metadata.
 - Missing custom SEO fields fall back to sensible editorial fields.
 
@@ -280,6 +318,7 @@ The system must generate title, description, canonical URL, Open Graph data, and
 The system must expose RSS feed and sitemap output for published public content.
 
 **Consequences:**
+
 - Sitemap includes public routes and last modified dates.
 - RSS includes latest published Articles.
 
@@ -292,6 +331,7 @@ The system must expose RSS feed and sitemap output for published public content.
 Readers can submit an email address for newsletter signup.
 
 **Consequences:**
+
 - MVP can store signups locally or forward to a provider.
 - The form validates email format and shows success/failure states.
 
@@ -313,6 +353,7 @@ Readers can submit an email address for newsletter signup.
 ### 6.1 In Scope
 
 - Public homepage, Articles, Article detail, Series, Series detail, Napi Ige, Search, Resources, About, Author pages.
+- Public Topic and Audience indexes/details as cross-content discovery hubs.
 - Admin authentication and CRUD for Articles, Series, Authors, Categories, Tags, Daily Verses, Resources, and Media.
 - Rich text editing with theological long-form needs: headings, quotes, footnotes, Scripture references, images, and callouts.
 - SEO metadata, sitemap, RSS, and basic analytics.

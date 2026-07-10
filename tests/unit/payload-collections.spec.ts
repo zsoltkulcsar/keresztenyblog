@@ -8,7 +8,9 @@ import { Users } from '@/collections/Users'
 
 function fieldNames(collection: { fields: unknown[] }) {
   return collection.fields
-    .map((field) => (typeof field === 'object' && field && 'name' in field ? String(field.name) : null))
+    .map((field) =>
+      typeof field === 'object' && field && 'name' in field ? String(field.name) : null,
+    )
     .filter(Boolean)
 }
 
@@ -27,7 +29,9 @@ describe('CMS collections', () => {
       schedulePublish: true,
       validate: true,
     })
-    expect(Series.admin?.preview?.({ slug: 'foundations' } as never, {} as never)).toBe('/series/foundations')
+    expect(Series.admin?.preview?.({ slug: 'foundations' } as never, {} as never)).toBe(
+      '/series/foundations',
+    )
     expect(Series.admin?.group).toBe('Content')
   })
 
@@ -38,7 +42,9 @@ describe('CMS collections', () => {
       schedulePublish: true,
       validate: true,
     })
-    expect(DailyVerse.admin?.preview?.({ date: '2026-06-16' } as never, {} as never)).toBe('/napi-ige/2026-06-16')
+    expect(DailyVerse.admin?.preview?.({ date: '2026-06-16' } as never, {} as never)).toBe(
+      '/napi-ige/2026-06-16',
+    )
     expect(DailyVerse.admin?.group).toBe('Content')
   })
 

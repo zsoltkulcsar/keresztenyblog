@@ -50,4 +50,3 @@ export function ShareTools({ title, url }: ShareToolsProps) {
     </div>
   )
 }
-

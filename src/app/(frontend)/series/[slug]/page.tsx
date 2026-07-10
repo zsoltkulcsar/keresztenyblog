@@ -6,6 +6,8 @@ import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
 import { buildSeriesUrl, loadSeries, loadSeriesOverview } from '@/lib/series'
 
+export const dynamic = 'force-dynamic'
+
 function getSingleValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value
 }

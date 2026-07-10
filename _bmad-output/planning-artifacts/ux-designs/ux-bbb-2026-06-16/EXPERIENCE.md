@@ -15,17 +15,17 @@ Kovasz is a responsive public web publication with an authenticated editorial ad
 
 ## Information Architecture
 
-| Surface | Reached From | Purpose |
-|---|---|---|
-| Home | `/` | Publication front page following `Home • Desktop.png`: light nav preview, photographic hero, foundations, article rail, series band, resources, CTA, and newsletter |
-| Articles | `/cikkek` | Browse and filter all published articles |
-| Article Detail | `/cikkek/[slug]` | Long-form reading, Scripture references, series navigation, related content |
-| Series | `/sorozatok` | List all published series |
-| Series Detail | `/sorozatok/[slug]` | Ordered hub for a series |
-| Resources | `/forrasok` | Useful PDFs, reading lists, study aids, and links |
-| Search | `/kereses?q=` | Recover content by query, tag, author, category, or Scripture reference |
-| About | `/rolunk` | Manifesto, theological posture, contact |
-| Admin | `/admin` or CMS route | Authenticated editorial publishing |
+| Surface        | Reached From          | Purpose                                                                                                                                                             |
+| -------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home           | `/`                   | Publication front page following `Home • Desktop.png`: light nav preview, photographic hero, foundations, article rail, series band, resources, CTA, and newsletter |
+| Articles       | `/cikkek`             | Browse and filter all published articles                                                                                                                            |
+| Article Detail | `/cikkek/[slug]`      | Long-form reading, Scripture references, series navigation, related content                                                                                         |
+| Series         | `/sorozatok`          | List all published series                                                                                                                                           |
+| Series Detail  | `/sorozatok/[slug]`   | Ordered hub for a series                                                                                                                                            |
+| Resources      | `/forrasok`           | Useful PDFs, reading lists, study aids, and links                                                                                                                   |
+| Search         | `/kereses?q=`         | Recover content by query, tag, author, category, or Scripture reference                                                                                             |
+| About          | `/rolunk`             | Manifesto, theological posture, contact                                                                                                                             |
+| Admin          | `/admin` or CMS route | Authenticated editorial publishing                                                                                                                                  |
 
 Public primary nav items are limited to `Articles`, `Series`, `Resources`, `About`, and `Search`. `Admin`, `Author Detail`, and `Napi Ige` are not primary header links in MVP.
 
@@ -37,29 +37,29 @@ Admin copy is plain and operational: Draft, Preview, Publish, Scheduled, Archive
 
 ## Component Patterns
 
-| Component | Use | Behavioral Rules |
-|---|---|---|
-| Masthead nav | Global public pages | Single-row desktop nav with brand and search. Mobile collapses to hamburger. Primary links are Articles, Series, Resources, About, and Search. No admin button in the public nav. |
-| Article card | Archives, home modules, related content | Entire card can open article. Secondary actions are explicit buttons or links. |
-| Filter bar | Articles, resources | Updates URL query params. Reset action visible when filters are active. |
-| Search box | Header and search page | Header submits to `/kereses?q=...`; search page updates results. |
-| Series part list | Series detail and article sidebar | Stable order. Current article highlighted. |
-| Rich text article body | Article detail | Supports headings, quotes, images, footnotes, Scripture references, callouts. |
-| Admin content table | Admin lists | Search, status filter, sort, edit action, publish state. |
-| Admin editor | Article and resource editing | Autosave optional. Manual save and publish actions must be distinct. |
+| Component              | Use                                     | Behavioral Rules                                                                                                                                                                  |
+| ---------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Masthead nav           | Global public pages                     | Single-row desktop nav with brand and search. Mobile collapses to hamburger. Primary links are Articles, Series, Resources, About, and Search. No admin button in the public nav. |
+| Article card           | Archives, home modules, related content | Entire card can open article. Secondary actions are explicit buttons or links.                                                                                                    |
+| Filter bar             | Articles, resources                     | Updates URL query params. Reset action visible when filters are active.                                                                                                           |
+| Search box             | Header and search page                  | Header submits to `/kereses?q=...`; search page updates results.                                                                                                                  |
+| Series part list       | Series detail and article sidebar       | Stable order. Current article highlighted.                                                                                                                                        |
+| Rich text article body | Article detail                          | Supports headings, quotes, images, footnotes, Scripture references, callouts.                                                                                                     |
+| Admin content table    | Admin lists                             | Search, status filter, sort, edit action, publish state.                                                                                                                          |
+| Admin editor           | Article and resource editing            | Autosave optional. Manual save and publish actions must be distinct.                                                                                                              |
 
 ## State Patterns
 
-| State | Surface | Treatment |
-|---|---|---|
-| Loading public list | Articles/Search | Skeleton rows matching final row height. |
-| Empty archive filter | Articles | "No articles match this filter." with reset option. |
-| Search no results | Search | Shows query, reset/search again, and suggested categories. |
-| Article not found | Article Detail | Editorial 404 with route back to archive and search. |
-| Missing Daily Verse | Home/Napi Ige | Treat as secondary content only; if present, use latest published fallback and mark date clearly. |
-| Draft preview | Article Detail | Preview banner visible only to authenticated editor. |
-| Admin validation error | Editor | Inline field errors plus summary near save/publish actions. |
-| Upload error | Admin media | Preserve form state and show retry. |
+| State                  | Surface         | Treatment                                                                                         |
+| ---------------------- | --------------- | ------------------------------------------------------------------------------------------------- |
+| Loading public list    | Articles/Search | Skeleton rows matching final row height.                                                          |
+| Empty archive filter   | Articles        | "No articles match this filter." with reset option.                                               |
+| Search no results      | Search          | Shows query, reset/search again, and suggested categories.                                        |
+| Article not found      | Article Detail  | Editorial 404 with route back to archive and search.                                              |
+| Missing Daily Verse    | Home/Napi Ige   | Treat as secondary content only; if present, use latest published fallback and mark date clearly. |
+| Draft preview          | Article Detail  | Preview banner visible only to authenticated editor.                                              |
+| Admin validation error | Editor          | Inline field errors plus summary near save/publish actions.                                       |
+| Upload error           | Admin media     | Preserve form state and show retry.                                                               |
 
 ## Interaction Primitives
 
@@ -83,11 +83,11 @@ Admin copy is plain and operational: Draft, Preview, Publish, Scheduled, Archive
 
 ## Responsive and Platform
 
-| Breakpoint | Behavior |
-|---|---|
-| Desktop | Dense magazine grid, masthead frame, multi-column homepage modules, article sidebars where useful |
-| Tablet | 6-column editorial grid, sidebars collapse below content |
-| Mobile | Single-column, masthead remains prominent, nav collapses into hamburger, article body prioritizes reading |
+| Breakpoint | Behavior                                                                                                  |
+| ---------- | --------------------------------------------------------------------------------------------------------- |
+| Desktop    | Dense magazine grid, masthead frame, multi-column homepage modules, article sidebars where useful         |
+| Tablet     | 6-column editorial grid, sidebars collapse below content                                                  |
+| Mobile     | Single-column, masthead remains prominent, nav collapses into hamburger, article body prioritizes reading |
 
 The public site must work well on mobile, but the primary authoring surface is desktop/laptop admin.
 

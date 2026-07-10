@@ -6,6 +6,8 @@ import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
 import { buildSeriesUrl, loadSeries } from '@/lib/series'
 
+export const dynamic = 'force-dynamic'
+
 function visualTone(slug: string, index = 0) {
   const score = Array.from(slug).reduce((total, char) => total + char.charCodeAt(0), index)
   return `article-visual article-visual-${score % 12}`

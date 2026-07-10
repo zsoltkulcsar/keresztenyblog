@@ -304,6 +304,11 @@ export async function loadResourceItems() {
       collection: 'resources',
       limit: 100,
       sort: 'title',
+      where: {
+        status: {
+          equals: 'published',
+        },
+      },
     })
 
     if (result?.docs?.length) {
@@ -313,7 +318,9 @@ export async function loadResourceItems() {
         mergedResources.set(resource.slug, resource)
       }
 
-      for (const resource of result.docs.map(normalizeResource)) {
+      for (const resource of result.docs
+        .map(normalizeResource)
+        .filter((item) => item.status === 'published')) {
         if (resource.slug) {
           mergedResources.set(resource.slug, resource)
         }

@@ -87,7 +87,9 @@ export default async function AboutPage() {
       <section className="about-publishing" aria-labelledby="about-publishing-title">
         <div className="about-section-heading">
           <p className="eyebrow">What we publish</p>
-          <h2 id="about-publishing-title">Teaching, guidance, and resources organized around real questions.</h2>
+          <h2 id="about-publishing-title">
+            Teaching, guidance, and resources organized around real questions.
+          </h2>
         </div>
         <div className="about-topic-list">
           {[

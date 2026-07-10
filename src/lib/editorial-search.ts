@@ -105,7 +105,8 @@ const searchCorpus: SearchRecord[] = [
     type: 'resource',
   },
   {
-    excerpt: 'The publication is shaped around Scripture, spiritual guidance, and daily Christian life.',
+    excerpt:
+      'The publication is shaped around Scripture, spiritual guidance, and daily Christian life.',
     href: '/articles?author=editorial-team',
     keywords: ['about', 'mission', 'doctrine', 'faith', 'guidance'],
     tags: ['Author', 'Trust'],
@@ -150,7 +151,9 @@ function tokenize(query: string) {
 }
 
 function scoreRecord(record: SearchRecord, tokens: string[]) {
-  const haystack = normalize([record.title, record.excerpt, ...record.keywords, ...record.tags].join(' '))
+  const haystack = normalize(
+    [record.title, record.excerpt, ...record.keywords, ...record.tags].join(' '),
+  )
 
   let score = 0
 
@@ -215,4 +218,3 @@ export function buildSearchUrl(query: string) {
   const normalized = query.trim()
   return normalized ? `/search?q=${encodeURIComponent(normalized)}` : '/search'
 }
-

@@ -8,6 +8,13 @@ const DEV_ADMIN = {
   role: 'admin' as const,
 }
 
+const SHOULD_REFRESH_STARTER_CONTENT = process.env.KOVASZ_REFRESH_SEED === 'true'
+
+type SeedDoc = Record<string, unknown> & {
+  __created?: boolean
+  id?: number | string
+}
+
 const STARTER_RESOURCES = [
   {
     audience: 'New believers',
@@ -32,9 +39,51 @@ const STARTER_RESOURCES = [
     usefulness: 'Helps readers slow down, observe the text, and keep the passage at the center.',
   },
   {
+    audience: 'New and growing believers',
+    ctaLabel: 'View series path',
+    description:
+      'A focused reading path for new and growing believers who want structure instead of scattered links.',
+    format: 'Series companion',
+    highlights: ['ordered reading', 'doctrine basics', 'discussion-ready'],
+    relatedArticleSlugs: ['how-to-read-the-bible-for-the-first-time'],
+    relatedSeriesSlugs: ['foundations-for-new-believers'],
+    slug: 'foundations-series-guide',
+    status: 'published',
+    steps: [
+      'Start with the first article in the Foundations series.',
+      'Use the summary questions after each reading.',
+      'Repeat difficult sections with a mentor, group, or pastor.',
+    ],
+    title: 'Foundations series guide',
+    topic: 'Discipleship',
+    type: 'series',
+    usefulness: 'Groups the articles into one path for learning and review.',
+  },
+  {
+    audience: 'Daily readers',
+    ctaLabel: 'Open archive',
+    description: 'Short Scripture readings for the day with archive access and stable links.',
+    format: 'Archive link',
+    highlights: ['daily rhythm', 'shareable references', 'short readings'],
+    relatedArticleSlugs: [],
+    relatedSeriesSlugs: [],
+    slug: 'daily-verse-archive',
+    status: 'published',
+    steps: [
+      'Choose one reading for the morning or evening.',
+      'Read the verse in its surrounding paragraph.',
+      'Save the link when it helps a conversation or prayer time.',
+    ],
+    title: 'Daily Verse archive',
+    topic: 'Devotional rhythm',
+    type: 'link',
+    usefulness: 'Keeps daily reading easy to revisit and share.',
+  },
+  {
     audience: 'Personal study',
     ctaLabel: 'Open file',
     description: 'A downloadable reading aid for keeping track of passages, notes, and questions.',
+    externalUrl: '/home-hero.png',
     fileHref: '/home-hero.png',
     format: 'Printable file',
     highlights: ['printable', 'notes', 'questions'],
@@ -51,6 +100,114 @@ const STARTER_RESOURCES = [
     topic: 'Bible reading',
     type: 'file',
     usefulness: 'Useful for printed study and slower personal review.',
+  },
+  {
+    audience: 'Small group leaders',
+    ctaLabel: 'Open leader tool',
+    description:
+      'A practical outline for preparing a Bible discussion without turning it into a lecture.',
+    format: 'Leader worksheet',
+    highlights: ['group questions', 'text-first flow', 'pastoral application'],
+    relatedArticleSlugs: ['how-to-read-the-bible-for-the-first-time'],
+    relatedSeriesSlugs: ['foundations-for-new-believers'],
+    slug: 'small-group-discussion-guide',
+    status: 'published',
+    steps: [
+      'Mark the main movement of the passage before writing questions.',
+      'Prepare one observation, one interpretation, and one application question.',
+      'Leave space for prayer and concrete obedience.',
+    ],
+    title: 'Small group discussion guide',
+    topic: 'Leadership',
+    type: 'leader-tool',
+    usefulness:
+      'Helps leaders ask better questions and keep the group anchored in the biblical text.',
+  },
+  {
+    audience: 'Married couples and families',
+    ctaLabel: 'Open reading plan',
+    description:
+      'A short household reading rhythm for families who want Scripture to shape ordinary days.',
+    format: 'Reading plan',
+    highlights: ['family rhythm', 'short readings', 'conversation prompts'],
+    relatedArticleSlugs: ['parenting-without-perfection'],
+    relatedSeriesSlugs: [],
+    slug: 'family-scripture-rhythm',
+    status: 'published',
+    steps: [
+      'Pick a short passage that can be read aloud in a few minutes.',
+      'Ask one simple question: what does this show about God?',
+      'Close with one sentence of prayer from each person who wants to pray.',
+    ],
+    title: 'Family Scripture rhythm',
+    topic: 'Family',
+    type: 'reading-plan',
+    usefulness: 'Gives families a repeatable pattern without requiring long preparation.',
+  },
+  {
+    audience: 'Readers with hard questions',
+    ctaLabel: 'Open resource',
+    description:
+      'A curated starting point for ethical questions where Scripture, wisdom, and pastoral care meet.',
+    format: 'Curated link list',
+    highlights: ['ethics', 'discernment', 'pastoral care'],
+    relatedArticleSlugs: ['is-it-wrong-to-be-wealthy'],
+    relatedSeriesSlugs: [],
+    slug: 'ethics-question-starter',
+    status: 'published',
+    steps: [
+      'Define the question as honestly and specifically as possible.',
+      'Identify which biblical themes are directly involved.',
+      'Bring unclear cases into prayerful conversation with mature believers.',
+    ],
+    title: 'Ethics question starter',
+    topic: 'Ethics',
+    type: 'article',
+    usefulness: 'Helps readers frame moral questions carefully before looking for quick answers.',
+  },
+  {
+    audience: 'Mature believers',
+    ctaLabel: 'Open recommendation',
+    description:
+      'A compact book path for readers who want to grow in prayer, doctrine, and daily obedience.',
+    externalUrl: 'https://www.desiringgod.org/books',
+    format: 'Book list',
+    highlights: ['recommended books', 'spiritual growth', 'doctrine'],
+    relatedArticleSlugs: [],
+    relatedSeriesSlugs: ['foundations-for-new-believers'],
+    slug: 'spiritual-growth-book-list',
+    status: 'published',
+    steps: [
+      'Choose one book that matches your current question or season.',
+      'Read slowly with a notebook, not as a completion task.',
+      'Pair the book with related Scripture passages.',
+    ],
+    title: 'Spiritual growth book list',
+    topic: 'Personal growth',
+    type: 'book',
+    usefulness: 'Creates a next-step shelf for readers who need more than one article.',
+  },
+  {
+    audience: 'Church leaders',
+    ctaLabel: 'Open checklist',
+    description:
+      'A ministry checklist for evaluating whether a teaching plan serves formation, not only information.',
+    format: 'Checklist',
+    highlights: ['teaching planning', 'formation', 'leader review'],
+    relatedArticleSlugs: ['the-elders-first-qualification-is-character-not-skill'],
+    relatedSeriesSlugs: [],
+    slug: 'teaching-plan-checklist',
+    status: 'published',
+    steps: [
+      'Name the biblical text and the central truth clearly.',
+      'Define the hoped-for response in belief, affection, and action.',
+      'Remove material that is interesting but not necessary for the aim.',
+    ],
+    title: 'Teaching plan checklist',
+    topic: 'Pastoral theology',
+    type: 'leader-tool',
+    usefulness:
+      'Gives leaders a simple grid for connecting doctrine, Scripture, prayer, and practice.',
   },
   {
     audience: 'Readers in prayer',
@@ -156,22 +313,30 @@ async function upsertBySlug(
     },
   })
 
-  const existingDoc = existing.docs[0] as { id?: number | string } | undefined
+  const existingDoc = existing.docs[0] as SeedDoc | undefined
 
   if (existingDoc?.id) {
-    return payload.update({
+    if (!SHOULD_REFRESH_STARTER_CONTENT) {
+      return { ...existingDoc, __created: false }
+    }
+
+    const updatedDoc = await payload.update({
       id: existingDoc.id,
       collection: collection as never,
       data,
       overrideAccess: true,
     })
+
+    return { ...(updatedDoc as SeedDoc), __created: false }
   }
 
-  return payload.create({
+  const createdDoc = await payload.create({
     collection: collection as never,
     data,
     overrideAccess: true,
   })
+
+  return { ...(createdDoc as SeedDoc), __created: true }
 }
 
 export async function seedDevAdminIfNeeded(payload: Payload): Promise<void> {
@@ -237,8 +402,8 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
     audienceLabels.add(resource.audience)
   }
 
-  const topicDocs = new Map<string, { id?: number | string }>()
-  const audienceDocs = new Map<string, { id?: number | string }>()
+  const topicDocs = new Map<string, SeedDoc>()
+  const audienceDocs = new Map<string, SeedDoc>()
 
   for (const title of topicLabels) {
     const slug = slugifyLabel(title)
@@ -247,7 +412,7 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
       slug,
       title,
     })
-    topicDocs.set(title, doc as { id?: number | string })
+    topicDocs.set(title, doc)
   }
 
   for (const title of audienceLabels) {
@@ -257,7 +422,7 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
       slug,
       title,
     })
-    audienceDocs.set(title, doc as { id?: number | string })
+    audienceDocs.set(title, doc)
   }
 
   const author = (await upsertBySlug(payload, 'authors', 'editorial-team', {
@@ -268,9 +433,9 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
     role: 'Editorial Team',
     slug: 'editorial-team',
     status: 'published',
-  })) as { id?: number | string }
+  })) as SeedDoc
 
-  const resourceDocs = new Map<string, { id?: number | string }>()
+  const resourceDocs = new Map<string, SeedDoc>()
 
   for (const resource of STARTER_RESOURCES) {
     const { fileHref: _fileHref, ...resourceData } = resource
@@ -279,10 +444,10 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
       audiences: [audienceDocs.get(resource.audience)?.id].filter(Boolean),
       topics: [topicDocs.get(resource.topic)?.id].filter(Boolean),
     })
-    resourceDocs.set(resource.slug, doc as { id?: number | string })
+    resourceDocs.set(resource.slug, doc)
   }
 
-  const articleDocs = new Map<string, { id?: number | string }>()
+  const articleDocs = new Map<string, SeedDoc>()
 
   for (const article of editorialArticles) {
     const relatedResourceIds = [article.relatedResource]
@@ -311,7 +476,7 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
       title: article.title,
       topics: article.topic.map((topic) => topicDocs.get(topic)?.id).filter(Boolean),
     })
-    articleDocs.set(article.slug, doc as { id?: number | string })
+    articleDocs.set(article.slug, doc)
   }
 
   const seriesBySlug = new Map<
@@ -340,7 +505,7 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
     }
   }
 
-  const seriesDocs = new Map<string, { id?: number | string }>()
+  const seriesDocs = new Map<string, SeedDoc>()
 
   for (const [slug, series] of seriesBySlug.entries()) {
     const orderedArticles = series.articles
@@ -372,7 +537,7 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
       topic: series.firstArticle.topic.map((topic) => topicDocs.get(topic)?.id).filter(Boolean),
     })
 
-    seriesDocs.set(slug, doc as { id?: number | string })
+    seriesDocs.set(slug, doc)
   }
 
   for (const article of editorialArticles) {
@@ -385,7 +550,7 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
 
     if (memberships.length > 0) {
       const articleDoc = articleDocs.get(article.slug)
-      if (articleDoc?.id) {
+      if (articleDoc?.id && (articleDoc.__created || SHOULD_REFRESH_STARTER_CONTENT)) {
         await payload.update({
           id: articleDoc.id,
           collection: 'articles',

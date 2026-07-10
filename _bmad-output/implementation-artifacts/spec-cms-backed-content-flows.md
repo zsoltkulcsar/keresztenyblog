@@ -2,7 +2,7 @@
 title: 'CMS-backed content flows'
 type: 'feature'
 created: '2026-07-08'
-status: 'in-review'
+status: 'done'
 baseline_commit: '0f9b1254562408963f66016f299e85cfd575bee8'
 context:
   - '{project-root}/_bmad-output/planning-artifacts/sprint-change-proposal-2026-07-08-cms-content-structure.md'
@@ -85,3 +85,12 @@ Use Payload as the preferred content source only at server-loader boundaries. Ke
 - `npm run lint` -- expected: no ESLint errors.
 - `npm run test:int` -- expected: unit/integration suite passes.
 - Route smoke checks for `/`, `/articles`, `/articles/what-happened-when-you-believed`, `/series`, `/series/foundations-for-new-believers`, `/resources`, `/resources/bible-study-aids` -- expected: HTTP 200.
+
+### Review Findings
+
+- [x] [Review][Patch] Resources exposes draft CMS records publicly [src/lib/resources.ts:303]
+- [x] [Review][Patch] Article previous/next navigation does not follow Series-owned ordered relationships [src/lib/cms-content.ts:160, src/lib/article-detail.ts:98]
+- [x] [Review][Patch] Local bootstrap seed can overwrite editor changes on every startup [src/payload/bootstrap.ts:221]
+- [x] [Review][Patch] Bootstrap seeds only a subset of starter resources and strips the file resource target [src/payload/bootstrap.ts:11, src/payload/bootstrap.ts:276]
+- [x] [Review][Patch] CMS-backed public routes can be statically frozen instead of reflecting CMS edits [src/app/(frontend)/page.tsx:43]
+- [x] [Review][Patch] Hydrated author relation ignores the Authors collection `name` field [src/lib/cms-content.ts:168]

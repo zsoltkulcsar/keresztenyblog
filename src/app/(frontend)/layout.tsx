@@ -3,7 +3,8 @@ import { SiteChrome } from '@/components/layout/SiteChrome'
 import './styles.css'
 
 export const metadata = {
-  description: 'Kovasz is a Hungarian Christian publication for articles, series, and study resources.',
+  description:
+    'Kovasz is a Hungarian Christian publication for articles, series, and study resources.',
   title: 'Kovasz',
 }
 

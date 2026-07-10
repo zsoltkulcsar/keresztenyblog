@@ -173,22 +173,40 @@ body {
 }
 
 .site-header-actions {
+  position: relative;
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
+.site-search-popover {
+  position: relative;
+  display: grid;
+}
+
+.site-search-popover summary {
+  list-style: none;
+}
+
+.site-search-popover summary::-webkit-details-marker {
+  display: none;
+}
+
 .site-header-search {
+  position: absolute;
+  top: 50%;
+  right: 46px;
   width: 0;
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
+  transform: translateY(-50%);
   transition:
     opacity 140ms ease,
     width 180ms ease;
 }
 
-.site-header-search.is-open {
+.site-search-popover[open] .site-header-search {
   width: min(260px, 22vw);
   opacity: 1;
   pointer-events: auto;
@@ -262,7 +280,7 @@ body {
   transform: translateY(-1px);
 }
 
-.site-search-link[aria-expanded='true'] {
+.site-search-popover[open] .site-search-link {
   border-color: #24547f;
   background: #24547f;
   color: #ffffff;
@@ -369,7 +387,7 @@ body {
 
 .site-footer-columns {
   display: grid;
-  grid-template-columns: repeat(5, minmax(110px, 1fr));
+  grid-template-columns: repeat(3, minmax(130px, 1fr));
   gap: 24px;
 }
 
@@ -2924,9 +2942,9 @@ img {
 
 .toolbox-controls {
   display: grid;
-  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
-  gap: clamp(20px, 5vw, 52px);
-  align-items: end;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  gap: clamp(18px, 4vw, 40px);
+  align-items: start;
   padding-top: 24px;
   padding-bottom: 20px;
   border-top: 1px solid #d9e2ea;
@@ -2937,15 +2955,16 @@ img {
 }
 
 .toolbox-filter-tabs {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
   gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: stretch;
 }
 
 .toolbox-filter-tabs a {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 34px;
   border: 1px solid #cbd6df;
   border-radius: 999px;
@@ -4927,7 +4946,7 @@ img {
 
 .scripture-study-meta dl {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin: 0;
 }
@@ -4987,6 +5006,26 @@ img {
 .scripture-study-meta dd {
   margin-top: 5px;
   font-size: 0.88rem;
+}
+
+.scripture-study-facet-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scripture-study-facet-list a {
+  border: 1px solid #cbd6df;
+  border-radius: 999px;
+  color: #24547f;
+  line-height: 1;
+  padding: 6px 8px;
+  text-decoration: none;
+}
+
+.scripture-study-facet-list a:hover {
+  border-color: #24547f;
+  background: #f6fafe;
 }
 
 .scripture-study-meta .share-tools {
@@ -6925,6 +6964,168 @@ img {
     linear-gradient(135deg, #bae6fd, #38bdf8 46%, #075985);
 }
 
+.taxonomy-page {
+  background: #f7f4ee;
+  color: #201c18;
+  min-height: 100vh;
+  padding: 5rem clamp(1.25rem, 4vw, 4rem);
+}
+
+.taxonomy-header {
+  border-bottom: 1px solid rgba(32, 28, 24, 0.18);
+  display: grid;
+  gap: 1rem;
+  margin: 0 auto 2rem;
+  max-width: 1180px;
+  padding-bottom: 2rem;
+}
+
+.taxonomy-header h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 5vw, 5.4rem);
+  font-weight: 500;
+  line-height: 0.95;
+  margin: 0;
+}
+
+.taxonomy-header p {
+  color: #5c5348;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 720px;
+}
+
+.taxonomy-detail-header > a {
+  color: #6f3f28;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.taxonomy-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 auto;
+  max-width: 1180px;
+}
+
+.taxonomy-card {
+  background: #fffaf2;
+  border: 1px solid rgba(32, 28, 24, 0.14);
+  border-radius: 8px;
+  color: inherit;
+  display: grid;
+  gap: 0.75rem;
+  min-height: 160px;
+  padding: 1.35rem;
+  text-decoration: none;
+}
+
+.taxonomy-card span {
+  font-family: var(--font-serif);
+  font-size: 1.7rem;
+  line-height: 1.05;
+}
+
+.taxonomy-card small {
+  color: #6a5f52;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.taxonomy-detail-layout {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+  margin: 0 auto;
+  max-width: 1180px;
+}
+
+.taxonomy-detail-section,
+.taxonomy-side-panel section {
+  background: #fffaf2;
+  border: 1px solid rgba(32, 28, 24, 0.14);
+  border-radius: 8px;
+  padding: 1.35rem;
+}
+
+.taxonomy-detail-section h2,
+.taxonomy-side-panel h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 0 0 1rem;
+}
+
+.taxonomy-result-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.taxonomy-result-list article {
+  border-top: 1px solid rgba(32, 28, 24, 0.14);
+  display: grid;
+  gap: 0.65rem;
+  padding-top: 1rem;
+}
+
+.taxonomy-result-list article:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.taxonomy-result-list h3 {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.taxonomy-result-list p {
+  color: #5c5348;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.taxonomy-result-list a,
+.taxonomy-side-panel a {
+  color: #6f3f28;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.taxonomy-side-panel {
+  align-content: start;
+  display: grid;
+  gap: 1rem;
+}
+
+.taxonomy-side-panel section {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.taxonomy-side-panel a {
+  border-top: 1px solid rgba(32, 28, 24, 0.14);
+  display: grid;
+  gap: 0.35rem;
+  padding-top: 0.85rem;
+}
+
+.taxonomy-side-panel a:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.taxonomy-side-panel small,
+.taxonomy-side-panel p {
+  color: #6a5f52;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+}
+
 @media (max-width: 1100px) {
   .site-footer,
   .masthead {
@@ -7344,9 +7545,9 @@ img {
   .resource-guide-section,
   .resource-guide-related-list,
   .books-header,
-    .books-library,
-    .books-filter-form,
-    .book-detail-header,
+  .books-library,
+  .books-filter-form,
+  .book-detail-header,
   .book-detail-section,
   .book-facts,
   .book-comments-heading,
@@ -7599,7 +7800,8 @@ img {
 
   .guided-section-heading,
   .guided-section-heading-split,
-  .guided-series-card {
+  .guided-series-card,
+  .taxonomy-detail-layout {
     grid-template-columns: 1fr;
   }
 
@@ -7632,5 +7834,13 @@ img {
   .archive-item h2,
   .archive-empty h2 {
     font-size: 1.5rem;
+  }
+
+  .taxonomy-page {
+    padding: 3rem 16px;
+  }
+
+  .taxonomy-grid {
+    grid-template-columns: 1fr;
   }
 }

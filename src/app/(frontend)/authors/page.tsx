@@ -36,7 +36,13 @@ export default async function AuthorsPage() {
       <section className="author-grid" aria-label="Author profiles">
         {authors.map((author) => (
           <article className="author-card" key={author.slug}>
-            <Image alt={author.photoAlt} className="author-photo" height={480} src={author.photoSrc} width={360} />
+            <Image
+              alt={author.photoAlt}
+              className="author-photo"
+              height={480}
+              src={author.photoSrc}
+              width={360}
+            />
             <p className="card-meta">
               <span>{author.role}</span>
               <span>{author.articleSlugs.length} articles</span>

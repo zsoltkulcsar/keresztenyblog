@@ -7,7 +7,11 @@ describe('Series collection', () => {
     expect(Series.slug).toBe('series')
     expect(Series.fields.some((field) => 'name' in field && field.name === 'title')).toBe(true)
     expect(Series.fields.some((field) => 'name' in field && field.name === 'slug')).toBe(true)
-    expect(Series.fields.some((field) => 'name' in field && field.name === 'articleSlugs')).toBe(true)
-    expect(Series.fields.some((field) => 'name' in field && field.name === 'seoDescription')).toBe(true)
+    expect(Series.fields.some((field) => 'name' in field && field.name === 'articleSlugs')).toBe(
+      true,
+    )
+    expect(Series.fields.some((field) => 'name' in field && field.name === 'seoDescription')).toBe(
+      true,
+    )
   })
 })

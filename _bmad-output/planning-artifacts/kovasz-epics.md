@@ -2,7 +2,7 @@
 title: Kovasz Epics and Stories
 status: draft
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-07-10
 inputDocuments:
   - kovasz-prd.md
   - kovasz-architecture.md
@@ -21,6 +21,7 @@ This is a fast-path implementation plan, not a fully confirmed BMad epics workfl
 - FR-2: Curate homepage sections.
 - FR-3: Browse article archive.
 - FR-4: Search editorial content.
+- FR-4A: Browse by Topic and Audience.
 - FR-5: Render article detail page.
 - FR-6: Support series navigation inside articles.
 - FR-7: Provide reader utilities.
@@ -140,6 +141,18 @@ As a reader, I can browse all articles and filter them.
 - URL reflects filter state.
 - Empty state includes reset.
 
+### Story 2.4: Implement topic and audience discovery hubs
+
+As a reader, I can browse content by first-class Topic and Audience so articles, series, and resources about the same need are discoverable together.
+
+**Acceptance Criteria**
+
+- `/topics` and `/audiences` render taxonomy indexes with content counts.
+- `/topics/[slug]` and `/audiences/[slug]` render matching Articles, Series, and Resources grouped by type.
+- Topic and Audience pages use CMS-backed content when available and static starter content as fallback.
+- Topic and Audience detail routes are included in discovery metadata and sitemap output.
+- Unit tests cover URL generation, summary counts, alias normalization, and detail filtering.
+
 ## Epic 3: Reading, Series, and Daily Verse
 
 **Goal:** Deliver the core theological reading experience.
@@ -220,6 +233,7 @@ As a reader, I can search content by query and filters.
 **Acceptance Criteria**
 
 - Search covers Articles, Series, Authors, Daily Verses, and Resources.
+- Discovery metadata covers Articles, Series, Resources, Topics, and Audiences.
 - Results show type, title, excerpt, and metadata.
 - Search is tested with Hungarian text.
 

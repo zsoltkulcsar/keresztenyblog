@@ -95,7 +95,9 @@ function fallbackLeadStory(latestArticles: HomepageArticle[]): HomepageArticle {
 }
 
 export function createHomepageContent(input: HomepageContentInput = {}): HomepageContent {
-  const latestArticles = input.latestArticles?.length ? input.latestArticles : fallbackLatestArticles
+  const latestArticles = input.latestArticles?.length
+    ? input.latestArticles
+    : fallbackLatestArticles
 
   const leadStory = input.leadStory ?? fallbackLeadStory(latestArticles)
 

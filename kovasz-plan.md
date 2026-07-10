@@ -27,18 +27,23 @@ Kovasz is a Hungarian Christian discipleship and formation publication. It is no
 ## Epic Structure
 
 ### Epic 1: Discover the Publication
+
 Readers can understand the brand, browse the archive, search content, subscribe, and reach content through stable discovery surfaces.
 
 ### Epic 2: Read and Study Articles
+
 Readers can open an article and get a calm, scripture-first reading experience with series context, reading progress, and sharing tools.
 
 ### Epic 3: Follow Series and Daily Scripture
+
 Readers can use series and Daily Verse as guided learning paths for growth, study, and recurring spiritual rhythm.
 
 ### Epic 4: Publish Content in a Practical CMS
+
 Editors can sign in, draft, preview, publish, schedule, and manage media in a CMS-first editorial workspace with role-based access.
 
 ### Epic 5: Build Trust and Practical Support
+
 Readers can learn who is behind the publication, understand the editorial posture, and access practical resources that support study and growth.
 
 ## Readiness

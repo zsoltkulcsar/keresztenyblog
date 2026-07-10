@@ -32,4 +32,3 @@ export function ReadingProgress({ label = 'Reading progress' }: ReadingProgressP
     </div>
   )
 }
-

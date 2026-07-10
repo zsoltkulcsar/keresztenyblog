@@ -4,6 +4,8 @@ import { buildArchiveUrl, loadArchiveContent, type ArchiveFilters } from '@/lib/
 import { buildArticleUrl } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 
+export const dynamic = 'force-dynamic'
+
 type ArchivePageProps = {
   searchParams?:
     | Record<string, string | string[] | undefined>
@@ -86,9 +88,9 @@ export function generateMetadata({
 
 const audienceTabs = [
   { href: '/articles', label: 'All' },
-  { href: '/articles?tag=new-believers', label: 'New believers' },
-  { href: '/articles?tag=growth', label: 'Growing believers' },
-  { href: '/articles?tag=leaders', label: 'Leaders' },
+  { href: '/audiences/new-believers', label: 'New believers' },
+  { href: '/topics/spiritual-growth', label: 'Growing believers' },
+  { href: '/topics/leadership', label: 'Leaders' },
   { href: '/series', label: 'Series' },
   { href: '/resources', label: 'Study aids' },
 ]
@@ -96,27 +98,27 @@ const audienceTabs = [
 const readingGuides = [
   {
     description: 'Start with basic teaching, Scripture, and steady Christian growth.',
-    href: '/series?audience=new-believer',
+    href: '/audiences/new-believers',
     label: 'New to faith',
   },
   {
     description: 'Build habits around Scripture, prayer, patience, and obedience.',
-    href: '/articles?category=christian-life',
+    href: '/topics/spiritual-growth',
     label: 'Daily growth',
   },
   {
     description: 'Read about marriage, family, parenting, and patient love at home.',
-    href: '/articles?category=marriage',
+    href: '/topics/family',
     label: 'Marriage and family',
   },
   {
     description: 'Think through work, choices, speech, and public life before God.',
-    href: '/articles?category=ethics',
+    href: '/topics/ethics',
     label: 'Hard questions',
   },
   {
     description: 'Find pastoral theology, leadership, and material for serving others.',
-    href: '/articles?tag=leadership',
+    href: '/topics/leadership',
     label: 'For leaders',
   },
 ]

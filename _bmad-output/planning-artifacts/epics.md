@@ -119,22 +119,27 @@ FR17: Epic 4 - Media upload and management.
 ## Epic List
 
 ### Epic 1: Discover the Publication
+
 Readers can immediately understand Kovasz, navigate the front page, browse the archive, search the publication, subscribe, and reach content through stable metadata-driven discovery.
 **FRs covered:** FR1, FR2, FR3, FR4, FR18, FR19, FR20
 
 ### Epic 2: Read and Study Articles
+
 Readers can open an article and get a calm, scripture-first reading experience with series context, reading progress, and sharing tools.
 **FRs covered:** FR5, FR6, FR7
 
 ### Epic 3: Follow Series and Daily Scripture
+
 Readers can use series and Daily Verse as guided learning paths for growth, study, and recurring spiritual rhythm.
 **FRs covered:** FR8, FR9, FR10, FR11
 
 ### Epic 4: Publish Content in a Practical CMS
+
 Editors can sign in, draft, preview, publish, schedule, and manage media in a CMS-first editorial workspace with role-based access.
 **FRs covered:** FR15, FR16, FR17
 
 ### Epic 5: Build Trust and Practical Support
+
 Readers can learn who is behind the publication, understand the editorial posture, and access practical resources that support study and growth.
 **FRs covered:** FR12, FR13, FR14
 

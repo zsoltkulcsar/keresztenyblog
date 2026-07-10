@@ -21,23 +21,25 @@ describe('resources', () => {
   })
 
   it('merges cms resources with the fallback set', async () => {
+    const find = vi.fn().mockResolvedValue({
+      docs: [
+        {
+          description: 'CMS resource description',
+          externalUrl: 'https://example.com/resource',
+          file: null,
+          relatedArticleSlugs: ['scripture-shapes-christian-growth'],
+          relatedSeriesSlugs: ['foundations'],
+          slug: 'cms-resource',
+          status: 'published',
+          title: 'CMS Resource',
+          type: 'link',
+          usefulness: 'Useful for readers.',
+        },
+      ],
+    })
+
     vi.mocked(getCmsPayload).mockResolvedValue({
-      find: vi.fn().mockResolvedValue({
-        docs: [
-          {
-            description: 'CMS resource description',
-            externalUrl: 'https://example.com/resource',
-            file: null,
-            relatedArticleSlugs: ['scripture-shapes-christian-growth'],
-            relatedSeriesSlugs: ['foundations'],
-            slug: 'cms-resource',
-            status: 'published',
-            title: 'CMS Resource',
-            type: 'link',
-            usefulness: 'Useful for readers.',
-          },
-        ],
-      }),
+      find,
     } as never)
 
     const resources = await loadResourceItems()
@@ -47,5 +49,37 @@ describe('resources', () => {
     expect(resources.some((resource) => resource.slug === 'cms-resource')).toBe(true)
     expect(cmsResource?.externalUrl).toBe('https://example.com/resource')
     expect(cmsResource?.relatedArticleSlugs).toContain('scripture-shapes-christian-growth')
+    expect(find).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          status: {
+            equals: 'published',
+          },
+        },
+      }),
+    )
+  })
+
+  it('does not expose draft cms resources even if the cms returns them', async () => {
+    vi.mocked(getCmsPayload).mockResolvedValue({
+      find: vi.fn().mockResolvedValue({
+        docs: [
+          {
+            description: 'Draft resource description',
+            relatedArticleSlugs: [],
+            relatedSeriesSlugs: [],
+            slug: 'draft-resource',
+            status: 'draft',
+            title: 'Draft Resource',
+            type: 'link',
+            usefulness: 'Should remain private.',
+          },
+        ],
+      }),
+    } as never)
+
+    const resources = await loadResourceItems()
+
+    expect(resources.some((resource) => resource.slug === 'draft-resource')).toBe(false)
   })
 })

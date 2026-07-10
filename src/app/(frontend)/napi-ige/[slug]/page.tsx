@@ -11,7 +11,9 @@ function getSingleValue(value: string | string[] | undefined) {
 export function generateMetadata({
   params,
 }: {
-  params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  params?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   return Promise.resolve(params ?? {}).then((resolvedParams) => {
     const slug = getSingleValue(resolvedParams.slug) ?? ''
@@ -37,7 +39,9 @@ export function generateMetadata({
 export default async function DailyVerseDetail({
   params,
 }: {
-  params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  params?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   const resolvedParams = await Promise.resolve(params ?? {})
   const slug = getSingleValue(resolvedParams.slug) ?? ''

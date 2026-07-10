@@ -169,7 +169,7 @@ export default async function BooksPage({
 
           {books.length ? (
             <ol className="books-list">
-          {books.map((book) => (
+              {books.map((book) => (
                 <li className="book-list-item" key={book.slug}>
                   <Link
                     className={`book-cover book-cover-${book.coverTone}`}
@@ -192,7 +192,7 @@ export default async function BooksPage({
                     <p>{book.description}</p>
                   </div>
                 </li>
-          ))}
+              ))}
             </ol>
           ) : (
             <section className="books-empty" aria-live="polite">

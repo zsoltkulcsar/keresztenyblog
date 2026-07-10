@@ -163,12 +163,12 @@ Avoid pills except for compact filter tokens where the affordance is genuinely u
 
 ## Do's and Don'ts
 
-| Do | Don't |
-|---|---|
-| Keep Kovasz as the first-viewport signal | Hide the brand in tiny nav text |
-| Use `des1.png` for layout energy | Copy its art-blog topic or palette wholesale |
-| Favor high contrast and reading stability | Add decorative animation or background blobs |
-| Make article pages calm and typographic | Turn the site into a card-heavy landing page |
-| Keep admin practical and dense | Make admin mimic the public editorial homepage |
-| Keep the desktop navbar on a single row | Split the header into two lines just to fit links |
+| Do                                                                         | Don't                                                         |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Keep Kovasz as the first-viewport signal                                   | Hide the brand in tiny nav text                               |
+| Use `des1.png` for layout energy                                           | Copy its art-blog topic or palette wholesale                  |
+| Favor high contrast and reading stability                                  | Add decorative animation or background blobs                  |
+| Make article pages calm and typographic                                    | Turn the site into a card-heavy landing page                  |
+| Keep admin practical and dense                                             | Make admin mimic the public editorial homepage                |
+| Keep the desktop navbar on a single row                                    | Split the header into two lines just to fit links             |
 | Show only Articles, Series, Resources, About, and Search in the public nav | Expose Admin, Authors, or Daily Verse as primary header items |

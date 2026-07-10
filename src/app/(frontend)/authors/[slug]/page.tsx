@@ -13,7 +13,9 @@ function articleCardTitle(slug: string) {
 export function generateMetadata({
   params,
 }: {
-  params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  params?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   return Promise.resolve(params ?? {}).then(async (resolvedParams) => {
     const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug[0] : resolvedParams.slug
@@ -39,7 +41,9 @@ export function generateMetadata({
 export default async function AuthorDetailPage({
   params,
 }: {
-  params?: Record<string, string | string[] | undefined> | Promise<Record<string, string | string[] | undefined>>
+  params?:
+    | Record<string, string | string[] | undefined>
+    | Promise<Record<string, string | string[] | undefined>>
 }) {
   const resolvedParams = await Promise.resolve(params ?? {})
   const slug = Array.isArray(resolvedParams.slug) ? resolvedParams.slug[0] : resolvedParams.slug
@@ -68,7 +72,13 @@ export default async function AuthorDetailPage({
           </div>
         </div>
 
-        <Image alt={profile.photoAlt} className="profile-photo" height={720} src={profile.photoSrc} width={520} />
+        <Image
+          alt={profile.photoAlt}
+          className="profile-photo"
+          height={720}
+          src={profile.photoSrc}
+          width={520}
+        />
       </header>
 
       <section className="related-section" aria-label="Published articles">
