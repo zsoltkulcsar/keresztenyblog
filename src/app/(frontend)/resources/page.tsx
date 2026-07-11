@@ -32,6 +32,9 @@ const typeOrder: ResourceType[] = [
   'link',
 ]
 
+const defaultShelfTypes: ResourceType[] = ['study-guide', 'reading-plan', 'leader-tool']
+const defaultShelfLimit = 2
+
 function typeLabel(value: string) {
   return typeLabels[value as ResourceType] ?? value
 }
@@ -102,6 +105,11 @@ export default async function ResourcesPage({
     findByAudience(allResources, 'famil') ??
     allResources.find((resource) => resource.topic === 'Family')
   const groupedResources = groupByType(visibleResources)
+  const libraryShelves = selectedType
+    ? groupedResources
+    : groupedResources
+        .filter(([type]) => defaultShelfTypes.includes(type))
+        .map(([type, resources]) => [type, resources.slice(0, defaultShelfLimit)] as const)
   const availableTypes = groupByType(allResources).map(([type]) => type)
 
   return (
@@ -163,7 +171,12 @@ export default async function ResourcesPage({
       <section className="toolbox-controls" aria-label="Resource type filters">
         <div>
           <p className="eyebrow">Type</p>
-          <h2>Library shelves</h2>
+          <h2>{selectedType ? `${typeLabel(selectedType)} shelf` : 'Start with one shelf'}</h2>
+          <p className="toolbox-controls-note">
+            {selectedType
+              ? 'Showing every resource in this shelf.'
+              : 'The full library stays available through the type filters.'}
+          </p>
         </div>
         <nav className="toolbox-filter-tabs">
           <Link aria-current={!selectedType ? 'page' : undefined} href={filterUrl()}>
@@ -182,7 +195,7 @@ export default async function ResourcesPage({
       </section>
 
       <section className="toolbox-library" aria-label="Resource library shelves">
-        {groupedResources.map(([type, resources]) => (
+        {libraryShelves.map(([type, resources]) => (
           <section className="toolbox-shelf" key={type}>
             <div className="toolbox-shelf-heading">
               <div>
@@ -191,7 +204,7 @@ export default async function ResourcesPage({
                   {resources.length} useful {resources.length === 1 ? 'resource' : 'resources'}
                 </h2>
               </div>
-              <Link href={filterUrl(type)}>Filter shelf</Link>
+              {!selectedType ? <Link href={filterUrl(type)}>View full shelf</Link> : null}
             </div>
 
             <div className="toolbox-shelf-list">
@@ -216,7 +229,7 @@ export default async function ResourcesPage({
           </section>
         ))}
 
-        {!groupedResources.length ? (
+        {!libraryShelves.length ? (
           <div className="toolbox-empty">
             <h2>No resources found</h2>
             <p>Reset the type filter to return to the full study library.</p>

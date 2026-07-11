@@ -1,24 +1,19 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
 import { buildArticleUrl, loadArticleDetails } from '@/lib/article-detail'
+import { listDailyVerseEntries } from '@/lib/daily-verse'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
 import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
 import { buildSeriesUrl, loadSeries } from '@/lib/series'
 
 export const dynamic = 'force-dynamic'
 
-function visualTone(slug: string, index = 0) {
-  const score = Array.from(slug).reduce((total, char) => total + char.charCodeAt(0), index)
-  return `article-visual article-visual-${score % 12}`
-}
-
 function audienceLabel(value: string) {
   const labels: Record<string, string> = {
-    'growing-believer': 'Growing believer',
-    leader: 'Leader',
-    'mature-believer': 'Mature believer',
-    'new-believer': 'New believer',
+    'growing-believer': 'Novekvo hivo',
+    leader: 'Vezeto',
+    'mature-believer': 'Erett hivo',
+    'new-believer': 'Uj hivo',
   }
 
   return labels[value] ?? value
@@ -27,7 +22,7 @@ function audienceLabel(value: string) {
 export function generateMetadata() {
   return buildDiscoveryMetadata({
     description:
-      'Kovasz is a Scripture-first Christian publication for articles, series, and study resources.',
+      'Kovasz egy magyar kereszteny teologiai folyoirat cikkekkel, sorozatokkal es tanulmanyozasi segedanyagokkal.',
     path: '/',
     title: 'Kovasz',
   })
@@ -44,84 +39,70 @@ export default async function HomePage({
 
   const homepageArticles = (await loadArticleDetails()).slice(0, 8)
   const leadArticle = homepageArticles[0]
-  const editorPicks = homepageArticles.slice(1, 4)
+  const frontPageArticles = homepageArticles.slice(1, 4)
+  const latestArticles = homepageArticles.slice(4, 8)
   const seriesIndex = (await loadSeries()).slice(0, 3)
-  const resources = (await loadResourceItems()).slice(0, 4)
+  const resources = (await loadResourceItems()).slice(0, 3)
+  const dailyVerse = listDailyVerseEntries().find((entry) => entry.status === 'published')
 
   return (
     <main className="guided-home">
       <section className="guided-hero" aria-labelledby="home-hero-title">
-        <Image
-          alt="People studying Scripture together"
-          fill
-          priority
-          sizes="100vw"
-          src="/home-hero.png"
-        />
-        <div className="guided-hero-overlay" />
-        <div className="guided-hero-copy">
-          <p className="eyebrow">Kovasz</p>
-          <h1 id="home-hero-title">Scripture-first Christian teaching for everyday faith</h1>
-          <p>
-            Articles, guided series, and study resources that help readers understand the Bible,
-            grow in Christ, and live faithfully in daily life.
-          </p>
-          <div className="guided-button-row">
-            <Link className="guided-button guided-button-primary" href="/articles">
-              Start reading
-            </Link>
-            <Link className="guided-button guided-button-secondary" href="/series">
-              Choose a series
-            </Link>
-          </div>
+        <div className="guided-issue-line">
+          <span>Kovasz</span>
+          <span>Samizdat 04</span>
+          <span>Budapest</span>
+          <span>2026</span>
         </div>
+
+        <div className="guided-masthead">
+          <p className="eyebrow">Magyar kereszteny teologiai naplo</p>
+          <h1 id="home-hero-title">Kovasz</h1>
+          <p>
+            Hit, gondolkodas, egyhaz es mindennapi engedelmesseg. Lassu olvasasra
+            szerkesztett irasok azoknak, akik nem csak valaszokat, hanem tisztabb
+            kerdeseket is keresnek.
+          </p>
+        </div>
+
+        {leadArticle ? (
+          <article className="guided-lead-article">
+            <div className="guided-lead-label">
+              <span>01</span>
+              <p>Kiemelt iras</p>
+            </div>
+            <div className="guided-lead-copy">
+              <p className="guided-meta">
+                <span>{leadArticle.category}</span>
+                <span>{leadArticle.readingMinutes} perc</span>
+              </p>
+              <h2>{leadArticle.title}</h2>
+              <p>{leadArticle.excerpt}</p>
+            </div>
+            <Link href={buildArticleUrl(leadArticle.slug)}>Olvasas</Link>
+          </article>
+        ) : null}
       </section>
 
       {leadArticle ? (
         <section className="guided-reading-section" aria-labelledby="guided-reading-title">
           <div className="guided-section-heading">
-            <p className="eyebrow">Latest and selected</p>
-            <h2 id="guided-reading-title">Read with a clear first step</h2>
-            <p>
-              The newest article is paired with a few editorial recommendations worth opening next.
-            </p>
+            <p className="eyebrow">A lapszam elejerol</p>
+            <h2 id="guided-reading-title">Harom iras, amely kijeloli a hangot</h2>
           </div>
 
-          <div className="guided-reading-layout">
-            <article className="guided-lead-article">
-              <div
-                className={`guided-lead-visual ${visualTone(leadArticle.slug)}`}
-                aria-hidden="true"
-              />
-              <div>
+          <div className="guided-front-list">
+            {frontPageArticles.map((article, index) => (
+              <Link href={buildArticleUrl(article.slug)} key={article.slug}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
                 <p className="guided-meta">
-                  <span>{leadArticle.category}</span>
-                  <span>{leadArticle.readingMinutes} min read</span>
+                  <span>{article.category}</span>
+                  <span>{article.readingMinutes} perc</span>
                 </p>
-                <h3>{leadArticle.title}</h3>
-                <p>{leadArticle.excerpt}</p>
-                <Link href={buildArticleUrl(leadArticle.slug)}>Read latest article</Link>
-              </div>
-            </article>
-
-            <aside className="guided-editor-picks" aria-label="Editor picks">
-              <div>
-                <p className="eyebrow">Editor picks</p>
-                <h3>Worth reading next</h3>
-              </div>
-              <div className="guided-pick-list">
-                {editorPicks.map((article) => (
-                  <Link href={buildArticleUrl(article.slug)} key={article.slug}>
-                    <span>{article.category}</span>
-                    <strong>{article.title}</strong>
-                    <small>{article.excerpt}</small>
-                  </Link>
-                ))}
-              </div>
-              <Link className="guided-inline-action" href="/articles">
-                Browse all articles
+                <strong>{article.title}</strong>
+                <small>{article.excerpt}</small>
               </Link>
-            </aside>
+            ))}
           </div>
         </section>
       ) : null}
@@ -129,11 +110,11 @@ export default async function HomePage({
       <section className="guided-series-section" aria-labelledby="guided-series-title">
         <div className="guided-section-heading guided-section-heading-split">
           <div>
-            <p className="eyebrow">Guided series</p>
-            <h2 id="guided-series-title">Follow a study path instead of scattered links</h2>
+            <p className="eyebrow">Sorozatok</p>
+            <h2 id="guided-series-title">Olvasasi utak, nem elszort linkek</h2>
           </div>
           <Link className="guided-inline-action" href="/series">
-            View all series
+            Osszes sorozat
           </Link>
         </div>
 
@@ -144,12 +125,12 @@ export default async function HomePage({
               <div>
                 <p className="guided-meta">
                   <span>{audienceLabel(series.audience)}</span>
-                  <span>{series.articleSlugs.length} parts</span>
+                  <span>{series.articleSlugs.length} resz</span>
                 </p>
                 <h3>{series.title}</h3>
                 <p>{series.description}</p>
               </div>
-              <Link href={buildSeriesUrl(series.slug)}>Start path</Link>
+              <Link href={buildSeriesUrl(series.slug)}>Sorozat megnyitasa</Link>
             </article>
           ))}
         </div>
@@ -157,15 +138,14 @@ export default async function HomePage({
 
       <section className="guided-toolbox-section" aria-labelledby="guided-toolbox-title">
         <div className="guided-toolbox-intro">
-          <p className="eyebrow">Resources toolbox</p>
-          <h2 id="guided-toolbox-title">Practical aids for study, prayer, and teaching</h2>
-          <p>
-            Use the resource library when an article needs a worksheet, reading plan, checklist, or
-            group-ready tool beside it.
-          </p>
-          <Link className="guided-button guided-button-primary" href="/resources">
-            Open resources
-          </Link>
+          <p className="eyebrow">Mai jegyzet</p>
+          <h2 id="guided-toolbox-title">Egy rovid ige melle lehet ulni</h2>
+          {dailyVerse ? (
+            <figure className="guided-daily-verse">
+              <blockquote>{dailyVerse.text}</blockquote>
+              <figcaption>{dailyVerse.reference}</figcaption>
+            </figure>
+          ) : null}
         </div>
 
         <div className="guided-resource-list">
@@ -181,39 +161,37 @@ export default async function HomePage({
 
       <section className="guided-question-section" aria-labelledby="guided-question-title">
         <div>
-          <p className="eyebrow">Have a question?</p>
-          <h2 id="guided-question-title">If you cannot find the answer, write to us</h2>
+          <p className="eyebrow">Friss irasok</p>
+          <h2 id="guided-question-title">A legutobbi rovatbol</h2>
           <p>
-            Some questions need more than a search result. Send us what you are wrestling with, and
-            we will consider how to answer it through an article, series, resource, or direct
-            pastoral reply.
+            Nem minden szovegnek kell hangosnak lennie. Ezek az irasok rovidebb
+            bejaratot adnak teologiahoz, imadsaghoz, csaladhoz, gyulekezethez es
+            kereszteny eletgyakorlathoz.
           </p>
         </div>
-        <div className="guided-question-card">
-          <p>
-            Write with trust. Questions about Scripture, Christian life, family, ethics, and
-            spiritual growth can help shape future Kovasz content.
-          </p>
-          <div className="guided-button-row">
-            <Link className="guided-button guided-button-primary" href="/about">
-              Contact us
+        <div className="guided-latest-list">
+          {latestArticles.map((article) => (
+            <Link href={buildArticleUrl(article.slug)} key={article.slug}>
+              <span>{article.category}</span>
+              <strong>{article.title}</strong>
             </Link>
-            <Link className="guided-button guided-button-secondary" href="/search">
-              Search first
-            </Link>
-          </div>
+          ))}
         </div>
       </section>
 
       <section className="guided-final-cta" aria-labelledby="guided-final-title">
-        <p className="eyebrow">Next faithful step</p>
-        <h2 id="guided-final-title">Start with the question you are carrying today</h2>
+        <p className="eyebrow">Kerdesed van?</p>
+        <h2 id="guided-final-title">Ird meg, min dolgozik benned az Ige</h2>
+        <p>
+          A szerkesztoseg olyan kerdeseket var, amelyekbol kesobb cikk, sorozat,
+          segedanyag vagy szemelyes valasz szulethet.
+        </p>
         <div className="guided-button-row">
           <Link className="guided-button guided-button-primary" href="/articles">
-            Browse articles
+            Cikkek bongeszese
           </Link>
-          <Link className="guided-button guided-button-secondary" href="/series">
-            Choose a series
+          <Link className="guided-button guided-button-secondary" href="/about">
+            Kapcsolat
           </Link>
         </div>
       </section>

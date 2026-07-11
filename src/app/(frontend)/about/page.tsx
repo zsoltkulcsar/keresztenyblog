@@ -23,7 +23,7 @@ export default async function AboutPage() {
     'Reader questions can become future articles, series, or practical resources.',
   ]
 
-  const commitments = [
+  const principles = [
     { body: about.mission, title: 'Mission' },
     { body: about.doctrine, title: 'Doctrine' },
     { body: about.editorialPosture, title: 'Editorial posture' },
@@ -41,6 +41,15 @@ export default async function AboutPage() {
           </p>
         </div>
       </header>
+
+      <section className="about-principles" aria-label="Kovasz mission and editorial principles">
+        {principles.map((item) => (
+          <article className="about-principle" key={item.title}>
+            <span>{item.title}</span>
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </section>
 
       <section className="about-writers" aria-labelledby="about-writers-title">
         <div className="about-section-heading">
@@ -87,9 +96,7 @@ export default async function AboutPage() {
       <section className="about-publishing" aria-labelledby="about-publishing-title">
         <div className="about-section-heading">
           <p className="eyebrow">What we publish</p>
-          <h2 id="about-publishing-title">
-            Teaching, guidance, and resources organized around real questions.
-          </h2>
+          <h2 id="about-publishing-title">The questions we keep returning to</h2>
         </div>
         <div className="about-topic-list">
           {[
@@ -144,21 +151,7 @@ export default async function AboutPage() {
             />
           </label>
           <button type="submit">Send message</button>
-          <p>
-            This starter form opens your email client for now. Later it can be connected to the CMS
-            or a moderation inbox.
-          </p>
         </form>
-      </section>
-
-      <section className="about-commitments" aria-label="Editorial commitments">
-        {commitments.map((item) => (
-          <article className="about-commitment" key={item.title}>
-            <span>{item.title}</span>
-            <h2>{item.title}</h2>
-            <p>{item.body}</p>
-          </article>
-        ))}
       </section>
     </main>
   )
