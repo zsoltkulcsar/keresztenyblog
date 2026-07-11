@@ -1,0 +1,8 @@
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          44668
+- Dir:          C:\Users\zsolt.kulcsar\OneDrive - RebelDot Solutions\Desktop\bbb\kovasz
+- Log:          dist\dev\logs\next-development.log
+
+Run taskkill /PID 44668 /F to stop it.

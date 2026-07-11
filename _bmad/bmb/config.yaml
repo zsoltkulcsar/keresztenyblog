@@ -3,12 +3,12 @@
 # Version: 6.8.0
 # Date: 2026-06-16T10:42:48.866Z
 
-bmad_builder_output_folder: "{project-root}/skills"
-bmad_builder_reports: "{project-root}/skills/reports"
+bmad_builder_output_folder: '{project-root}/skills'
+bmad_builder_reports: '{project-root}/skills/reports'
 
 # Core Configuration Values
 user_name: Zsolt.kulcsar
 project_name: bbb
 communication_language: English
 document_output_language: English
-output_folder: "{project-root}/_bmad-output"
+output_folder: '{project-root}/_bmad-output'

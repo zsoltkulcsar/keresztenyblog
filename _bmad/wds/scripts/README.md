@@ -35,6 +35,7 @@ node src/scripts/wds-init-page.js \
 ```
 
 Output:
+
 - `C-UX-Scenarios/01-new-user-onboarding/01-start/01-start.md`
 - `C-UX-Scenarios/01-new-user-onboarding/01-start/sketches/`
 
@@ -117,6 +118,7 @@ node src/scripts/wds-validate.js --all
 ```
 
 Validates:
+
 - Required sections present
 - Object IDs are kebab-case with correct page prefix
 - No duplicate Object IDs
