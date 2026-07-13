@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { buildArticleUrl, loadArticleDetail } from '@/lib/article-detail'
@@ -29,9 +29,9 @@ function resourceAction(resource: ResourceItem) {
   if (resource.externalUrl) {
     return {
       href: resource.externalUrl,
-      label: resource.ctaLabel ?? 'Külső forrás megnyitása',
+      label: resource.ctaLabel ?? 'Külso forrás megnyitása',
       external: true,
-      note: 'Külső link',
+      note: 'Külso link',
     }
   }
 
@@ -80,10 +80,10 @@ export function generateMetadata({
 
     if (!resource) {
       return buildDiscoveryMetadata({
-        description: 'Resource detail',
+        description: 'Forrás részletei',
         noIndex: true,
         path: buildResourceUrl(slug ?? ''),
-        title: 'Resource not found',
+        title: 'A forrás nem található',
       })
     }
 
@@ -128,9 +128,9 @@ export default async function ResourceDetailPage({
   const usageSteps = resource.steps.length
     ? resource.steps
     : [
-        'Read the related passage first.',
-        'Use the resource as support, not replacement.',
-        'Write one concrete next step.',
+        'Először olvasd el a kapcsolódó igeszakaszt.',
+        'Segítségként használd a forrást, ne helyettesítésként.',
+        'Írj le egy konkrét következő lépést.',
       ]
 
   return (
@@ -145,7 +145,7 @@ export default async function ResourceDetailPage({
           <p>{resource.description}</p>
         </div>
 
-        <aside className="resource-action-card" aria-label="Resource action">
+        <aside className="resource-action-card" aria-label="Forrásművelet">
           <span>{action?.note ?? resourceMetaLabel(resource.format, t.resources.openResource)}</span>
           <h2>{resource.ctaLabel ?? 'Használd ezt a forrást'}</h2>
           <p>{resource.usefulness}</p>

@@ -26,15 +26,15 @@ export async function generateMetadata({ params }: TaxonomyPageProps) {
 
   if (!audience) {
     return buildDiscoveryMetadata({
-      description: 'Audience not found',
+      description: 'A célcsoport nem található',
       noIndex: true,
       path: buildTaxonomyUrl('audience', slug),
-      title: 'Audience not found',
+      title: 'A célcsoport nem található',
     })
   }
 
   return buildDiscoveryMetadata({
-    description: `Articles, series, and resources for ${audience.label}.`,
+    description: `Cikkek, sorozatok és források ennek a célcsoportnak: ${audience.label}.`,
     path: buildTaxonomyUrl('audience', audience.value),
     title: audience.label,
   })
@@ -52,28 +52,28 @@ export default async function AudienceDetailPage({ params }: TaxonomyPageProps) 
   return (
     <main className="taxonomy-page">
       <header className="taxonomy-header taxonomy-detail-header">
-        <Link href="/audiences">All audiences</Link>
-        <p className="eyebrow">Audience</p>
+        <Link href="/audiences">Minden célcsoport</Link>
+        <p className="eyebrow">Célcsoport</p>
         <h1>{audience.label}</h1>
         <p>
-          {audience.articleCount} articles, {audience.seriesCount} series, and{' '}
-          {audience.resourceCount} resources prepared for this reader.
+          {audience.articleCount} cikk, {audience.seriesCount} sorozat és{' '}
+          {audience.resourceCount} forrás készült ehhez az olvasóhoz.
         </p>
       </header>
 
       <div className="taxonomy-detail-layout">
         <section className="taxonomy-detail-section" aria-labelledby="taxonomy-articles">
-          <h2 id="taxonomy-articles">Articles</h2>
+          <h2 id="taxonomy-articles">Cikkek</h2>
           <div className="taxonomy-result-list">
             {audience.articles.map((article) => (
               <article key={article.slug}>
                 <p className="archive-card-meta">
                   <span>{article.category.label}</span>
-                  <span>{article.readingMinutes} min read</span>
+                  <span>{article.readingMinutes} perc olvasás</span>
                 </p>
                 <h3>{article.title}</h3>
                 <p>{article.excerpt}</p>
-                <Link href={buildArticleUrl(article.slug)}>Read article</Link>
+                <Link href={buildArticleUrl(article.slug)}>Cikk olvasása</Link>
               </article>
             ))}
           </div>
@@ -81,7 +81,7 @@ export default async function AudienceDetailPage({ params }: TaxonomyPageProps) 
 
         <aside className="taxonomy-side-panel">
           <section aria-labelledby="taxonomy-series">
-            <h2 id="taxonomy-series">Series</h2>
+            <h2 id="taxonomy-series">Sorozatok</h2>
             {audience.series.length > 0 ? (
               audience.series.map((series) => (
                 <Link href={buildSeriesUrl(series.slug)} key={series.slug}>
@@ -90,12 +90,12 @@ export default async function AudienceDetailPage({ params }: TaxonomyPageProps) 
                 </Link>
               ))
             ) : (
-              <p>No series yet.</p>
+              <p>Még nincs kapcsolódó sorozat.</p>
             )}
           </section>
 
           <section aria-labelledby="taxonomy-resources">
-            <h2 id="taxonomy-resources">Resources</h2>
+            <h2 id="taxonomy-resources">Források</h2>
             {audience.resources.length > 0 ? (
               audience.resources.map((resource) => (
                 <Link href={buildResourceUrl(resource.slug)} key={resource.slug}>
@@ -104,7 +104,7 @@ export default async function AudienceDetailPage({ params }: TaxonomyPageProps) 
                 </Link>
               ))
             ) : (
-              <p>No resources yet.</p>
+              <p>Még nincs kapcsolódó forrás.</p>
             )}
           </section>
         </aside>

@@ -7,7 +7,7 @@ const t = getTranslations()
 
 export const metadata = {
   description: t.layout.description,
-  title: 'Kovasz',
+  title: 'Kovász',
 }
 
 export default function RootLayout(props: { children: ReactNode }) {

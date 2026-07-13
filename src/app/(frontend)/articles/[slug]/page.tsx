@@ -25,7 +25,7 @@ function getSingleValue(value: string | string[] | undefined) {
 function formatDate(value: string) {
   const dateValue = value.includes('T') ? value : `${value}T00:00:00Z`
 
-  return new Intl.DateTimeFormat('en-GB', {
+  return new Intl.DateTimeFormat('hu-HU', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -51,10 +51,10 @@ export function generateMetadata({
 
     if (!detail) {
       return buildDiscoveryMetadata({
-        description: 'Article detail',
+        description: 'Cikk részletei',
         noIndex: true,
         path: buildArticleUrl(slug),
-        title: 'Article not found',
+        title: 'A cikk nem található',
         type: 'article',
       })
     }
@@ -108,15 +108,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </p>
             <dl>
               <div>
-                <dt>Reading</dt>
-                <dd>{detail.readingMinutes} min</dd>
+                <dt>Olvasás</dt>
+                <dd>{detail.readingMinutes} perc</dd>
               </div>
               <div>
-                <dt>Series</dt>
-                <dd>{detail.series?.label ?? 'Standalone'}</dd>
+                <dt>Sorozat</dt>
+                <dd>{detail.series?.label ?? 'Önálló cikk'}</dd>
               </div>
               <div>
-                <dt>Topics</dt>
+                <dt>Témák</dt>
                 <dd className="scripture-study-facet-list">
                   {detail.archiveArticle.topics.map((topic) => (
                     <Link href={buildTaxonomyUrl('topic', topic.value)} key={topic.value}>
@@ -126,7 +126,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 </dd>
               </div>
               <div>
-                <dt>Readers</dt>
+                <dt>Olvasók</dt>
                 <dd className="scripture-study-facet-list">
                   {detail.archiveArticle.audiences.map((audience) => (
                     <Link href={buildTaxonomyUrl('audience', audience.value)} key={audience.value}>
@@ -136,7 +136,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 </dd>
               </div>
               <div>
-                <dt>Tags</dt>
+                <dt>Címkék</dt>
                 <dd>{detail.tags.join(' / ')}</dd>
               </div>
             </dl>
@@ -145,19 +145,19 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </header>
 
         {detail.series ? (
-          <section className="scripture-study-series-banner" aria-label="Series placement">
+          <section className="scripture-study-series-banner" aria-label="Sorozatbeli hely">
             <div>
-              <p className="eyebrow">Part {detail.seriesOrder ?? 1}</p>
-              <h2>This article belongs to {detail.series.label}</h2>
+              <p className="eyebrow">{detail.seriesOrder ?? 1}. rész</p>
+              <h2>Ez a cikk a(z) {detail.series.label} sorozat része</h2>
               <p>{detail.series.description}</p>
             </div>
             <div>
-              <Link href={buildSeriesUrl(detail.series.slug)}>Start from beginning</Link>
+              <Link href={buildSeriesUrl(detail.series.slug)}>Kezdés az elejéről</Link>
               {detail.seriesNavigation.previous ? (
-                <Link href={buildArticleUrl(detail.seriesNavigation.previous.slug)}>Previous</Link>
+                <Link href={buildArticleUrl(detail.seriesNavigation.previous.slug)}>Előző</Link>
               ) : null}
               {detail.seriesNavigation.next ? (
-                <Link href={buildArticleUrl(detail.seriesNavigation.next.slug)}>Next</Link>
+                <Link href={buildArticleUrl(detail.seriesNavigation.next.slug)}>Következő</Link>
               ) : null}
             </div>
           </section>
@@ -165,20 +165,20 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
         <section className="scripture-study-anchor" aria-labelledby="scripture-title">
           <div>
-            <p className="eyebrow">Scripture</p>
+            <p className="eyebrow">Szentírás</p>
             <span>{detail.scriptureBlock.reference}</span>
           </div>
           <blockquote id="scripture-title">{detail.scriptureBlock.text}</blockquote>
         </section>
 
-        <section className="scripture-study-quote" aria-label="Pull quote">
-          <p className="eyebrow">Central thought</p>
+        <section className="scripture-study-quote" aria-label="Kiemelt gondolat">
+          <p className="eyebrow">Központi gondolat</p>
           <blockquote>{detail.pullQuote}</blockquote>
         </section>
 
         <section className="scripture-study-layout">
           <aside className="scripture-study-panel">
-            <p className="eyebrow">Study panel</p>
+            <p className="eyebrow">Tanulmányi panel</p>
             <h2>{detail.studyPanel.title}</h2>
             <ul>
               {detail.studyPanel.items.map((item) => (
@@ -186,7 +186,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               ))}
             </ul>
             {detail.series ? (
-              <Link href={buildSeriesUrl(detail.series.slug)}>Open series path</Link>
+              <Link href={buildSeriesUrl(detail.series.slug)}>Sorozatút megnyitása</Link>
             ) : null}
           </aside>
 
@@ -204,38 +204,38 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
         <footer className="scripture-study-footer">
           <section>
-            <p className="eyebrow">Author and source</p>
+            <p className="eyebrow">Szerző és forrás</p>
             <h2>{detail.author}</h2>
             <p>
-              Published {formatDate(detail.publishedAt)} in {detail.category}. Scripture remains the
-              anchor for the reading, study notes, and suggested next steps.
+              Megjelent: {formatDate(detail.publishedAt)}, kategória: {detail.category}. A
+              Szentírás marad az olvasás, a jegyzetek és a következő lépések horgonya.
             </p>
             <ShareTools title={detail.title} url={buildArticleUrl(detail.slug)} />
           </section>
 
           {detail.series ? (
             <section>
-              <p className="eyebrow">Series context</p>
+              <p className="eyebrow">Sorozat kontextus</p>
               <h2>{detail.series.label}</h2>
               <p>{detail.series.description}</p>
-              <Link href={buildSeriesUrl(detail.series.slug)}>Continue the path</Link>
+              <Link href={buildSeriesUrl(detail.series.slug)}>Út folytatása</Link>
             </section>
           ) : null}
 
           {detail.relatedResource || detail.relatedBook ? (
             <section>
-              <p className="eyebrow">Study next</p>
-              <h2>Related helps</h2>
-              {detail.relatedResource ? <p>Resource: {detail.relatedResource}</p> : null}
-              {detail.relatedBook ? <p>Book: {detail.relatedBook}</p> : null}
+              <p className="eyebrow">Következő tanulmány</p>
+              <h2>Kapcsolódó segítségek</h2>
+              {detail.relatedResource ? <p>Forrás: {detail.relatedResource}</p> : null}
+              {detail.relatedBook ? <p>Könyv: {detail.relatedBook}</p> : null}
             </section>
           ) : null}
         </footer>
 
-        <section className="scripture-study-related" aria-label="Related reading">
+        <section className="scripture-study-related" aria-label="Kapcsolódó olvasmányok">
           <div>
-            <p className="eyebrow">Related reading</p>
-            <h2>Read next</h2>
+            <p className="eyebrow">Kapcsolódó olvasmány</p>
+            <h2>Olvasd tovább</h2>
           </div>
           <div>
             {relatedArticles.map((article) => (

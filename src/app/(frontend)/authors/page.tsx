@@ -6,9 +6,9 @@ import { buildAuthorUrl, loadAuthorProfiles } from '@/lib/authors'
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
-    description: 'Author profiles for the writers and editors behind Kovasz.',
+    description: 'Szerzői profilok a Kovász íróiról és szerkesztőiről.',
     path: '/authors',
-    title: 'Authors',
+    title: 'Szerzők',
   })
 }
 
@@ -19,21 +19,21 @@ export default async function AuthorsPage() {
     <main className="archive-page">
       <header className="archive-header">
         <div>
-          <p className="eyebrow">Authors</p>
-          <h1>People behind the writing</h1>
+          <p className="eyebrow">Szerzők</p>
+          <h1>Akik az írások mögött állnak</h1>
           <p className="archive-intro">
-            Meet the editors and contributors shaping the publication.
+            Ismerd meg a szerkesztőket és közreműködőket, akik formálják a kiadványt.
           </p>
         </div>
         <div className="archive-header-meta">
-          <span>{authors.length} profiles</span>
+          <span>{authors.length} profil</span>
           <Link className="archive-reset-link" href="/about">
-            About Kovasz
+            A Kovászról
           </Link>
         </div>
       </header>
 
-      <section className="author-grid" aria-label="Author profiles">
+      <section className="author-grid" aria-label="Szerzői profilok">
         {authors.map((author) => (
           <article className="author-card" key={author.slug}>
             <Image
@@ -45,12 +45,12 @@ export default async function AuthorsPage() {
             />
             <p className="card-meta">
               <span>{author.role}</span>
-              <span>{author.articleSlugs.length} articles</span>
+              <span>{author.articleSlugs.length} cikk</span>
             </p>
             <h2>{author.name}</h2>
             <p>{author.bio}</p>
             <Link className="archive-open-link" href={buildAuthorUrl(author.slug)}>
-              Open profile
+              Profil megnyitása
             </Link>
           </article>
         ))}

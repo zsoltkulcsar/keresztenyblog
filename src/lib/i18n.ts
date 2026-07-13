@@ -47,6 +47,8 @@ const translations = {
         'Keresztény élet és személyes növekedés',
         'Házasság, család és kapcsolatok',
         'Etika és mindennapi keresztény döntések',
+        'Bibliaolvasás, imádság és lelki fegyelem',
+        'Gyülekezeti szolgálat és vezetői felelősség',
       ],
     },
     chrome: {
@@ -112,7 +114,7 @@ const translations = {
         'Hit, gondolkodás, egyház és mindennapi engedelmesség. Lassú olvasásra szerkesztett írások azoknak, akik nem csak válaszokat, hanem tisztább kérdéseket is keresnek.',
       heroEyebrow: 'Magyar keresztény teológiai napló',
       issueCity: 'Budapest',
-      issueName: 'Kovasz',
+      issueName: 'Kovász',
       issueNumber: 'Samizdat 04',
       issueYear: '2026',
       latestBody:
@@ -318,6 +320,8 @@ const translations = {
         'Christian life and personal growth',
         'Marriage, family, and relationships',
         'Ethics and daily Christian decisions',
+        'Bible reading, prayer, and spiritual discipline',
+        'Church service and leadership responsibility',
       ],
     },
     chrome: {

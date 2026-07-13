@@ -21,10 +21,10 @@ export function generateMetadata({
 
     if (!entry) {
       return buildDiscoveryMetadata({
-        description: 'Daily verse not found',
+        description: 'A napi ige nem található',
         noIndex: true,
         path: buildDailyVerseUrl(slug),
-        title: 'Daily Verse not found',
+        title: 'A napi ige nem található',
       })
     }
 
@@ -55,7 +55,7 @@ export default async function DailyVerseDetail({
     <main className="archive-page">
       <article className="article-header">
         <div className="article-kicker-row">
-          <p className="eyebrow">Daily Verse</p>
+          <p className="eyebrow">Napi ige</p>
           <p className="article-meta-inline">
             <span>{entry.reference}</span>
             <span>{entry.date}</span>
@@ -67,7 +67,7 @@ export default async function DailyVerseDetail({
 
       <section className="scripture-block">
         <div>
-          <p className="eyebrow">Verse</p>
+          <p className="eyebrow">Ige</p>
           <h2>{entry.reference}</h2>
         </div>
         <blockquote>{entry.text}</blockquote>
@@ -75,27 +75,27 @@ export default async function DailyVerseDetail({
 
       <section className="archive-empty">
         <div>
-          <p className="eyebrow">Archive</p>
-          <h2>More daily readings</h2>
-          <p>Return to the archive to keep moving through the daily Scripture rhythm.</p>
+          <p className="eyebrow">Archívum</p>
+          <h2>További napi olvasmányok</h2>
+          <p>Térj vissza az archívumba, és folytasd a napi igei ritmust.</p>
         </div>
         <Link className="archive-reset-link" href="/napi-ige">
-          Back to archive
+          Vissza az archívumba
         </Link>
       </section>
 
-      <section className="page-links" aria-label="Daily Verse routes">
+      <section className="page-links" aria-label="Napi ige útvonalak">
         <Link className="page-link" href="/articles">
-          Articles
+          Cikkek
         </Link>
         <Link className="page-link" href="/series">
-          Series
+          Sorozatok
         </Link>
         <Link className="page-link" href="/resources">
-          Resources
+          Források
         </Link>
         <Link className="page-link" href="/about">
-          About Kovasz
+          A Kovászról
         </Link>
       </section>
     </main>

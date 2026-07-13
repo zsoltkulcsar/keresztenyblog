@@ -7,9 +7,9 @@ export const dynamic = 'force-dynamic'
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
-    description: 'Browse Kovasz content by reader stage and pastoral need.',
+    description: 'Böngészd a Kovász tartalmait olvasói szakasz és pásztori szükség szerint.',
     path: '/audiences',
-    title: 'Audiences',
+    title: 'Célcsoportok',
   })
 }
 
@@ -19,15 +19,15 @@ export default async function AudiencesPage() {
   return (
     <main className="taxonomy-page">
       <header className="taxonomy-header">
-        <p className="eyebrow">Audiences</p>
-        <h1>Browse by reader</h1>
+        <p className="eyebrow">Célcsoportok</p>
+        <h1>Böngészés olvasó szerint</h1>
         <p>
-          Start with the reader in front of the question: new believers, mature readers, families,
-          leaders, and others who need practical biblical guidance.
+          Indulj abból, kinek szól a kérdés: új hívőknek, érett olvasóknak, családoknak,
+          vezetőknek vagy másoknak, akik gyakorlati bibliai útmutatást keresnek.
         </p>
       </header>
 
-      <section className="taxonomy-grid" aria-label="Audience list">
+      <section className="taxonomy-grid" aria-label="Célcsoportok listája">
         {audiences.map((audience) => (
           <Link
             className="taxonomy-card"
@@ -36,8 +36,8 @@ export default async function AudiencesPage() {
           >
             <span>{audience.label}</span>
             <small>
-              {audience.articleCount} articles / {audience.seriesCount} series /{' '}
-              {audience.resourceCount} resources
+              {audience.articleCount} cikk / {audience.seriesCount} sorozat /{' '}
+              {audience.resourceCount} forrás
             </small>
           </Link>
         ))}

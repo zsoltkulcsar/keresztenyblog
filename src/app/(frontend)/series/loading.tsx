@@ -3,9 +3,9 @@ export default function SeriesLoading() {
     <main className="series-page" aria-busy="true">
       <section className="archive-empty">
         <div>
-          <p className="eyebrow">Series</p>
-          <h2>Loading series.</h2>
-          <p>Preparing topic and audience routes.</p>
+          <p className="eyebrow">Sorozatok</p>
+          <h2>Sorozatok betöltése.</h2>
+          <p>A téma- és célcsoportútvonalak előkészítése folyamatban van.</p>
         </div>
       </section>
     </main>

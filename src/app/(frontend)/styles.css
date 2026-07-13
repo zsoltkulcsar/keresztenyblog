@@ -12,6 +12,7 @@
   --ink: #0b0b0b;
   --ink-soft: #3b3730;
   --ink-muted: #6e675c;
+  --font-serif: Georgia, 'Times New Roman', serif;
 }
 
 * {
@@ -374,6 +375,8 @@ body {
   display: grid;
   grid-template-columns: minmax(120px, 0.35fr) minmax(0, 1fr);
   gap: clamp(32px, 7vw, 96px);
+  width: min(100%, 1180px);
+  margin: 0 auto;
   align-items: start;
 }
 
@@ -389,12 +392,15 @@ body {
   display: grid;
   grid-template-columns: repeat(3, minmax(130px, 1fr));
   gap: 24px;
+  justify-items: start;
 }
 
 .site-footer-group {
   display: grid;
   gap: 9px;
   align-content: start;
+  justify-items: start;
+  text-align: left;
 }
 
 .site-footer-group h3 {
@@ -407,6 +413,8 @@ body {
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  width: min(100%, 1180px);
+  margin: 0 auto;
   padding-top: 24px;
   border-top: 1px solid rgba(255, 255, 255, 0.16);
   color: rgba(255, 255, 255, 0.8);
@@ -421,6 +429,7 @@ body {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .site-frame {
@@ -5659,9 +5668,9 @@ img {
 }
 
 .guided-toolbox-section .guided-resource-list a {
-  grid-template-columns: minmax(96px, 0.28fr) minmax(0, 0.42fr) minmax(0, 0.72fr);
-  gap: 16px;
-  min-height: 92px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  min-height: 0;
   align-items: start;
   padding: 18px 0;
 }
@@ -5669,6 +5678,7 @@ img {
 .guided-toolbox-section .guided-resource-list span,
 .guided-toolbox-section .guided-resource-list strong,
 .guided-toolbox-section .guided-resource-list small {
+  grid-column: 1;
   min-width: 0;
 }
 
@@ -7585,6 +7595,14 @@ img {
     display: grid;
   }
 
+  .site-footer-bottom div {
+    justify-content: flex-start;
+  }
+
+  .site-footer-bottom a {
+    text-align: left;
+  }
+
   .front-page {
     padding: 16px;
   }
@@ -8050,5 +8068,293 @@ img {
 
   .taxonomy-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Presentation polish: keep translated Hungarian copy readable and stable. */
+.site-frame,
+.archive-page,
+.guided-home,
+.resources-toolbox-page,
+.resource-guide-page,
+.study-path-page,
+.discipleship-path-page,
+.scripture-study-page,
+.about-page,
+.books-page,
+.book-detail-page,
+.taxonomy-page,
+.profile-page {
+  overflow-x: clip;
+}
+
+.site-brand,
+.site-footer-logo,
+.site-nav a,
+.site-footer a,
+.guided-button,
+.guided-inline-action,
+.guided-series-card a,
+.toolbox-card-link,
+.resource-primary-link,
+.archive-reset-link,
+.archive-open-link,
+.pagination-link,
+.book-back-link,
+.book-comment-form button,
+.books-filter-form button,
+.books-resource-tabs a,
+.study-path-form button,
+.study-path-form a,
+.discipleship-back-link,
+.discipleship-primary-link,
+.discipleship-secondary-link,
+.page-link {
+  text-decoration: none;
+}
+
+.site-nav a,
+.site-footer a,
+.guided-button,
+.guided-inline-action,
+.guided-series-card a,
+.toolbox-card-link,
+.resource-primary-link,
+.archive-reset-link,
+.archive-open-link,
+.pagination-link,
+.book-back-link,
+.book-comment-form button,
+.books-filter-form button,
+.books-filter-form a,
+.books-resource-tabs a,
+.study-path-form button,
+.study-path-form a,
+.discipleship-back-link,
+.discipleship-primary-link,
+.discipleship-secondary-link,
+.page-link {
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.guided-masthead h1,
+.guided-lead-copy h2,
+.guided-section-heading h2,
+.guided-series-card h3,
+.guided-final-cta h2,
+.archive-header h1,
+.archive-latest-copy h2,
+.archive-editor-card h3,
+.archive-result-item h3,
+.toolbox-header h1,
+.toolbox-feature h2,
+.toolbox-shelf-heading h2,
+.resource-guide-title h1,
+.resource-guide-section h2,
+.study-path-header h1,
+.study-path-feature-heading h2,
+.study-path-card h2,
+.discipleship-path-title h1,
+.discipleship-path-section h2,
+.scripture-study-header h1,
+.scripture-study-body h2,
+.scripture-study-related h2,
+.about-hero h1,
+.about-section-heading h2,
+.books-header h1,
+.book-list-copy h2,
+.book-detail-header h1,
+.book-detail-section h2,
+.taxonomy-header h1,
+.taxonomy-card span,
+.profile-hero h1 {
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.archive-intro,
+.guided-masthead p,
+.guided-lead-copy p,
+.guided-series-card p,
+.guided-daily-verse blockquote,
+.toolbox-header-note p,
+.toolbox-feature p,
+.toolbox-resource-main p,
+.resource-guide-title p,
+.resource-action-card p,
+.resource-guide-section p,
+.study-path-header p,
+.study-path-feature p,
+.study-path-card p,
+.discipleship-path-title p,
+.discipleship-purpose-card h2,
+.scripture-study-header p,
+.scripture-study-body p,
+.about-hero-copy p,
+.about-principle p,
+.about-writer-card p,
+.books-header p,
+.book-list-copy p,
+.book-detail-section p,
+.taxonomy-header p,
+.taxonomy-result-list p {
+  overflow-wrap: anywhere;
+}
+
+.archive-card-meta,
+.card-meta,
+.guided-meta,
+.book-meta,
+.toolbox-tags,
+.resource-guide-highlights,
+.article-meta-inline {
+  align-items: center;
+  gap: 8px;
+}
+
+.archive-card-meta span,
+.card-meta span,
+.guided-meta span,
+.book-meta span,
+.toolbox-tags span,
+.resource-guide-highlights span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.guided-series-card,
+.guided-front-list a,
+.guided-latest-list a,
+.toolbox-resource-row,
+.resource-guide-links a,
+.resource-guide-related-list a,
+.study-path-card,
+.discipleship-lesson-list li,
+.discipleship-resource-list a,
+.discipleship-next-list a,
+.archive-editor-card,
+.archive-result-item,
+.author-card,
+.book-list-item,
+.taxonomy-card,
+.taxonomy-detail-section,
+.taxonomy-side-panel section,
+.related-item {
+  transition:
+    border-color 140ms ease,
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.guided-series-card:hover,
+.guided-front-list a:hover,
+.guided-latest-list a:hover,
+.toolbox-resource-row:hover,
+.resource-guide-links a:hover,
+.resource-guide-related-list a:hover,
+.study-path-card:hover,
+.discipleship-lesson-list li:hover,
+.discipleship-resource-list a:hover,
+.discipleship-next-list a:hover,
+.archive-editor-card:hover,
+.archive-result-item:hover,
+.author-card:hover,
+.book-list-item:hover,
+.taxonomy-card:hover,
+.related-item:hover {
+  border-color: rgba(36, 84, 127, 0.42);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+  transform: translateY(-1px);
+}
+
+.archive-search input,
+.search-field input,
+.site-header-search input,
+.site-mobile-search input,
+.about-contact-form input,
+.about-contact-form textarea,
+.books-filter-form select,
+.book-comment-form input,
+.book-comment-form textarea,
+.study-path-form select {
+  min-width: 0;
+}
+
+.site-footer a,
+.site-footer-logo {
+  text-align: left;
+}
+
+.site-footer-bottom a {
+  text-align: right;
+}
+
+.about-contact,
+.about-principles,
+.about-writers,
+.about-process,
+.about-publishing,
+.books-library,
+.book-detail-layout,
+.taxonomy-detail-layout,
+.resource-guide-layout,
+.scripture-study-layout {
+  min-width: 0;
+}
+
+.archive-empty {
+  align-items: center;
+}
+
+@media (max-width: 720px) {
+  .site-brand {
+    font-size: 1.1rem;
+  }
+
+  .site-nav-drawer .site-nav {
+    min-width: min(82vw, 340px);
+  }
+
+  .site-nav-drawer .site-nav a {
+    min-height: 40px;
+    text-align: left;
+  }
+
+  .guided-masthead h1,
+  .archive-header h1,
+  .toolbox-header h1,
+  .resource-guide-title h1,
+  .study-path-header h1,
+  .discipleship-path-title h1,
+  .scripture-study-header h1,
+  .about-hero h1,
+  .books-header h1,
+  .book-detail-header h1,
+  .taxonomy-header h1,
+  .profile-hero h1 {
+    line-height: 1.02;
+  }
+
+  .archive-header,
+  .toolbox-header,
+  .study-path-header,
+  .resource-guide-header,
+  .book-detail-header {
+    gap: 22px;
+  }
+
+  .archive-search,
+  .search-form,
+  .about-contact-form,
+  .book-comment-form {
+    width: 100%;
+  }
+
+  .archive-search button,
+  .search-form button,
+  .about-contact-form button,
+  .book-comment-form button {
+    width: 100%;
   }
 }

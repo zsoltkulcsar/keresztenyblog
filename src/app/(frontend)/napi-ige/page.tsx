@@ -8,14 +8,14 @@ function getSingleValue(value: string | string[] | undefined) {
 }
 
 function pageLabel(total: number, page: number) {
-  return `Page ${page} of ${Math.max(1, Math.ceil(total / 4))}`
+  return `${page}. oldal / ${Math.max(1, Math.ceil(total / 4))}`
 }
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
-    description: 'Browse the Daily Verse archive on Kovasz.',
+    description: 'Böngészd a Kovász napi ige archívumát.',
     path: '/napi-ige',
-    title: 'Daily Verse',
+    title: 'Napi ige',
   })
 }
 
@@ -39,22 +39,22 @@ export default async function DailyVerseArchive({
     <main className="archive-page">
       <header className="archive-header">
         <div>
-          <p className="eyebrow">Daily Verse</p>
-          <h1>Archive of Scripture for the day</h1>
+          <p className="eyebrow">Napi ige</p>
+          <h1>Napi igék archívuma</h1>
           <p className="archive-intro">
-            Browse short daily Scripture readings with stable date-based links.
+            Rövid napi igeolvasások stabil, dátum szerinti hivatkozásokkal.
           </p>
         </div>
 
         <div className="archive-header-meta">
           <span>{pageLabel(entries.length, safePage)}</span>
           <Link className="archive-reset-link" href="/napi-ige">
-            Reset archive
+            Archívum visszaállítása
           </Link>
         </div>
       </header>
 
-      <section className="archive-grid" aria-label="Daily Verse archive">
+      <section className="archive-grid" aria-label="Napi ige archívum">
         {slice.map((entry) => (
           <article className="archive-item" key={entry.slug}>
             <p className="card-meta">
@@ -64,21 +64,21 @@ export default async function DailyVerseArchive({
             <h2>{entry.text}</h2>
             <p>{entry.note}</p>
             <Link className="archive-open-link" href={buildDailyVerseUrl(entry.slug)}>
-              Open verse
+              Ige megnyitása
             </Link>
           </article>
         ))}
       </section>
 
       {totalPages > 1 ? (
-        <nav className="archive-pagination" aria-label="Daily Verse pagination">
+        <nav className="archive-pagination" aria-label="Napi ige lapozás">
           <Link
             aria-disabled={safePage === 1}
             className="pagination-link"
             href={safePage === 1 ? '/napi-ige' : `/napi-ige?page=${safePage - 1}`}
             tabIndex={safePage === 1 ? -1 : 0}
           >
-            Previous
+            Előző
           </Link>
           <div className="pagination-pages">
             {Array.from({ length: totalPages }, (_, index) => {
@@ -105,7 +105,7 @@ export default async function DailyVerseArchive({
             }
             tabIndex={safePage === totalPages ? -1 : 0}
           >
-            Next
+            Következő
           </Link>
         </nav>
       ) : null}

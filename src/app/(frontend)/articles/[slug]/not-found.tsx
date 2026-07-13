@@ -5,12 +5,12 @@ export default function ArticleNotFound() {
     <main className="archive-page">
       <section className="archive-empty" aria-live="polite">
         <div>
-          <p className="eyebrow">Article not found</p>
-          <h2>This article is not available.</h2>
-          <p>Return to the archive or search the publication for another route into the content.</p>
+          <p className="eyebrow">A cikk nem található</p>
+          <h2>Ez a cikk jelenleg nem elérhető.</h2>
+          <p>Térj vissza az archívumba, vagy keress másik útvonalat a tartalomhoz.</p>
         </div>
         <Link className="archive-reset-link" href="/articles">
-          Back to archive
+          Vissza az archívumba
         </Link>
       </section>
     </main>

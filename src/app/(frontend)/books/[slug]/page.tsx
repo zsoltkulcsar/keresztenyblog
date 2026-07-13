@@ -15,6 +15,16 @@ function getSingleValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value
 }
 
+function bookFormatLabel(format: string) {
+  const labels: Record<string, string> = {
+    book: 'Könyv',
+    'reading-list': 'Olvasási lista',
+    'study-companion': 'Tanulmányi kísérő',
+  }
+
+  return labels[format] ?? format
+}
+
 export function generateMetadata({
   params,
 }: {
@@ -28,10 +38,10 @@ export function generateMetadata({
 
     if (!book) {
       return buildDiscoveryMetadata({
-        description: 'Book recommendation not found',
+        description: 'A könyvajánló nem található',
         noIndex: true,
         path: buildBookUrl(slug),
-        title: 'Book not found',
+        title: 'A könyv nem található',
       })
     }
 
@@ -70,7 +80,7 @@ export default async function BookDetailPage({
       <header className="book-detail-header">
         <div>
           <Link className="book-back-link" href="/books">
-            Books
+            Könyvek
           </Link>
           <p className="eyebrow">{bookTopicLabels[book.topic]}</p>
           <h1>{book.title}</h1>
@@ -87,7 +97,7 @@ export default async function BookDetailPage({
           </div>
           <div className="book-recommendation-card">
             <span>{bookLevelLabels[book.level]}</span>
-            <h2>Why we recommend it</h2>
+            <h2>Miért ajánljuk?</h2>
             <p>{book.recommendation}</p>
           </div>
         </aside>
@@ -96,8 +106,8 @@ export default async function BookDetailPage({
       <section className="book-detail-layout">
         <section className="book-detail-section book-detail-intro">
           <div>
-            <p className="eyebrow">What it is about</p>
-            <h2>A recommendation for careful reading</h2>
+            <p className="eyebrow">Miről szól?</p>
+            <h2>Ajánlás figyelmes olvasáshoz</h2>
           </div>
           <div>
             <p>{book.whyRead}</p>
@@ -111,24 +121,24 @@ export default async function BookDetailPage({
 
         <section className="book-detail-section">
           <div>
-            <p className="eyebrow">Who it helps</p>
-            <h2>Reader fit</h2>
+            <p className="eyebrow">Kinek segít?</p>
+            <h2>Olvasói illeszkedés</h2>
           </div>
           <dl className="book-facts">
             <div>
-              <dt>Audience</dt>
+              <dt>Célcsoport</dt>
               <dd>{bookAudienceLabels[book.audience]}</dd>
             </div>
             <div>
-              <dt>Depth</dt>
+              <dt>Mélység</dt>
               <dd>{bookLevelLabels[book.level]}</dd>
             </div>
             <div>
-              <dt>Format</dt>
-              <dd>{book.format.replace('-', ' ')}</dd>
+              <dt>Forma</dt>
+              <dd>{bookFormatLabel(book.format)}</dd>
             </div>
             <div>
-              <dt>Author</dt>
+              <dt>Szerző</dt>
               <dd>{book.author}</dd>
             </div>
           </dl>
@@ -136,8 +146,8 @@ export default async function BookDetailPage({
 
         <section className="book-detail-section">
           <div>
-            <p className="eyebrow">How to read it</p>
-            <h2>Suggested reading rhythm</h2>
+            <p className="eyebrow">Hogyan olvasd?</p>
+            <h2>Javasolt olvasási ritmus</h2>
           </div>
           <ol className="book-reading-plan">
             {book.readingPlan.map((step, index) => (
@@ -152,12 +162,12 @@ export default async function BookDetailPage({
         <section className="book-comments-section">
           <div className="book-comments-heading">
             <div>
-              <p className="eyebrow">Reader responses</p>
-              <h2>Review or respond to the recommendation</h2>
+              <p className="eyebrow">Olvasói visszajelzések</p>
+              <h2>Értékeld vagy egészítsd ki az ajánlást</h2>
             </div>
             <p>
-              Comments should help other readers decide whether this recommendation fits their
-              question, season, or group.
+              A hozzászólások abban segítsenek, hogy más olvasók eldönthessék, illik-e ez az
+              ajánlás a kérdésükhöz, életszakaszukhoz vagy csoportjukhoz.
             </p>
           </div>
 
@@ -170,7 +180,7 @@ export default async function BookDetailPage({
                     <p>{comment.body}</p>
                     {comment.response ? (
                       <div>
-                        <span>Editorial response</span>
+                        <span>Szerkesztőségi válasz</span>
                         <p>{comment.response}</p>
                       </div>
                     ) : null}
@@ -178,23 +188,23 @@ export default async function BookDetailPage({
                 ))
               ) : (
                 <article className="book-comment">
-                  <strong>No reader reviews yet</strong>
-                  <p>Be the first to explain how this recommendation helped your reading.</p>
+                  <strong>Még nincs olvasói visszajelzés</strong>
+                  <p>Írd le elsőként, hogyan segítette ez az ajánlás az olvasásodat.</p>
                 </article>
               )}
             </div>
 
             <form className="book-comment-form">
               <label>
-                <span>Name</span>
-                <input name="name" placeholder="Your name" type="text" />
+                <span>Név</span>
+                <input name="name" placeholder="Neved" type="text" />
               </label>
               <label>
-                <span>Your review</span>
-                <textarea name="comment" placeholder="How did this recommendation help?" rows={5} />
+                <span>Visszajelzésed</span>
+                <textarea name="comment" placeholder="Miben segített ez az ajánlás?" rows={5} />
               </label>
-              <button type="button">Submit for review</button>
-              <p>Prototype only: comments will need moderation and persistence before launch.</p>
+              <button type="button">Beküldés átnézésre</button>
+              <p>A hozzászólások élesítés előtt moderálást és mentést kapnak.</p>
             </form>
           </div>
         </section>
@@ -202,8 +212,8 @@ export default async function BookDetailPage({
         {relatedBooks.length ? (
           <section className="book-detail-section">
             <div>
-              <p className="eyebrow">Related books</p>
-              <h2>Continue the shelf</h2>
+              <p className="eyebrow">Kapcsolódó könyvek</p>
+              <h2>Folytasd az olvasási polcot</h2>
             </div>
             <div className="book-related-list">
               {relatedBooks.map((item) => (

@@ -38,7 +38,7 @@ export default async function AboutPage() {
         </div>
       </header>
 
-      <section className="about-principles" aria-label="Kovasz mission and editorial principles">
+      <section className="about-principles" aria-label="Kovász küldetés és szerkesztői alapelvek">
         {principles.map((item) => (
           <article className="about-principle" key={item.title}>
             <span>{item.title}</span>

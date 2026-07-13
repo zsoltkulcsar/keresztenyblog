@@ -19,7 +19,7 @@ export function generateMetadata() {
   return buildDiscoveryMetadata({
     description: t.home.metadataDescription,
     path: '/',
-    title: 'Kovasz',
+    title: 'Kovász',
   })
 }
 
@@ -52,7 +52,7 @@ export default async function HomePage({
 
         <div className="guided-masthead">
           <p className="eyebrow">{t.home.heroEyebrow}</p>
-          <h1 id="home-hero-title">Kovasz</h1>
+          <h1 id="home-hero-title">Kovász</h1>
           <p>{t.home.heroBody}</p>
         </div>
 

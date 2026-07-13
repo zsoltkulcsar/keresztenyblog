@@ -50,7 +50,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       <header className="site-header">
         <div className="site-brand-block">
           <Link className="site-brand" href="/">
-            Kovasz
+            Kovász
           </Link>
         </div>
 
@@ -105,7 +105,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       <footer className="site-footer" id="site-footer">
         <div className="site-footer-main">
           <Link className="site-footer-logo" href="/">
-            Kovasz
+            Kovász
           </Link>
           <div className="site-footer-columns">
             {footerGroups.map((group) => (
@@ -122,7 +122,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         </div>
 
         <div className="site-footer-bottom">
-          <p>2026 Kovasz. {t.chrome.allRightsReserved}</p>
+          <p>2026 Kovász. {t.chrome.allRightsReserved}</p>
           <div>
             <Link href="/about">{t.chrome.links.contact}</Link>
             <Link href="/search">{t.chrome.links.search}</Link>

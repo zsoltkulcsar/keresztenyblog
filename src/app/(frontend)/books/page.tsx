@@ -59,9 +59,9 @@ function sortBooks(books: BookRecommendation[], sort: string | undefined) {
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
-    description: 'Recommended Christian books and reading paths for Kovasz readers.',
+    description: 'Ajánlott keresztény könyvek és olvasási utak Kovász olvasóknak.',
     path: '/books',
-    title: 'Books',
+    title: 'Könyvek',
   })
 }
 
@@ -92,39 +92,39 @@ export default async function BooksPage({
     <main className="books-page">
       <header className="books-header">
         <div>
-          <p className="eyebrow">Books</p>
-          <h1>Books</h1>
+          <p className="eyebrow">Könyvek</p>
+          <h1>Ajánlott olvasmányok</h1>
           <p>
-            A browseable shelf of recommended Christian books, reading guides, and study companions
-            for Scripture, daily faith, family life, doctrine, and leadership.
+            Áttekinthető polc ajánlott keresztény könyvekkel, olvasási útmutatókkal és tanulmányi
+            kísérőkkel Szentíráshoz, mindennapi hithez, családi élethez, tanításhoz és vezetéshez.
           </p>
         </div>
       </header>
 
-      <section className="books-library" aria-label="Book recommendations">
+      <section className="books-library" aria-label="Könyvajánlók">
         <aside className="books-catalog-rail">
-          <nav aria-label="Book views" className="books-resource-tabs">
+          <nav aria-label="Könyv nézetek" className="books-resource-tabs">
             <Link aria-current="page" href="/books">
-              All Books
+              Minden könyv
             </Link>
-            <Link href={buildBooksUrl({ audience: 'new-believer', sort })}>New believers</Link>
-            <Link href={buildBooksUrl({ audience: 'leader', sort })}>Leaders</Link>
-            <Link href={buildBooksUrl({ level: 'beginner', sort })}>Beginner</Link>
+            <Link href={buildBooksUrl({ audience: 'new-believer', sort })}>Új hívők</Link>
+            <Link href={buildBooksUrl({ audience: 'leader', sort })}>Vezetők</Link>
+            <Link href={buildBooksUrl({ level: 'beginner', sort })}>Kezdők</Link>
           </nav>
 
           <form action="/books" className="books-filter-form" method="get">
             <label>
-              <span>Sort</span>
+              <span>Rendezés</span>
               <select name="sort" defaultValue={sort}>
-                <option value="alphabetical">Alphabetical</option>
-                <option value="topic">Topic</option>
-                <option value="depth">Depth</option>
+                <option value="alphabetical">Ábécé szerint</option>
+                <option value="topic">Téma szerint</option>
+                <option value="depth">Mélység szerint</option>
               </select>
             </label>
             <label>
-              <span>Topic</span>
+              <span>Téma</span>
               <select name="topic" defaultValue={topic ?? ''}>
-                <option value="">All topics</option>
+                <option value="">Minden téma</option>
                 {listBookTopics().map((value) => (
                   <option key={value} value={value}>
                     {bookTopicLabels[value]}
@@ -133,9 +133,9 @@ export default async function BooksPage({
               </select>
             </label>
             <label>
-              <span>Audience</span>
+              <span>Célcsoport</span>
               <select name="audience" defaultValue={audience ?? ''}>
-                <option value="">All readers</option>
+                <option value="">Minden olvasó</option>
                 {listBookAudiences().map((value) => (
                   <option key={value} value={value}>
                     {bookAudienceLabels[value]}
@@ -144,9 +144,9 @@ export default async function BooksPage({
               </select>
             </label>
             <label>
-              <span>Depth</span>
+              <span>Mélység</span>
               <select name="level" defaultValue={level ?? ''}>
-                <option value="">All depths</option>
+                <option value="">Minden mélység</option>
                 {listBookLevels().map((value) => (
                   <option key={value} value={value}>
                     {bookLevelLabels[value]}
@@ -154,16 +154,16 @@ export default async function BooksPage({
                 ))}
               </select>
             </label>
-            <button type="submit">Apply filters</button>
-            <Link href="/books">Reset filters</Link>
+            <button type="submit">Szűrők alkalmazása</button>
+            <Link href="/books">Szűrők visszaállítása</Link>
           </form>
         </aside>
 
         <div className="books-catalog">
           <div className="books-catalog-heading">
-            <p>{books.length} recommendations</p>
+            <p>{books.length} ajánlás</p>
             <strong>
-              {topic ? bookTopicLabels[topic as keyof typeof bookTopicLabels] : 'All books'}
+              {topic ? bookTopicLabels[topic as keyof typeof bookTopicLabels] : 'Minden könyv'}
             </strong>
           </div>
 
@@ -174,7 +174,7 @@ export default async function BooksPage({
                   <Link
                     className={`book-cover book-cover-${book.coverTone}`}
                     href={buildBookUrl(book.slug)}
-                    aria-label={`Open ${book.title}`}
+                    aria-label={`${book.title} megnyitása`}
                   >
                     <span>{bookTopicLabels[book.topic]}</span>
                     <strong>{book.title}</strong>
@@ -197,11 +197,11 @@ export default async function BooksPage({
           ) : (
             <section className="books-empty" aria-live="polite">
               <div>
-                <p className="eyebrow">No books found</p>
-                <h2>No recommendations match these filters.</h2>
-                <p>Reset the filters to see the whole reading shelf again.</p>
+                <p className="eyebrow">Nincs könyv</p>
+                <h2>Nincs ajánlás ezekkel a szűrőkkel.</h2>
+                <p>Állítsd vissza a szűrőket, hogy újra lásd a teljes olvasási polcot.</p>
               </div>
-              <Link href={buildBooksUrl({})}>Clear filters</Link>
+              <Link href={buildBooksUrl({})}>Szűrők törlése</Link>
             </section>
           )}
         </div>

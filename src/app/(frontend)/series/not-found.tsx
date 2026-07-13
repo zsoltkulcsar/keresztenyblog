@@ -5,12 +5,12 @@ export default function SeriesNotFound() {
     <main className="archive-page">
       <section className="archive-empty" aria-live="polite">
         <div>
-          <p className="eyebrow">Series not found</p>
-          <h2>This series is not available.</h2>
-          <p>Return to the series index to find another learning path.</p>
+          <p className="eyebrow">A sorozat nem található</p>
+          <h2>Ez a sorozat jelenleg nem elérhető.</h2>
+          <p>Térj vissza a sorozatokhoz, és válassz másik tanulási utat.</p>
         </div>
         <Link className="archive-reset-link" href="/series">
-          Back to series
+          Vissza a sorozatokhoz
         </Link>
       </section>
     </main>

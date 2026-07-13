@@ -87,7 +87,7 @@ export default async function ResourcesPage({
     | Promise<Record<string, string | string[] | undefined>>
 }) {
   const resolvedSearchParams = await Promise.resolve(searchParams ?? {})
-          const selectedType = activeType(resolvedSearchParams)
+  const selectedType = activeType(resolvedSearchParams)
   const allResources = await loadResourceItems()
   const visibleResources = selectedType
     ? allResources.filter((resource) => resource.type === selectedType)
@@ -99,7 +99,7 @@ export default async function ResourcesPage({
     allResources.find((resource) => resource.type === 'leader-tool')
   const familyResource =
     findByAudience(allResources, 'famil') ??
-    allResources.find((resource) => resource.topic === 'Family')
+    allResources.find((resource) => resource.topic === 'Család' || resource.topic === 'Family')
   const groupedResources = groupByType(visibleResources)
   const libraryShelves = selectedType
     ? groupedResources

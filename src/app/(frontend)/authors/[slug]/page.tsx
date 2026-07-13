@@ -23,10 +23,10 @@ export function generateMetadata({
 
     if (!profile) {
       return buildDiscoveryMetadata({
-        description: 'Author profile',
+        description: 'Szerzői profil',
         noIndex: true,
         path: buildAuthorUrl(slug ?? ''),
-        title: 'Author not found',
+        title: 'A szerző nem található',
       })
     }
 
@@ -59,7 +59,7 @@ export default async function AuthorDetailPage({
     <main className="profile-page">
       <header className="profile-hero">
         <div className="profile-copy">
-          <p className="eyebrow">Author</p>
+          <p className="eyebrow">Szerző</p>
           <h1>{profile.name}</h1>
           <p className="profile-role">{profile.role}</p>
           <p className="archive-intro">{profile.bio}</p>
@@ -81,10 +81,10 @@ export default async function AuthorDetailPage({
         />
       </header>
 
-      <section className="related-section" aria-label="Published articles">
+      <section className="related-section" aria-label="Publikált cikkek">
         <div className="section-heading">
-          <p className="eyebrow">Articles</p>
-          <h2>Published writing</h2>
+          <p className="eyebrow">Cikkek</p>
+          <h2>Publikált írások</h2>
         </div>
 
         <div className="related-grid">
@@ -96,11 +96,11 @@ export default async function AuthorDetailPage({
               <article className="related-item" key={article.slug}>
                 <p className="card-meta">
                   <span>{article.category}</span>
-                  <span>{article.readingMinutes} min</span>
+                  <span>{article.readingMinutes} perc</span>
                 </p>
                 <h3>{article.title}</h3>
                 <p>{article.excerpt}</p>
-                <Link href={buildArticleUrl(article.slug)}>Open article</Link>
+                <Link href={buildArticleUrl(article.slug)}>Cikk megnyitása</Link>
               </article>
             )
           })}

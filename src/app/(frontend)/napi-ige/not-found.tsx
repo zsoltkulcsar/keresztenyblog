@@ -5,12 +5,12 @@ export default function DailyVerseNotFound() {
     <main className="archive-page">
       <section className="archive-empty" aria-live="polite">
         <div>
-          <p className="eyebrow">Daily Verse not found</p>
-          <h2>This verse is not available.</h2>
-          <p>Return to the archive to browse other Scripture entries.</p>
+          <p className="eyebrow">A napi ige nem található</p>
+          <h2>Ez az ige jelenleg nem elérhető.</h2>
+          <p>Térj vissza az archívumba, és böngéssz más igei bejegyzéseket.</p>
         </div>
         <Link className="archive-reset-link" href="/napi-ige">
-          Back to archive
+          Vissza az archívumba
         </Link>
       </section>
     </main>

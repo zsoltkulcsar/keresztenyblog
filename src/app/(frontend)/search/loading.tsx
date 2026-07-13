@@ -3,41 +3,41 @@ export default function SearchLoading() {
     <main className="search-page" aria-busy="true">
       <header className="archive-header">
         <div>
-          <p className="eyebrow">Search</p>
-          <h1>Search the publication</h1>
-          <p className="archive-intro">Loading search surface.</p>
+          <p className="eyebrow">Keresés</p>
+          <h1>Keresés a kiadványban</h1>
+          <p className="archive-intro">A keresőfelület betöltése folyamatban van.</p>
         </div>
 
         <div className="archive-header-meta">
-          <span>Loading results</span>
-          <span className="archive-reset-link">Reset search</span>
+          <span>Találatok betöltése</span>
+          <span className="archive-reset-link">Keresés visszaállítása</span>
         </div>
       </header>
 
-      <section className="archive-toolbar" aria-label="Search input">
+      <section className="archive-toolbar" aria-label="Keresőmező">
         <div className="search-form">
           <label className="search-field">
-            <span>Search term</span>
-            <input disabled placeholder="Scripture, series, author, resource..." type="search" />
+            <span>Keresési kifejezés</span>
+            <input disabled placeholder="Szentírás, sorozat, szerző, forrás..." type="search" />
           </label>
 
           <button disabled type="button">
-            Search
+            Keresés
           </button>
         </div>
 
-        <p className="archive-summary">Loading editorial matches.</p>
+        <p className="archive-summary">Szerkesztőségi találatok betöltése.</p>
       </section>
 
-      <section className="archive-grid" aria-label="Search results">
+      <section className="archive-grid" aria-label="Keresési találatok">
         {Array.from({ length: 4 }).map((_, index) => (
           <article className="archive-item" key={index}>
             <p className="card-meta">
-              <span>Loading</span>
-              <span>Editorial</span>
+              <span>Betöltés</span>
+              <span>Szerkesztőség</span>
             </p>
-            <h2>Loading result</h2>
-            <p>Preparing search matches.</p>
+            <h2>Találat betöltése</h2>
+            <p>A keresési egyezések előkészítése folyamatban van.</p>
           </article>
         ))}
       </section>

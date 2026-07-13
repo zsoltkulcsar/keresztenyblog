@@ -26,15 +26,15 @@ export async function generateMetadata({ params }: TaxonomyPageProps) {
 
   if (!topic) {
     return buildDiscoveryMetadata({
-      description: 'Topic not found',
+      description: 'A téma nem található',
       noIndex: true,
       path: buildTaxonomyUrl('topic', slug),
-      title: 'Topic not found',
+      title: 'A téma nem található',
     })
   }
 
   return buildDiscoveryMetadata({
-    description: `Articles, series, and resources about ${topic.label}.`,
+    description: `Cikkek, sorozatok és források erről a témáról: ${topic.label}.`,
     path: buildTaxonomyUrl('topic', topic.value),
     title: topic.label,
   })
@@ -52,12 +52,12 @@ export default async function TopicDetailPage({ params }: TaxonomyPageProps) {
   return (
     <main className="taxonomy-page">
       <header className="taxonomy-header taxonomy-detail-header">
-        <Link href="/topics">All topics</Link>
-        <p className="eyebrow">Topic</p>
+        <Link href="/topics">Minden téma</Link>
+        <p className="eyebrow">Téma</p>
         <h1>{topic.label}</h1>
         <p>
-          {topic.articleCount} articles, {topic.seriesCount} series, and {topic.resourceCount}{' '}
-          resources connected to this topic.
+          {topic.articleCount} cikk, {topic.seriesCount} sorozat és {topic.resourceCount}{' '}
+          forrás kapcsolódik ehhez a témához.
         </p>
       </header>
 
@@ -74,17 +74,17 @@ function TaxonomyDetailContent({
   return (
     <div className="taxonomy-detail-layout">
       <section className="taxonomy-detail-section" aria-labelledby="taxonomy-articles">
-        <h2 id="taxonomy-articles">Articles</h2>
+        <h2 id="taxonomy-articles">Cikkek</h2>
         <div className="taxonomy-result-list">
           {detail.articles.map((article) => (
             <article key={article.slug}>
               <p className="archive-card-meta">
                 <span>{article.category.label}</span>
-                <span>{article.readingMinutes} min read</span>
+                <span>{article.readingMinutes} perc olvasás</span>
               </p>
               <h3>{article.title}</h3>
               <p>{article.excerpt}</p>
-              <Link href={buildArticleUrl(article.slug)}>Read article</Link>
+              <Link href={buildArticleUrl(article.slug)}>Cikk olvasása</Link>
             </article>
           ))}
         </div>
@@ -92,7 +92,7 @@ function TaxonomyDetailContent({
 
       <aside className="taxonomy-side-panel">
         <section aria-labelledby="taxonomy-series">
-          <h2 id="taxonomy-series">Series</h2>
+          <h2 id="taxonomy-series">Sorozatok</h2>
           {detail.series.length > 0 ? (
             detail.series.map((series) => (
               <Link href={buildSeriesUrl(series.slug)} key={series.slug}>
@@ -101,12 +101,12 @@ function TaxonomyDetailContent({
               </Link>
             ))
           ) : (
-            <p>No series yet.</p>
+            <p>Még nincs kapcsolódó sorozat.</p>
           )}
         </section>
 
         <section aria-labelledby="taxonomy-resources">
-          <h2 id="taxonomy-resources">Resources</h2>
+          <h2 id="taxonomy-resources">Források</h2>
           {detail.resources.length > 0 ? (
             detail.resources.map((resource) => (
               <Link href={buildResourceUrl(resource.slug)} key={resource.slug}>
@@ -115,7 +115,7 @@ function TaxonomyDetailContent({
               </Link>
             ))
           ) : (
-            <p>No resources yet.</p>
+            <p>Még nincs kapcsolódó forrás.</p>
           )}
         </section>
       </aside>

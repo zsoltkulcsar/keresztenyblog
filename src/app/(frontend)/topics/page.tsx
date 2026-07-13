@@ -8,9 +8,9 @@ export const dynamic = 'force-dynamic'
 export function generateMetadata() {
   return buildDiscoveryMetadata({
     description:
-      'Browse Kovasz articles, series, and resources by theological and daily-life topic.',
+      'Böngészd a Kovász cikkeit, sorozatait és forrásait teológiai és mindennapi témák szerint.',
     path: '/topics',
-    title: 'Topics',
+    title: 'Témák',
   })
 }
 
@@ -20,15 +20,15 @@ export default async function TopicsPage() {
   return (
     <main className="taxonomy-page">
       <header className="taxonomy-header">
-        <p className="eyebrow">Topics</p>
-        <h1>Browse by topic</h1>
+        <p className="eyebrow">Témák</p>
+        <h1>Böngészés témák szerint</h1>
         <p>
-          Find Scripture-first teaching grouped by doctrine, Christian life, family, ethics,
-          leadership, and other recurring questions.
+          Ige-központú tanítások tanítás, keresztény élet, család, etika, vezetés és más visszatérő
+          kérdések szerint rendezve.
         </p>
       </header>
 
-      <section className="taxonomy-grid" aria-label="Topic list">
+      <section className="taxonomy-grid" aria-label="Témák listája">
         {topics.map((topic) => (
           <Link
             className="taxonomy-card"
@@ -37,8 +37,8 @@ export default async function TopicsPage() {
           >
             <span>{topic.label}</span>
             <small>
-              {topic.articleCount} articles / {topic.seriesCount} series / {topic.resourceCount}{' '}
-              resources
+              {topic.articleCount} cikk / {topic.seriesCount} sorozat / {topic.resourceCount}{' '}
+              forrás
             </small>
           </Link>
         ))}
