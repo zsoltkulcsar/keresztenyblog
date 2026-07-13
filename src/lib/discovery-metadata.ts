@@ -37,9 +37,9 @@ type RssItem = {
 }
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'http://localhost:3000'
-const siteName = 'Kovasz'
+const siteName = 'Kovász'
 const siteDescription =
-  'Kovasz is a Hungarian Christian publication for articles, series, and study resources.'
+  'A Kovász magyar keresztény kiadvány cikkekhez, sorozatokhoz és tanulmányi forrásokhoz.'
 
 const discoveryRoutes: DiscoveryRoute[] = [
   { changeFrequency: 'weekly', path: '/', priority: 1 },

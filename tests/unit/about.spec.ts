@@ -9,7 +9,7 @@ import { getFallbackAboutPage, loadAboutPageContent } from '@/lib/about'
 
 describe('about page content', () => {
   it('exposes the fallback about content', () => {
-    expect(getFallbackAboutPage().mission).toContain('Teach new Christians')
+    expect(getFallbackAboutPage().mission).toContain('Új keresztényeket tanítani')
     expect(getFallbackAboutPage().contactLinks).toHaveLength(2)
   })
 

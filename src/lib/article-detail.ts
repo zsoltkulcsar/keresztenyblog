@@ -1,6 +1,7 @@
 import { createArchiveContent, loadArchiveContent } from '@/lib/article-archive'
 import { loadCmsEditorialArticles } from '@/lib/cms-content'
 import { editorialArticles, type EditorialArticleSeed } from '@/lib/editorial-articles'
+import { translateArticleLabel } from '@/lib/i18n'
 
 export type ArticleSeriesContext = {
   description: string
@@ -50,11 +51,11 @@ type ArticleArchiveContent = ReturnType<typeof createArchiveContent>
 function toArticleDetail(article: EditorialArticleSeed): ArticleDetail {
   return {
     author: article.author,
-    category: article.category,
-    coverAlt: `${article.title} editorial cover`,
+    category: translateArticleLabel(article.category),
+    coverAlt: `${article.title} szerkesztőségi borító`,
     coverSrc: '/home-hero.png',
     excerpt: article.excerpt,
-    format: article.format,
+    format: translateArticleLabel(article.format),
     publishedAt: article.publishedAt,
     readingMinutes: article.readingMinutes,
     relatedBook: article.relatedBook,
@@ -76,9 +77,11 @@ function toArticleDetail(article: EditorialArticleSeed): ArticleDetail {
     subtitle: article.subtitle,
     studyPanel: {
       items: article.studyQuestions,
-      title: article.format === 'devotion' ? 'Reflection questions' : 'Study questions',
+      title: article.format === 'devotion' ? 'Elmélkedési kérdések' : 'Tanulmányozási kérdések',
     },
-    tags: [...article.tags, ...article.topic, ...article.audience],
+    tags: [...article.tags, ...article.topic, ...article.audience].map((label) =>
+      translateArticleLabel(label),
+    ),
     title: article.title,
     pullQuote: article.pullQuote,
   }

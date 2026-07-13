@@ -3,40 +3,44 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 
+import { getTranslations } from '@/lib/i18n'
+
+const t = getTranslations()
+
 const primaryLinks = [
-  { href: '/articles', label: 'Articles' },
-  { href: '/series', label: 'Series' },
-  { href: '/resources', label: 'Resources' },
-  { href: '/about', label: 'About' },
+  { href: '/articles', label: t.chrome.links.articles },
+  { href: '/series', label: t.chrome.links.series },
+  { href: '/resources', label: t.chrome.links.resources },
+  { href: '/about', label: t.chrome.links.about },
 ]
 
 const footerGroups = [
   {
     links: [
-      { href: '/articles', label: 'Articles' },
-      { href: '/series', label: 'Series' },
-      { href: '/resources', label: 'Resources' },
-      { href: '/books', label: 'Books' },
-      { href: '/about', label: 'About' },
+      { href: '/articles', label: t.chrome.links.articles },
+      { href: '/series', label: t.chrome.links.series },
+      { href: '/resources', label: t.chrome.links.resources },
+      { href: '/books', label: t.chrome.links.books },
+      { href: '/about', label: t.chrome.links.about },
     ],
-    title: 'Read',
+    title: t.chrome.footerGroups.read,
   },
   {
     links: [
-      { href: '/topics', label: 'Topics' },
-      { href: '/audiences', label: 'Audiences' },
-      { href: '/audiences/new-believers', label: 'New believers' },
-      { href: '/topics/pastoral-theology', label: 'Pastoral theology' },
+      { href: '/topics', label: t.chrome.links.topics },
+      { href: '/audiences', label: t.chrome.links.audiences },
+      { href: '/audiences/new-believers', label: t.chrome.links.newBelievers },
+      { href: '/topics/pastoral-theology', label: t.chrome.links.pastoralTheology },
     ],
-    title: 'Discover',
+    title: t.chrome.footerGroups.discover,
   },
   {
     links: [
-      { href: '/about', label: 'Contact us' },
-      { href: '/about', label: 'Our team' },
-      { href: '/search', label: 'Search' },
+      { href: '/about', label: t.chrome.links.contact },
+      { href: '/about', label: t.chrome.links.team },
+      { href: '/search', label: t.chrome.links.search },
     ],
-    title: 'About',
+    title: t.chrome.footerGroups.about,
   },
 ]
 
@@ -52,21 +56,21 @@ export function SiteChrome({ children }: { children: ReactNode }) {
 
         <div className="site-nav-shell">
           <details className="site-nav-drawer">
-            <summary className="site-nav-summary">Menu</summary>
-            <nav className="site-nav" aria-label="Primary">
+            <summary className="site-nav-summary">{t.chrome.menu}</summary>
+            <nav className="site-nav" aria-label={t.chrome.primaryNav}>
               {primaryLinks.map((link) => (
                 <Link href={link.href} key={link.href}>
                   {link.label}
                 </Link>
               ))}
               <form action="/search" className="site-mobile-search" method="get" role="search">
-                <label htmlFor="mobile-site-search">Search</label>
-                <input id="mobile-site-search" name="q" placeholder="Search" type="search" />
+                <label htmlFor="mobile-site-search">{t.chrome.search}</label>
+                <input id="mobile-site-search" name="q" placeholder={t.chrome.search} type="search" />
               </form>
             </nav>
           </details>
 
-          <nav className="site-nav site-nav-desktop" aria-label="Primary">
+          <nav className="site-nav site-nav-desktop" aria-label={t.chrome.primaryNav}>
             {primaryLinks.map((link) => (
               <Link href={link.href} key={link.href}>
                 {link.label}
@@ -77,7 +81,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
 
         <div className="site-header-actions">
           <details className="site-search-popover">
-            <summary aria-label="Open search" className="site-search-link">
+            <summary aria-label={t.chrome.searchOpen} className="site-search-link">
               <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
                 <path
                   d="m20 20-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"
@@ -89,8 +93,8 @@ export function SiteChrome({ children }: { children: ReactNode }) {
               </svg>
             </summary>
             <form action="/search" className="site-header-search" method="get" role="search">
-              <label htmlFor="site-header-search">Search</label>
-              <input id="site-header-search" name="q" placeholder="Search" type="search" />
+              <label htmlFor="site-header-search">{t.chrome.search}</label>
+              <input id="site-header-search" name="q" placeholder={t.chrome.search} type="search" />
             </form>
           </details>
         </div>
@@ -118,10 +122,10 @@ export function SiteChrome({ children }: { children: ReactNode }) {
         </div>
 
         <div className="site-footer-bottom">
-          <p>2026 Kovasz. All rights reserved.</p>
+          <p>2026 Kovasz. {t.chrome.allRightsReserved}</p>
           <div>
-            <Link href="/about">Contact</Link>
-            <Link href="/search">Search</Link>
+            <Link href="/about">{t.chrome.links.contact}</Link>
+            <Link href="/search">{t.chrome.links.search}</Link>
           </div>
         </div>
       </footer>

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { getTranslations, translateResourceLabel } from '@/lib/i18n'
 import {
   buildResourceUrl,
   loadResourceItems,
@@ -10,16 +11,7 @@ import {
 
 export const dynamic = 'force-dynamic'
 
-const typeLabels: Record<ResourceType, string> = {
-  article: 'Article',
-  book: 'Book',
-  file: 'File',
-  'leader-tool': 'Leader tool',
-  link: 'Link',
-  'reading-plan': 'Reading plan',
-  series: 'Series',
-  'study-guide': 'Study guide',
-}
+const t = getTranslations()
 
 const typeOrder: ResourceType[] = [
   'study-guide',
@@ -36,7 +28,11 @@ const defaultShelfTypes: ResourceType[] = ['study-guide', 'reading-plan', 'leade
 const defaultShelfLimit = 2
 
 function typeLabel(value: string) {
-  return typeLabels[value as ResourceType] ?? value
+  return t.resources.typeLabels[value as ResourceType] ?? value
+}
+
+function resourceMetaLabel(value: string | undefined, fallback: string) {
+  return value ? translateResourceLabel(value) : fallback
 }
 
 function filterUrl(type?: string) {
@@ -70,16 +66,16 @@ function findByAudience(resources: ResourceItem[], keyword: string) {
 function ResourceAction({ resource }: { resource: ResourceItem }) {
   return (
     <Link className="toolbox-card-link" href={buildResourceUrl(resource.slug)}>
-      {resource.ctaLabel ?? 'Open resource'}
+      {resource.ctaLabel ?? t.resources.openResource}
     </Link>
   )
 }
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
-    description: 'Study aids, books, and other practical resources for readers of Kovasz.',
+    description: t.resources.description,
     path: '/resources',
-    title: 'Resources',
+    title: t.resources.title,
   })
 }
 
@@ -91,7 +87,7 @@ export default async function ResourcesPage({
     | Promise<Record<string, string | string[] | undefined>>
 }) {
   const resolvedSearchParams = await Promise.resolve(searchParams ?? {})
-  const selectedType = activeType(resolvedSearchParams)
+          const selectedType = activeType(resolvedSearchParams)
   const allResources = await loadResourceItems()
   const visibleResources = selectedType
     ? allResources.filter((resource) => resource.type === selectedType)
@@ -116,51 +112,55 @@ export default async function ResourcesPage({
     <main className="resources-toolbox-page">
       <header className="toolbox-header">
         <div>
-          <p className="eyebrow">Resources</p>
-          <h1>Study library and practical tools</h1>
+          <p className="eyebrow">{t.resources.headerEyebrow}</p>
+          <h1>{t.resources.headerTitle}</h1>
         </div>
         <div className="toolbox-header-note">
-          <span>{allResources.length} resources</span>
-          <p>Choose by need, then use the resource with Scripture open.</p>
+          <span>
+            {allResources.length} {t.resources.resourcesCount}
+          </span>
+          <p>{t.resources.headerBody}</p>
         </div>
       </header>
 
       <section className="toolbox-start">
         <article className="toolbox-feature">
           <div className="toolbox-feature-marker">
-            <span>Start</span>
+            <span>{t.resources.start}</span>
           </div>
           <div>
-            <p className="eyebrow">Start here</p>
+            <p className="eyebrow">{t.resources.startHere}</p>
             <h2>{featuredResource.title}</h2>
             <p>{featuredResource.description}</p>
             <div className="toolbox-tags">
               <span>{typeLabel(featuredResource.type)}</span>
-              <span>{featuredResource.audience ?? 'All readers'}</span>
-              <span>{featuredResource.topic ?? 'Study'}</span>
+              <span>
+                {resourceMetaLabel(featuredResource.audience, t.resources.featuredFallbackAudience)}
+              </span>
+              <span>{resourceMetaLabel(featuredResource.topic, t.resources.featuredFallbackTopic)}</span>
             </div>
             <ResourceAction resource={featuredResource} />
           </div>
         </article>
 
         <div className="toolbox-need-panel" aria-label="Resource routes by need">
-          <p className="eyebrow">Find by need</p>
+          <p className="eyebrow">{t.resources.findByNeed}</p>
           <div className="toolbox-need-grid">
             {newBelieverResource ? (
               <Link href={buildResourceUrl(newBelieverResource.slug)}>
-                <span>New in faith</span>
+                <span>{t.resources.newInFaith}</span>
                 <strong>{newBelieverResource.title}</strong>
               </Link>
             ) : null}
             {leaderResource ? (
               <Link href={buildResourceUrl(leaderResource.slug)}>
-                <span>Leader support</span>
+                <span>{t.resources.leaderSupport}</span>
                 <strong>{leaderResource.title}</strong>
               </Link>
             ) : null}
             {familyResource ? (
               <Link href={buildResourceUrl(familyResource.slug)}>
-                <span>Family rhythm</span>
+                <span>{t.resources.familyRhythm}</span>
                 <strong>{familyResource.title}</strong>
               </Link>
             ) : null}
@@ -170,17 +170,21 @@ export default async function ResourcesPage({
 
       <section className="toolbox-controls" aria-label="Resource type filters">
         <div>
-          <p className="eyebrow">Type</p>
-          <h2>{selectedType ? `${typeLabel(selectedType)} shelf` : 'Start with one shelf'}</h2>
+          <p className="eyebrow">{t.resources.type}</p>
+          <h2>
+            {selectedType
+              ? `${typeLabel(selectedType)} ${t.resources.shelfSuffix}`
+              : t.resources.filterTitleAll}
+          </h2>
           <p className="toolbox-controls-note">
             {selectedType
-              ? 'Showing every resource in this shelf.'
-              : 'The full library stays available through the type filters.'}
+              ? t.resources.filterNoteSelected
+              : t.resources.filterNoteAll}
           </p>
         </div>
         <nav className="toolbox-filter-tabs">
           <Link aria-current={!selectedType ? 'page' : undefined} href={filterUrl()}>
-            All
+            {t.resources.all}
           </Link>
           {availableTypes.map((type) => (
             <Link
@@ -201,10 +205,13 @@ export default async function ResourcesPage({
               <div>
                 <p className="eyebrow">{typeLabel(type)}</p>
                 <h2>
-                  {resources.length} useful {resources.length === 1 ? 'resource' : 'resources'}
+                  {resources.length}{' '}
+                  {resources.length === 1
+                    ? t.resources.resourceSingular
+                    : t.resources.resourcePlural}
                 </h2>
               </div>
-              {!selectedType ? <Link href={filterUrl(type)}>View full shelf</Link> : null}
+              {!selectedType ? <Link href={filterUrl(type)}>{t.resources.viewFullShelf}</Link> : null}
             </div>
 
             <div className="toolbox-shelf-list">
@@ -212,14 +219,19 @@ export default async function ResourcesPage({
                 <article className="toolbox-resource-row" key={resource.slug}>
                   <div className="toolbox-resource-type">
                     <span>{typeLabel(resource.type)}</span>
-                    <small>{resource.format ?? resource.topic ?? 'Resource'}</small>
+                    <small>
+                      {resourceMetaLabel(
+                        resource.format ?? resource.topic,
+                        t.resources.featuredFallbackTopic,
+                      )}
+                    </small>
                   </div>
                   <div className="toolbox-resource-main">
                     <h3>{resource.title}</h3>
                     <p>{resource.usefulness}</p>
                     <div className="toolbox-tags">
-                      <span>{resource.audience ?? 'All readers'}</span>
-                      <span>{resource.topic ?? 'Study'}</span>
+                      <span>{resourceMetaLabel(resource.audience, t.resources.allReaders)}</span>
+                      <span>{resourceMetaLabel(resource.topic, t.resources.featuredFallbackTopic)}</span>
                     </div>
                   </div>
                   <ResourceAction resource={resource} />
@@ -231,10 +243,10 @@ export default async function ResourcesPage({
 
         {!libraryShelves.length ? (
           <div className="toolbox-empty">
-            <h2>No resources found</h2>
-            <p>Reset the type filter to return to the full study library.</p>
+            <h2>{t.resources.emptyTitle}</h2>
+            <p>{t.resources.emptyBody}</p>
             <Link className="toolbox-card-link" href="/resources">
-              Reset filters
+              {t.resources.emptyReset}
             </Link>
           </div>
         ) : null}

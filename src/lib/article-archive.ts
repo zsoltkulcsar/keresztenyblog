@@ -1,5 +1,6 @@
 import { editorialArticles } from '@/lib/editorial-articles'
 import { loadCmsEditorialArticles } from '@/lib/cms-content'
+import { translateArticleLabel } from '@/lib/i18n'
 import type { EditorialArticleSeed } from '@/lib/editorial-articles'
 
 export type ArchiveFacet = {
@@ -70,17 +71,17 @@ export type ArchiveContent = {
 const PAGE_SIZE = 4
 
 const formatLabels = {
-  devotion: 'Devotion',
-  reflection: 'Reflection',
-  teaching: 'Teaching',
-  testimony: 'Testimony',
+  devotion: translateArticleLabel('devotion'),
+  reflection: translateArticleLabel('reflection'),
+  teaching: translateArticleLabel('teaching'),
+  testimony: translateArticleLabel('testimony'),
 } as const
 
 function toArchiveArticle(article: EditorialArticleSeed): ArchiveArticle {
   return {
-    audiences: article.audience.map((audience) => toFacet(audience)),
+    audiences: article.audience.map((audience) => toFacet(translateArticleLabel(audience), audience)),
     author: toFacet(article.author),
-    category: toFacet(article.category),
+    category: toFacet(translateArticleLabel(article.category), article.category),
     excerpt: article.excerpt,
     format: {
       label: formatLabels[article.format],
@@ -90,21 +91,23 @@ function toArchiveArticle(article: EditorialArticleSeed): ArchiveArticle {
     readingMinutes: article.readingMinutes,
     series: article.series[0]
       ? toFacet(article.series[0].label, article.series[0].slug)
-      : toFacet('Standalone'),
+      : toFacet(translateArticleLabel('Standalone'), 'Standalone'),
     slug: article.slug,
-    tags: [...article.tags, ...article.topic, ...article.audience].map((tag) => toFacet(tag)),
+    tags: [...article.tags, ...article.topic, ...article.audience].map((tag) =>
+      toFacet(translateArticleLabel(tag), tag),
+    ),
     title: article.title,
-    topics: article.topic.map((topic) => toFacet(topic)),
+    topics: article.topic.map((topic) => toFacet(translateArticleLabel(topic), topic)),
   }
 }
 
 const archiveArticles: ArchiveArticle[] = editorialArticles.map(toArchiveArticle)
 
 const sortOptions: Array<{ label: string; value: ArchiveSort }> = [
-  { label: 'Latest first', value: 'latest' },
-  { label: 'Oldest first', value: 'oldest' },
-  { label: 'Shortest reads', value: 'reading-time' },
-  { label: 'Title A to Z', value: 'title' },
+  { label: 'Legújabb elöl', value: 'latest' },
+  { label: 'Legrégebbi elöl', value: 'oldest' },
+  { label: 'Legrövidebb olvasmányok', value: 'reading-time' },
+  { label: 'Cím A-tól Z-ig', value: 'title' },
 ]
 
 function toFacet(label: string, value = label): ArchiveFacet {

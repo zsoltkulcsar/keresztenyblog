@@ -4,12 +4,15 @@ import Link from 'next/link'
 import { loadAboutPageContent } from '@/lib/about'
 import { loadAuthorProfiles } from '@/lib/authors'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { getTranslations } from '@/lib/i18n'
+
+const t = getTranslations()
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
-    description: 'Mission, writers, contact, and editorial posture for Kovasz.',
+    description: t.about.description,
     path: '/about',
-    title: 'About',
+    title: t.about.title,
   })
 }
 
@@ -17,28 +20,21 @@ export default async function AboutPage() {
   const [about, authors] = await Promise.all([loadAboutPageContent(), loadAuthorProfiles()])
   const editors = authors.slice(0, 3)
 
-  const editorialSteps = [
-    'Every article should begin from Scripture or return clearly to Scripture.',
-    'Teaching content should be reviewed for biblical clarity and pastoral tone.',
-    'Reader questions can become future articles, series, or practical resources.',
-  ]
+  const editorialSteps = t.about.editorialSteps
 
   const principles = [
-    { body: about.mission, title: 'Mission' },
-    { body: about.doctrine, title: 'Doctrine' },
-    { body: about.editorialPosture, title: 'Editorial posture' },
+    { body: about.mission, title: t.about.principles.mission },
+    { body: about.doctrine, title: t.about.principles.doctrine },
+    { body: about.editorialPosture, title: t.about.principles.editorialPosture },
   ]
 
   return (
     <main className="about-page">
       <header className="about-hero">
         <div className="about-hero-copy">
-          <p className="eyebrow">About Kovasz</p>
-          <h1>We help readers understand Scripture and follow Christ in daily life.</h1>
-          <p>
-            Kovasz exists for new Christians, growing believers, families, leaders, and readers who
-            want biblical teaching that is clear, pastoral, and useful in ordinary life.
-          </p>
+          <p className="eyebrow">{t.about.heroEyebrow}</p>
+          <h1>{t.about.heroTitle}</h1>
+          <p>{t.about.heroBody}</p>
         </div>
       </header>
 
@@ -53,13 +49,9 @@ export default async function AboutPage() {
 
       <section className="about-writers" aria-labelledby="about-writers-title">
         <div className="about-section-heading">
-          <p className="eyebrow">Pastors and editors</p>
-          <h2 id="about-writers-title">The people responsible for the teaching</h2>
-          <p>
-            The About page should make trust visible first. This section is the place for senior
-            pastors, editors, theological reviewers, and later guest contributors with clear
-            biography and photo.
-          </p>
+          <p className="eyebrow">{t.about.peopleEyebrow}</p>
+          <h2 id="about-writers-title">{t.about.peopleTitle}</h2>
+          <p>{t.about.peopleBody}</p>
         </div>
         <div className="about-writer-list">
           {editors.map((editor) => (
@@ -83,8 +75,8 @@ export default async function AboutPage() {
 
       <section className="about-process" aria-labelledby="about-process-title">
         <div>
-          <p className="eyebrow">Editorial process</p>
-          <h2 id="about-process-title">How content should be prepared</h2>
+          <p className="eyebrow">{t.about.editorialProcess}</p>
+          <h2 id="about-process-title">{t.about.processTitle}</h2>
         </div>
         <ol>
           {editorialSteps.map((step) => (
@@ -95,16 +87,11 @@ export default async function AboutPage() {
 
       <section className="about-publishing" aria-labelledby="about-publishing-title">
         <div className="about-section-heading">
-          <p className="eyebrow">What we publish</p>
-          <h2 id="about-publishing-title">The questions we keep returning to</h2>
+          <p className="eyebrow">{t.about.publishingEyebrow}</p>
+          <h2 id="about-publishing-title">{t.about.publishingTitle}</h2>
         </div>
         <div className="about-topic-list">
-          {[
-            'Pastoral theology',
-            'Christian life and personal growth',
-            'Marriage, family, and relationships',
-            'Ethics and daily Christian decisions',
-          ].map((topic) => (
+          {t.about.topics.map((topic) => (
             <span key={topic}>{topic}</span>
           ))}
         </div>
@@ -112,13 +99,9 @@ export default async function AboutPage() {
 
       <section className="about-contact" aria-labelledby="about-contact-title">
         <div className="about-contact-copy">
-          <p className="eyebrow">Contact</p>
-          <h2 id="about-contact-title">Do you have a question?</h2>
-          <p>
-            If you cannot find an answer, write to us with trust. Questions can be about faith,
-            Scripture, Christian life, family, leadership, or a topic you would like to see treated
-            carefully.
-          </p>
+          <p className="eyebrow">{t.about.contactEyebrow}</p>
+          <h2 id="about-contact-title">{t.about.contactTitle}</h2>
+          <p>{t.about.contactBody}</p>
           <div className="about-contact-links">
             {about.contactLinks.map((link) => (
               <Link href={link.url} key={link.url}>
@@ -135,22 +118,22 @@ export default async function AboutPage() {
           method="post"
         >
           <label>
-            <span>Your email</span>
+            <span>{t.about.emailLabel}</span>
             <input name="email" placeholder="name@example.com" type="email" />
           </label>
           <label>
-            <span>Subject</span>
-            <input name="subject" placeholder="Question about..." type="text" />
+            <span>{t.about.subjectLabel}</span>
+            <input name="subject" placeholder={t.about.subjectPlaceholder} type="text" />
           </label>
           <label>
-            <span>Message</span>
+            <span>{t.about.messageLabel}</span>
             <textarea
               name="message"
-              placeholder="Write your question or message here..."
+              placeholder={t.about.messagePlaceholder}
               rows={7}
             />
           </label>
-          <button type="submit">Send message</button>
+          <button type="submit">{t.about.sendMessage}</button>
         </form>
       </section>
     </main>

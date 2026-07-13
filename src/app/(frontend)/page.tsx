@@ -3,26 +3,21 @@ import Link from 'next/link'
 import { buildArticleUrl, loadArticleDetails } from '@/lib/article-detail'
 import { listDailyVerseEntries } from '@/lib/daily-verse'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { getTranslations, translateResourceLabel } from '@/lib/i18n'
 import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
 import { buildSeriesUrl, loadSeries } from '@/lib/series'
 
 export const dynamic = 'force-dynamic'
 
-function audienceLabel(value: string) {
-  const labels: Record<string, string> = {
-    'growing-believer': 'Novekvo hivo',
-    leader: 'Vezeto',
-    'mature-believer': 'Erett hivo',
-    'new-believer': 'Uj hivo',
-  }
+const t = getTranslations()
 
-  return labels[value] ?? value
+function audienceLabel(value: string) {
+  return t.home.audienceLabels[value as keyof typeof t.home.audienceLabels] ?? value
 }
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
-    description:
-      'Kovasz egy magyar kereszteny teologiai folyoirat cikkekkel, sorozatokkal es tanulmanyozasi segedanyagokkal.',
+    description: t.home.metadataDescription,
     path: '/',
     title: 'Kovasz',
   })
@@ -49,37 +44,35 @@ export default async function HomePage({
     <main className="guided-home">
       <section className="guided-hero" aria-labelledby="home-hero-title">
         <div className="guided-issue-line">
-          <span>Kovasz</span>
-          <span>Samizdat 04</span>
-          <span>Budapest</span>
-          <span>2026</span>
+          <span>{t.home.issueName}</span>
+          <span>{t.home.issueNumber}</span>
+          <span>{t.home.issueCity}</span>
+          <span>{t.home.issueYear}</span>
         </div>
 
         <div className="guided-masthead">
-          <p className="eyebrow">Magyar kereszteny teologiai naplo</p>
+          <p className="eyebrow">{t.home.heroEyebrow}</p>
           <h1 id="home-hero-title">Kovasz</h1>
-          <p>
-            Hit, gondolkodas, egyhaz es mindennapi engedelmesseg. Lassu olvasasra
-            szerkesztett irasok azoknak, akik nem csak valaszokat, hanem tisztabb
-            kerdeseket is keresnek.
-          </p>
+          <p>{t.home.heroBody}</p>
         </div>
 
         {leadArticle ? (
           <article className="guided-lead-article">
             <div className="guided-lead-label">
               <span>01</span>
-              <p>Kiemelt iras</p>
+              <p>{t.home.leadLabel}</p>
             </div>
             <div className="guided-lead-copy">
               <p className="guided-meta">
                 <span>{leadArticle.category}</span>
-                <span>{leadArticle.readingMinutes} perc</span>
+                <span>
+                  {leadArticle.readingMinutes} {t.common.minRead}
+                </span>
               </p>
               <h2>{leadArticle.title}</h2>
               <p>{leadArticle.excerpt}</p>
             </div>
-            <Link href={buildArticleUrl(leadArticle.slug)}>Olvasas</Link>
+            <Link href={buildArticleUrl(leadArticle.slug)}>{t.home.leadLink}</Link>
           </article>
         ) : null}
       </section>
@@ -87,8 +80,8 @@ export default async function HomePage({
       {leadArticle ? (
         <section className="guided-reading-section" aria-labelledby="guided-reading-title">
           <div className="guided-section-heading">
-            <p className="eyebrow">A lapszam elejerol</p>
-            <h2 id="guided-reading-title">Harom iras, amely kijeloli a hangot</h2>
+            <p className="eyebrow">{t.home.frontEyebrow}</p>
+            <h2 id="guided-reading-title">{t.home.frontTitle}</h2>
           </div>
 
           <div className="guided-front-list">
@@ -97,7 +90,9 @@ export default async function HomePage({
                 <span>{String(index + 1).padStart(2, '0')}</span>
                 <p className="guided-meta">
                   <span>{article.category}</span>
-                  <span>{article.readingMinutes} perc</span>
+                  <span>
+                    {article.readingMinutes} {t.common.minRead}
+                  </span>
                 </p>
                 <strong>{article.title}</strong>
                 <small>{article.excerpt}</small>
@@ -110,11 +105,11 @@ export default async function HomePage({
       <section className="guided-series-section" aria-labelledby="guided-series-title">
         <div className="guided-section-heading guided-section-heading-split">
           <div>
-            <p className="eyebrow">Sorozatok</p>
-            <h2 id="guided-series-title">Olvasasi utak, nem elszort linkek</h2>
+            <p className="eyebrow">{t.home.seriesEyebrow}</p>
+            <h2 id="guided-series-title">{t.home.seriesTitle}</h2>
           </div>
           <Link className="guided-inline-action" href="/series">
-            Osszes sorozat
+            {t.home.seriesAll}
           </Link>
         </div>
 
@@ -125,12 +120,14 @@ export default async function HomePage({
               <div>
                 <p className="guided-meta">
                   <span>{audienceLabel(series.audience)}</span>
-                  <span>{series.articleSlugs.length} resz</span>
+                  <span>
+                    {series.articleSlugs.length} {t.home.seriesPart}
+                  </span>
                 </p>
                 <h3>{series.title}</h3>
                 <p>{series.description}</p>
               </div>
-              <Link href={buildSeriesUrl(series.slug)}>Sorozat megnyitasa</Link>
+              <Link href={buildSeriesUrl(series.slug)}>{t.home.seriesLink}</Link>
             </article>
           ))}
         </div>
@@ -138,8 +135,8 @@ export default async function HomePage({
 
       <section className="guided-toolbox-section" aria-labelledby="guided-toolbox-title">
         <div className="guided-toolbox-intro">
-          <p className="eyebrow">Mai jegyzet</p>
-          <h2 id="guided-toolbox-title">Egy rovid ige melle lehet ulni</h2>
+          <p className="eyebrow">{t.home.verseEyebrow}</p>
+          <h2 id="guided-toolbox-title">{t.home.resourcesTitle}</h2>
           {dailyVerse ? (
             <figure className="guided-daily-verse">
               <blockquote>{dailyVerse.text}</blockquote>
@@ -151,7 +148,7 @@ export default async function HomePage({
         <div className="guided-resource-list">
           {resources.map((resource) => (
             <Link href={buildResourceUrl(resource.slug)} key={resource.slug}>
-              <span>{resource.format ?? resource.type}</span>
+              <span>{resource.format ? translateResourceLabel(resource.format) : resource.type}</span>
               <strong>{resource.title}</strong>
               <small>{resource.usefulness}</small>
             </Link>
@@ -161,13 +158,9 @@ export default async function HomePage({
 
       <section className="guided-question-section" aria-labelledby="guided-question-title">
         <div>
-          <p className="eyebrow">Friss irasok</p>
-          <h2 id="guided-question-title">A legutobbi rovatbol</h2>
-          <p>
-            Nem minden szovegnek kell hangosnak lennie. Ezek az irasok rovidebb
-            bejaratot adnak teologiahoz, imadsaghoz, csaladhoz, gyulekezethez es
-            kereszteny eletgyakorlathoz.
-          </p>
+          <p className="eyebrow">{t.home.latestEyebrow}</p>
+          <h2 id="guided-question-title">{t.home.latestTitle}</h2>
+          <p>{t.home.latestBody}</p>
         </div>
         <div className="guided-latest-list">
           {latestArticles.map((article) => (
@@ -180,18 +173,15 @@ export default async function HomePage({
       </section>
 
       <section className="guided-final-cta" aria-labelledby="guided-final-title">
-        <p className="eyebrow">Kerdesed van?</p>
-        <h2 id="guided-final-title">Ird meg, min dolgozik benned az Ige</h2>
-        <p>
-          A szerkesztoseg olyan kerdeseket var, amelyekbol kesobb cikk, sorozat,
-          segedanyag vagy szemelyes valasz szulethet.
-        </p>
+        <p className="eyebrow">{t.home.finalEyebrow}</p>
+        <h2 id="guided-final-title">{t.home.finalTitle}</h2>
+        <p>{t.home.finalBody}</p>
         <div className="guided-button-row">
           <Link className="guided-button guided-button-primary" href="/articles">
-            Cikkek bongeszese
+            {t.home.browseArticles}
           </Link>
           <Link className="guided-button guided-button-secondary" href="/about">
-            Kapcsolat
+            {t.home.contact}
           </Link>
         </div>
       </section>

@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from 'react'
 
+import { getTranslations } from '@/lib/i18n'
+
+const t = getTranslations()
+
 type ReadingProgressProps = {
   label?: string
 }
 
-export function ReadingProgress({ label = 'Reading progress' }: ReadingProgressProps) {
+export function ReadingProgress({ label = t.common.readingProgress }: ReadingProgressProps) {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {

@@ -33,10 +33,10 @@ function optionLabel(value: string, options: Array<{ label: string; value: strin
 
 function buildPageLabel(currentPage: number, totalPages: number, totalArticles: number) {
   if (totalArticles === 0) {
-    return 'No published articles match the current filters.'
+    return 'Nincs publikált cikk az aktuális szűrőkkel.'
   }
 
-  return `Page ${currentPage} of ${totalPages} / ${totalArticles} articles`
+  return `${currentPage}. oldal / ${totalPages} / ${totalArticles} cikk`
 }
 
 function visualTone(slug: string, index = 0) {
@@ -67,7 +67,7 @@ export function generateMetadata({
       series,
       author,
       tag,
-      page && page !== '1' ? `Page ${page}` : '',
+      page && page !== '1' ? `${page}. oldal` : '',
     ].filter(Boolean) as string[]
     const suffix = selectedFilters.length > 0 ? ` / ${selectedFilters.join(' / ')}` : ''
     const query = new URLSearchParams()
@@ -79,47 +79,47 @@ export function generateMetadata({
     if (tag) query.set('tag', tag)
 
     return buildDiscoveryMetadata({
-      description: 'Browse the Kovasz archive by category, series, author, tag, and sort order.',
+      description: 'Böngészd a Kovász archívumát kategória, sorozat, szerző, címke és rendezés szerint.',
       path: query.toString() ? `/articles?${query.toString()}` : '/articles',
-      title: `Articles${suffix}`,
+      title: `Cikkek${suffix}`,
     })
   })
 }
 
 const audienceTabs = [
-  { href: '/articles', label: 'All' },
-  { href: '/audiences/new-believers', label: 'New believers' },
-  { href: '/topics/spiritual-growth', label: 'Growing believers' },
-  { href: '/topics/leadership', label: 'Leaders' },
-  { href: '/series', label: 'Series' },
-  { href: '/resources', label: 'Study aids' },
+  { href: '/articles', label: 'Mind' },
+  { href: '/audiences/new-believers', label: 'Új hívők' },
+  { href: '/topics/spiritual-growth', label: 'Növekedő hívők' },
+  { href: '/topics/leadership', label: 'Vezetők' },
+  { href: '/series', label: 'Sorozatok' },
+  { href: '/resources', label: 'Segédanyagok' },
 ]
 
 const readingGuides = [
   {
-    description: 'Start with basic teaching, Scripture, and steady Christian growth.',
+    description: 'Kezdd alapvető tanítással, Szentírással és stabil keresztény növekedéssel.',
     href: '/audiences/new-believers',
-    label: 'New to faith',
+    label: 'Új a hitben',
   },
   {
-    description: 'Build habits around Scripture, prayer, patience, and obedience.',
+    description: 'Építs szokásokat a Szentírás, imádság, türelem és engedelmesség köré.',
     href: '/topics/spiritual-growth',
-    label: 'Daily growth',
+    label: 'Napi növekedés',
   },
   {
-    description: 'Read about marriage, family, parenting, and patient love at home.',
+    description: 'Olvass házasságról, családról, gyermeknevelésről és türelmes otthoni szeretetről.',
     href: '/topics/family',
-    label: 'Marriage and family',
+    label: 'Házasság és család',
   },
   {
-    description: 'Think through work, choices, speech, and public life before God.',
+    description: 'Gondold végig Isten előtt a munkát, döntéseket, beszédet és közéletet.',
     href: '/topics/ethics',
-    label: 'Hard questions',
+    label: 'Nehéz kérdések',
   },
   {
-    description: 'Find pastoral theology, leadership, and material for serving others.',
+    description: 'Találj pásztori teológiát, vezetést és mások szolgálatához való anyagot.',
     href: '/topics/leadership',
-    label: 'For leaders',
+    label: 'Vezetőknek',
   },
 ]
 
@@ -140,20 +140,20 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
     <main className="archive-page">
       <header className="archive-header">
         <div>
-          <p className="eyebrow">Articles</p>
-          <h1>Articles</h1>
+          <p className="eyebrow">Cikkek</p>
+          <h1>Cikkek</h1>
           <p className="archive-intro">
-            Scripture-first writing for believers at every stage of faith and understanding.
+            Ige-központú írások hívőknek a hit és megértés minden szakaszában.
           </p>
         </div>
         <form action="/search" className="archive-search" method="get">
           <label>
-            <span>Search by topic, question, or Bible passage</span>
-            <input name="q" placeholder="Psalm 23, marriage, prayer..." type="search" />
+            <span>Keresés téma, kérdés vagy bibliai igeszakasz szerint</span>
+            <input name="q" placeholder="23. zsoltár, házasság, imádság..." type="search" />
           </label>
-          <button type="submit">Search</button>
+          <button type="submit">Keresés</button>
         </form>
-        <nav className="archive-audience-tabs" aria-label="Browse articles by audience">
+        <nav className="archive-audience-tabs" aria-label="Cikkek böngészése célcsoport szerint">
           {audienceTabs.map((tab) => (
             <Link href={tab.href} key={tab.label}>
               {tab.label}
@@ -167,28 +167,28 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
           {latestArticle ? (
             <section className="archive-latest" aria-labelledby="archive-latest-title">
               <div className="archive-latest-copy">
-                <p className="eyebrow">Latest article</p>
+                <p className="eyebrow">Legújabb cikk</p>
                 <h2 id="archive-latest-title">{latestArticle.title}</h2>
                 <p>{latestArticle.excerpt}</p>
                 <dl className="archive-latest-meta">
                   <div>
-                    <dt>Topic</dt>
+                    <dt>Téma</dt>
                     <dd>{latestArticle.category.label}</dd>
                   </div>
                   <div>
-                    <dt>Series</dt>
+                    <dt>Sorozat</dt>
                     <dd>{latestArticle.series.label}</dd>
                   </div>
                   <div>
-                    <dt>Read</dt>
-                    <dd>{latestArticle.readingMinutes} min</dd>
+                    <dt>Olvasás</dt>
+                    <dd>{latestArticle.readingMinutes} perc</dd>
                   </div>
                 </dl>
                 <Link
                   className="figma-button figma-button-primary"
                   href={buildArticleUrl(latestArticle.slug)}
                 >
-                  Read latest article
+                  Legújabb cikk olvasása
                 </Link>
               </div>
               <div
@@ -202,7 +202,7 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
             <div className="archive-start-layout">
               <div>
                 <div className="archive-section-heading">
-                  <h2 id="archive-editors-title">Editor picks</h2>
+                  <h2 id="archive-editors-title">Szerkesztői ajánlások</h2>
                 </div>
                 <div className="archive-editor-grid">
                   {editorPicks.map((article, index) => (
@@ -214,22 +214,22 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                       <div>
                         <p className="archive-card-meta">
                           <span>{article.category.label}</span>
-                          <span>{article.readingMinutes} min read</span>
+                          <span>{article.readingMinutes} perc olvasás</span>
                         </p>
                         <h3>{article.title}</h3>
                         <p>{article.excerpt}</p>
-                        <Link href={buildArticleUrl(article.slug)}>Read more</Link>
+                        <Link href={buildArticleUrl(article.slug)}>Tovább olvasom</Link>
                       </div>
                     </article>
                   ))}
                 </div>
               </div>
 
-              <aside className="archive-reading-guide" aria-label="Where to start">
+              <aside className="archive-reading-guide" aria-label="Hol kezdd">
                 <div>
-                  <p className="eyebrow">Where to start</p>
-                  <h2>Read by need</h2>
-                  <p>Choose the route that best fits the reader in front of the article list.</p>
+                  <p className="eyebrow">Hol kezdd</p>
+                  <h2>Olvass szükség szerint</h2>
+                  <p>Válaszd azt az utat, amely legjobban illik az olvasó helyzetéhez.</p>
                 </div>
                 <div className="archive-reading-guide-list">
                   {readingGuides.map((guide) => (
@@ -240,17 +240,17 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                   ))}
                 </div>
                 <Link className="archive-reading-guide-action" href="/resources">
-                  Open study aids
+                  Segédanyagok megnyitása
                 </Link>
               </aside>
             </div>
           </section>
 
           <section className="archive-library" aria-labelledby="archive-library-title">
-            <aside className="archive-filter-panel" aria-label="Article filters">
+            <aside className="archive-filter-panel" aria-label="Cikkszűrők">
               <div>
-                <p className="eyebrow">Browse</p>
-                <h2>Find articles</h2>
+                <p className="eyebrow">Böngészés</p>
+                <h2>Cikkek keresése</h2>
                 <p>
                   {buildPageLabel(
                     archive.pagination.currentPage,
@@ -261,9 +261,9 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
               </div>
               <form action="/articles" className="archive-filters" method="get">
                 <label>
-                  <span>Topic</span>
+                  <span>Téma</span>
                   <select name="category" defaultValue={archive.filters.category}>
-                    <option value="">All topics</option>
+                    <option value="">Minden téma</option>
                     {archive.options.categories.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -273,9 +273,9 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                 </label>
 
                 <label>
-                  <span>Series</span>
+                  <span>Sorozat</span>
                   <select name="series" defaultValue={archive.filters.series}>
-                    <option value="">All series</option>
+                    <option value="">Minden sorozat</option>
                     {archive.options.series.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -285,9 +285,9 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                 </label>
 
                 <label>
-                  <span>Author</span>
+                  <span>Szerző</span>
                   <select name="author" defaultValue={archive.filters.author}>
-                    <option value="">All authors</option>
+                    <option value="">Minden szerző</option>
                     {archive.options.authors.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -297,9 +297,9 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                 </label>
 
                 <label>
-                  <span>Scripture / Tag</span>
+                  <span>Szentírás / címke</span>
                   <select name="tag" defaultValue={archive.filters.tag}>
-                    <option value="">All tags</option>
+                    <option value="">Minden címke</option>
                     {archive.options.tags.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
@@ -309,7 +309,7 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                 </label>
 
                 <label>
-                  <span>Sort</span>
+                  <span>Rendezés</span>
                   <select name="sort" defaultValue={archive.filters.sort}>
                     {archive.options.sortOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -319,9 +319,9 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                   </select>
                 </label>
 
-                <button type="submit">Apply filters</button>
+                <button type="submit">Szűrők alkalmazása</button>
                 <Link className="archive-filter-reset" href="/articles">
-                  Reset filters
+                  Szűrők visszaállítása
                 </Link>
               </form>
             </aside>
@@ -329,13 +329,13 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
             <div className="archive-results" id="all-articles">
               <div className="archive-results-heading">
                 <div>
-                  <p className="eyebrow">Library</p>
-                  <h2 id="archive-library-title">All articles</h2>
+                  <p className="eyebrow">Könyvtár</p>
+                  <h2 id="archive-library-title">Összes cikk</h2>
                 </div>
                 {filterSummary.length > 0 ? (
-                  <p className="archive-summary">Active filters: {filterSummary.join(' / ')}</p>
+                  <p className="archive-summary">Aktív szűrők: {filterSummary.join(' / ')}</p>
                 ) : (
-                  <p className="archive-summary">Newest articles first.</p>
+                  <p className="archive-summary">Legújabb cikkek elöl.</p>
                 )}
               </div>
 
@@ -345,26 +345,26 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                     <div>
                       <p className="archive-card-meta">
                         <span>{article.category.label}</span>
-                        <span>{article.readingMinutes} min read</span>
+                        <span>{article.readingMinutes} perc olvasás</span>
                       </p>
                       <h3>{article.title}</h3>
                       <p>{article.excerpt}</p>
                       <dl>
                         <div>
-                          <dt>Series</dt>
+                          <dt>Sorozat</dt>
                           <dd>{article.series.label}</dd>
                         </div>
                         <div>
-                          <dt>Author</dt>
+                          <dt>Szerző</dt>
                           <dd>{article.author.label}</dd>
                         </div>
                         <div>
-                          <dt>Tags</dt>
+                          <dt>Címkék</dt>
                           <dd>{article.tags.map((tag) => tag.label).join(' / ')}</dd>
                         </div>
                       </dl>
                     </div>
-                    <Link href={buildArticleUrl(article.slug)}>Read article</Link>
+                    <Link href={buildArticleUrl(article.slug)}>Cikk olvasása</Link>
                   </article>
                 ))}
               </div>
@@ -372,7 +372,7 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
           </section>
 
           {archive.pagination.totalPages > 1 ? (
-            <nav className="archive-pagination" aria-label="Archive pagination">
+            <nav className="archive-pagination" aria-label="Archívum lapozás">
               <Link
                 aria-disabled={archive.pagination.currentPage === 1}
                 className="pagination-link"
@@ -390,10 +390,10 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                 }
                 tabIndex={archive.pagination.currentPage === 1 ? -1 : 0}
               >
-                Previous
+                Előző
               </Link>
 
-              <div className="pagination-pages" aria-label="Archive pages">
+              <div className="pagination-pages" aria-label="Archívum oldalak">
                 {Array.from({ length: archive.pagination.totalPages }, (_, index) => {
                   const page = index + 1
                   return (
@@ -440,7 +440,7 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                 }
                 tabIndex={archive.pagination.currentPage === archive.pagination.totalPages ? -1 : 0}
               >
-                Next
+                Következő
               </Link>
             </nav>
           ) : null}
@@ -448,12 +448,12 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
       ) : (
         <section className="archive-empty" aria-live="polite">
           <div>
-            <p className="eyebrow">No results</p>
-            <h2>No articles match these filters.</h2>
-            <p>Reset the filters or widen the current selection to see the archive again.</p>
+            <p className="eyebrow">Nincs találat</p>
+            <h2>Nincs cikk ezekkel a szűrőkkel.</h2>
+            <p>Állítsd vissza a szűrőket, vagy tágítsd a jelenlegi választást az archívumhoz.</p>
           </div>
           <Link className="archive-reset-link" href="/articles">
-            Clear filters
+            Szűrők törlése
           </Link>
         </section>
       )}

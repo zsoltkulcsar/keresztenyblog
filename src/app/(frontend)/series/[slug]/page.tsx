@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 
 import { buildArticleUrl } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { translateResourceLabel } from '@/lib/i18n'
 import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
 import { buildSeriesUrl, loadSeries, loadSeriesOverview } from '@/lib/series'
 
@@ -14,16 +15,16 @@ function getSingleValue(value: string | string[] | undefined) {
 
 function labelFromValue(value: string) {
   const labels: Record<string, string> = {
-    'christian-life': 'Christian Life',
-    ethics: 'Ethics',
-    'all-believers': 'All believers',
-    families: 'Families',
-    'growing-believer': 'Growing believer',
-    leader: 'Leader',
-    marriage: 'Marriage',
-    'mature-believer': 'Mature believer',
-    'new-believer': 'New believer',
-    'pastoral-theology': 'Pastoral Theology',
+    'christian-life': 'Keresztény élet',
+    ethics: 'Etika',
+    'all-believers': 'Minden hívő',
+    families: 'Családok',
+    'growing-believer': 'Növekedő hívő',
+    leader: 'Vezető',
+    marriage: 'Házasság',
+    'mature-believer': 'Érett hívő',
+    'new-believer': 'Új hívő',
+    'pastoral-theology': 'Pásztori teológia',
   }
 
   return labels[value] ?? value
@@ -42,10 +43,10 @@ export async function generateMetadata({
 
   if (!series) {
     return buildDiscoveryMetadata({
-      description: 'Series not found',
+      description: 'A sorozat nem található',
       noIndex: true,
       path: buildSeriesUrl(slug),
-      title: 'Series not found',
+      title: 'A sorozat nem található',
     })
   }
 
@@ -87,32 +88,32 @@ export default async function SeriesDetailPage({
       <header className="discipleship-path-hero">
         <div className="discipleship-path-title">
           <Link className="discipleship-back-link" href="/series">
-            Series
+            Sorozatok
           </Link>
-          <p className="eyebrow">Discipleship path</p>
+          <p className="eyebrow">Tanítványi út</p>
           <h1>{series.title}</h1>
           <p>{series.longDescription || series.description}</p>
           {firstArticle ? (
             <Link className="discipleship-primary-link" href={buildArticleUrl(firstArticle.slug)}>
-              Start first lesson
+              Első tanítás elkezdése
             </Link>
           ) : null}
         </div>
 
         <aside className="discipleship-purpose-card">
-          <span>Purpose</span>
+          <span>Cél</span>
           <h2>{series.description}</h2>
           <dl>
             <div>
-              <dt>Topic</dt>
+              <dt>Téma</dt>
               <dd>{labelFromValue(series.topic)}</dd>
             </div>
             <div>
-              <dt>Audience</dt>
+              <dt>Célcsoport</dt>
               <dd>{labelFromValue(series.audience)}</dd>
             </div>
             <div>
-              <dt>Parts</dt>
+              <dt>Részek</dt>
               <dd>{series.articles.length}</dd>
             </div>
           </dl>
@@ -121,23 +122,23 @@ export default async function SeriesDetailPage({
 
       <section className="discipleship-path-layout">
         <div className="discipleship-path-main">
-          <section className="discipleship-path-overview" aria-label="Path overview">
+          <section className="discipleship-path-overview" aria-label="Út áttekintése">
             <div>
-              <p className="eyebrow">Path at a glance</p>
-              <h2>Study rhythm</h2>
+              <p className="eyebrow">Az út röviden</p>
+              <h2>Tanulmányi ritmus</h2>
             </div>
             <dl>
               <div>
-                <dt>For</dt>
+                <dt>Kinek</dt>
                 <dd>{labelFromValue(series.audience)}</dd>
               </div>
               <div>
-                <dt>Main theme</dt>
+                <dt>Fő téma</dt>
                 <dd>{labelFromValue(series.topic)}</dd>
               </div>
               <div>
-                <dt>Rhythm</dt>
-                <dd>{series.articles.length > 2 ? 'Multi-part study' : 'Short study path'}</dd>
+                <dt>Ritmus</dt>
+                <dd>{series.articles.length > 2 ? 'Többrészes tanulmány' : 'Rövid tanulmányi út'}</dd>
               </div>
             </dl>
             {firstArticle ? (
@@ -145,15 +146,15 @@ export default async function SeriesDetailPage({
                 className="discipleship-secondary-link"
                 href={buildArticleUrl(firstArticle.slug)}
               >
-                Begin path
+                Út elkezdése
               </Link>
             ) : null}
           </section>
 
           <section className="discipleship-path-section">
             <div>
-              <p className="eyebrow">Ordered parts</p>
-              <h2>Follow the lessons in order</h2>
+              <p className="eyebrow">Rendezett részek</p>
+              <h2>Kövesd sorrendben a tanításokat</h2>
             </div>
             <ol className="discipleship-lesson-list">
               {series.articles.map(({ article, order }) => (
@@ -161,12 +162,12 @@ export default async function SeriesDetailPage({
                   <span>{String(order).padStart(2, '0')}</span>
                   <div>
                     <p>
-                      {article.category} · {article.readingMinutes} min
+                      {article.category} / {article.readingMinutes} perc
                     </p>
                     <h3>{article.title}</h3>
                     <small>{article.excerpt}</small>
                   </div>
-                  <Link href={buildArticleUrl(article.slug)}>Read lesson</Link>
+                  <Link href={buildArticleUrl(article.slug)}>Tanítás olvasása</Link>
                 </li>
               ))}
             </ol>
@@ -175,13 +176,15 @@ export default async function SeriesDetailPage({
           {relatedResources.length ? (
             <section className="discipleship-path-section">
               <div>
-                <p className="eyebrow">Study support</p>
-                <h2>Resources for this path</h2>
+                <p className="eyebrow">Tanulmányi segítség</p>
+                <h2>Források ehhez az úthoz</h2>
               </div>
               <div className="discipleship-resource-list">
                 {relatedResources.map((resource) => (
                   <Link href={buildResourceUrl(resource.slug)} key={resource.slug}>
-                    <span>{resource.format ?? resource.type}</span>
+                    <span>
+                      {resource.format ? translateResourceLabel(resource.format) : resource.type}
+                    </span>
                     <strong>{resource.title}</strong>
                     <small>{resource.usefulness}</small>
                   </Link>
@@ -193,8 +196,8 @@ export default async function SeriesDetailPage({
           {relatedSeries.length ? (
             <section className="discipleship-path-section">
               <div>
-                <p className="eyebrow">Next path</p>
-                <h2>Continue with another series</h2>
+                <p className="eyebrow">Következő út</p>
+                <h2>Folytasd egy másik sorozattal</h2>
               </div>
               <div className="discipleship-next-list">
                 {relatedSeries.map((item) => (
@@ -202,7 +205,7 @@ export default async function SeriesDetailPage({
                     <span>{labelFromValue(item.topic)}</span>
                     <strong>{item.title}</strong>
                     <small>
-                      {labelFromValue(item.audience)} · {item.articleSlugs.length} parts
+                      {labelFromValue(item.audience)} / {item.articleSlugs.length} rész
                     </small>
                   </Link>
                 ))}

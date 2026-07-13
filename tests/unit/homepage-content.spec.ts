@@ -32,8 +32,8 @@ describe('createHomepageContent', () => {
       modules: {},
     })
 
-    expect(content.leadStory.title).toBe('Pastoral theology for ordinary churches')
+    expect(content.leadStory.title).toBe('Pásztori teológia hétköznapi gyülekezeteknek')
     expect(content.modules).toHaveLength(4)
-    expect(content.modules[1].title).toBe('A verse for the day')
+    expect(content.modules[1].title).toBe('Ige a mai napra')
   })
 })

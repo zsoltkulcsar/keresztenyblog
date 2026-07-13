@@ -1,10 +1,12 @@
 import type { ReactNode } from 'react'
 import { SiteChrome } from '@/components/layout/SiteChrome'
+import { getTranslations } from '@/lib/i18n'
 import './styles.css'
 
+const t = getTranslations()
+
 export const metadata = {
-  description:
-    'Kovasz is a Hungarian Christian publication for articles, series, and study resources.',
+  description: t.layout.description,
   title: 'Kovasz',
 }
 

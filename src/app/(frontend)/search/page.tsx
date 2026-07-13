@@ -22,15 +22,15 @@ function resolveSearchParams(searchParams: Record<string, string | string[] | un
 function typeLabel(type: string) {
   switch (type) {
     case 'article':
-      return 'Article'
+      return 'Cikk'
     case 'author':
-      return 'Author'
+      return 'Szerző'
     case 'dailyVerse':
-      return 'Daily Verse'
+      return 'Napi ige'
     case 'resource':
-      return 'Resource'
+      return 'Forrás'
     case 'series':
-      return 'Series'
+      return 'Sorozat'
     default:
       return type
   }
@@ -48,9 +48,9 @@ export function generateMetadata({
     const path = q ? `/search?q=${encodeURIComponent(q)}` : '/search'
 
     return buildDiscoveryMetadata({
-      description: 'Search across articles, series, authors, resources, and Daily Verse.',
+      description: 'Keresés cikkek, sorozatok, szerzők, források és napi igék között.',
       path,
-      title: q ? `Search results for ${q}` : 'Search the publication',
+      title: q ? `Keresési találatok erre: ${q}` : 'Keresés a kiadványban',
       type: 'website',
     })
   })
@@ -64,49 +64,49 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     <main className="search-page">
       <header className="archive-header">
         <div>
-          <p className="eyebrow">Search</p>
-          <h1>Search the publication</h1>
+          <p className="eyebrow">Keresés</p>
+          <h1>Keresés a kiadványban</h1>
           <p className="archive-intro">
-            Search across articles, series, authors, resources, and Daily Verse. The query stays in
-            the URL so the result can be shared or reopened later.
+            Keress cikkek, sorozatok, szerzők, források és napi igék között. A keresés az URL-ben
+            marad, így az eredmény később megosztható vagy újra megnyitható.
           </p>
         </div>
 
         <div className="archive-header-meta">
           <span>
             {search.hasQuery
-              ? `${search.totalResults} result${search.totalResults === 1 ? '' : 's'}`
-              : 'No recent searches'}
+              ? `${search.totalResults} találat`
+              : 'Nincsenek legutóbbi keresések'}
           </span>
           <Link className="archive-reset-link" href="/search">
-            Reset search
+            Keresés visszaállítása
           </Link>
         </div>
       </header>
 
-      <section className="archive-toolbar" aria-label="Search input">
+      <section className="archive-toolbar" aria-label="Keresőmező">
         <form action="/search" className="search-form" method="get">
           <label className="search-field">
-            <span>Search term</span>
+            <span>Keresési kifejezés</span>
             <input
               autoComplete="off"
               defaultValue={search.query}
               name="q"
-              placeholder="Scripture, series, author, resource..."
+              placeholder="Szentírás, sorozat, szerző, forrás..."
               type="search"
             />
           </label>
 
-          <button type="submit">Search</button>
+          <button type="submit">Keresés</button>
         </form>
 
         {!search.hasQuery ? (
           <p className="archive-summary">
-            Start with a title, topic, author, or Scripture-related term.
+            Kezdj egy címmel, témával, szerzővel vagy Szentíráshoz kapcsolódó kifejezéssel.
           </p>
         ) : (
           <p className="archive-summary">
-            Showing results for <strong>{search.query}</strong>.
+            Találatok erre: <strong>{search.query}</strong>.
           </p>
         )}
       </section>
@@ -114,15 +114,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       {!search.hasQuery ? (
         <section className="archive-empty" aria-live="polite">
           <div>
-            <p className="eyebrow">Recent searches</p>
-            <h2>No recent searches are stored yet.</h2>
+            <p className="eyebrow">Legutóbbi keresések</p>
+            <h2>Még nincsenek elmentett legutóbbi keresések.</h2>
             <p>
-              Search is tuned for editorial discovery, so a short topic or biblical phrase usually
-              works best.
+              A keresés szerkesztőségi felfedezésre van hangolva, ezért általában egy rövid téma
+              vagy bibliai kifejezés működik legjobban.
             </p>
           </div>
           <Link className="archive-reset-link" href={buildSearchUrl('scripture')}>
-            Try &quot;scripture&quot;
+            Próbáld: &quot;Szentírás&quot;
           </Link>
         </section>
       ) : search.results.length > 0 ? (
@@ -131,12 +131,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <article className="archive-item" key={`${result.type}-${result.title}`}>
               <p className="card-meta">
                 <span>{typeLabel(result.type)}</span>
-                <span>{result.tags[0] ?? 'Editorial'}</span>
+                <span>{result.tags[0] ?? 'Szerkesztőség'}</span>
               </p>
               <h2>{result.title}</h2>
               <p>{result.excerpt}</p>
               <div className="lead-links">
-                <Link href={result.href}>Open result</Link>
+                <Link href={result.href}>Találat megnyitása</Link>
               </div>
             </article>
           ))}
@@ -144,15 +144,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       ) : (
         <section className="archive-empty" aria-live="polite">
           <div>
-            <p className="eyebrow">No results</p>
-            <h2>No matches found for &quot;{search.query}&quot;.</h2>
+            <p className="eyebrow">Nincs találat</p>
+            <h2>Nincs egyezés erre: &quot;{search.query}&quot;.</h2>
             <p>
-              Try a broader topic, a shorter phrase, or a different category like Scripture, family,
-              or leadership.
+              Próbálj tágabb témát, rövidebb kifejezést vagy más kategóriát, például Szentírás,
+              család vagy vezetés.
             </p>
           </div>
           <Link className="archive-reset-link" href="/search">
-            Clear search
+            Keresés törlése
           </Link>
         </section>
       )}

@@ -2,6 +2,10 @@
 
 import { useMemo, useState } from 'react'
 
+import { getTranslations } from '@/lib/i18n'
+
+const t = getTranslations()
+
 type ShareToolsProps = {
   title: string
   url: string
@@ -14,9 +18,9 @@ export function ShareTools({ title, url }: ShareToolsProps) {
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(url)
-      setMessage('Link copied')
+      setMessage(t.common.linkCopied)
     } catch {
-      setMessage('Copy failed')
+      setMessage(t.common.copyFailed)
     }
   }
 
@@ -31,21 +35,21 @@ export function ShareTools({ title, url }: ShareToolsProps) {
         title,
         url,
       })
-      setMessage('Shared')
+      setMessage(t.common.shared)
     } catch {
-      setMessage('Share cancelled')
+      setMessage(t.common.shareCancelled)
     }
   }
 
   return (
-    <div className="share-tools" aria-label="Article utilities">
+    <div className="share-tools" aria-label={t.common.articleUtilities}>
       <button type="button" onClick={share}>
-        Share
+        {t.common.share}
       </button>
       <button type="button" onClick={copyLink}>
-        Copy link
+        {t.common.copyLink}
       </button>
-      {!canShare ? <span>Share uses clipboard on this browser.</span> : null}
+      {!canShare ? <span>{t.common.shareClipboardFallback}</span> : null}
       {message ? <span aria-live="polite">{message}</span> : null}
     </div>
   )

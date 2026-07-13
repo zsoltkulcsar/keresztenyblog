@@ -4,6 +4,7 @@ import type { ResourceItem } from '@/lib/resources'
 import { loadResourceItems } from '@/lib/resources'
 import type { SeriesItem } from '@/lib/series'
 import { loadSeries } from '@/lib/series'
+import { translateArticleLabel, translateResourceLabel } from '@/lib/i18n'
 
 export type TaxonomyKind = 'audience' | 'topic'
 
@@ -30,27 +31,42 @@ function slugifyLabel(label: string) {
 }
 
 const audienceAliases: Record<string, ArchiveFacet> = {
-  'all-believers': { label: 'All believers', value: 'all-believers' },
-  families: { label: 'Families', value: 'families' },
-  'growing-believer': { label: 'Growing believers', value: 'growing-believers' },
-  'growing-believers': { label: 'Growing believers', value: 'growing-believers' },
-  leader: { label: 'Leaders', value: 'leaders' },
-  leaders: { label: 'Leaders', value: 'leaders' },
-  'mature-believer': { label: 'Mature believers', value: 'mature-believers' },
-  'mature-believers': { label: 'Mature believers', value: 'mature-believers' },
-  'new-believer': { label: 'New believers', value: 'new-believers' },
-  'new-believers': { label: 'New believers', value: 'new-believers' },
+  'all-believers': { label: translateArticleLabel('All Believers'), value: 'all-believers' },
+  families: { label: translateArticleLabel('Families'), value: 'families' },
+  'growing-believer': { label: 'Növekvő hívők', value: 'growing-believers' },
+  'growing-believers': { label: 'Növekvő hívők', value: 'growing-believers' },
+  leader: { label: 'Vezetők', value: 'leaders' },
+  leaders: { label: 'Vezetők', value: 'leaders' },
+  'mature-believer': { label: 'Érett hívők', value: 'mature-believers' },
+  'mature-believers': { label: 'Érett hívők', value: 'mature-believers' },
+  'new-believer': { label: translateArticleLabel('New Believers'), value: 'new-believers' },
+  'new-believers': { label: translateArticleLabel('New Believers'), value: 'new-believers' },
+}
+
+const topicAliases: Record<string, ArchiveFacet> = {
+  bibliaolvasas: { label: 'Bibliaolvasás', value: 'bible-reading' },
+  csalad: { label: 'Család', value: 'family' },
+  etika: { label: 'Etika', value: 'ethics' },
+  hazassag: { label: 'Házasság', value: 'marriage' },
+  imadsag: { label: 'Imádság', value: 'prayer' },
+  'kereszteny-elet': { label: 'Keresztény élet', value: 'christian-life' },
+  'pasztori-teologia': { label: 'Pásztori teológia', value: 'pastoral-theology' },
+  'szemelyes-novekedes': { label: 'Személyes növekedés', value: 'personal-growth' },
+  tanitvanysag: { label: 'Tanítványság', value: 'discipleship' },
+  vezetes: { label: 'Vezetés', value: 'leadership' },
 }
 
 function normalizeFacet(kind: TaxonomyKind, facet: ArchiveFacet): ArchiveFacet {
-  if (kind !== 'audience') return facet
+  if (kind === 'topic') return topicAliases[facet.value] ?? facet
 
   return audienceAliases[facet.value] ?? facet
 }
 
 function toFacet(kind: TaxonomyKind, label: string): ArchiveFacet {
+  const displayLabel =
+    kind === 'topic' ? translateArticleLabel(translateResourceLabel(label)) : translateResourceLabel(label)
   const facet = {
-    label,
+    label: displayLabel,
     value: slugifyLabel(label),
   }
 

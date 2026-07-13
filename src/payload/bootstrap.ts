@@ -1,6 +1,7 @@
 import type { Payload } from 'payload'
 
 import { editorialArticles, type EditorialArticleSeed } from '@/lib/editorial-articles'
+import type { Config } from '@/payload-types'
 
 const DEV_ADMIN = {
   email: 'dev@payloadcms.com',
@@ -13,6 +14,15 @@ const SHOULD_REFRESH_STARTER_CONTENT = process.env.KOVASZ_REFRESH_SEED === 'true
 type SeedDoc = Record<string, unknown> & {
   __created?: boolean
   id?: number | string
+}
+
+type StarterCollectionSlug = Extract<
+  keyof Config['collections'],
+  'articles' | 'audiences' | 'authors' | 'resources' | 'series' | 'topics'
+>
+
+function isNumericId(value: SeedDoc['id']): value is number {
+  return typeof value === 'number'
 }
 
 const STARTER_RESOURCES = [
@@ -298,12 +308,12 @@ function articleBodyToLexical(article: EditorialArticleSeed) {
 
 async function upsertBySlug(
   payload: Payload,
-  collection: string,
+  collection: StarterCollectionSlug,
   slug: string,
   data: Record<string, unknown>,
 ) {
   const existing = await payload.find({
-    collection: collection as never,
+    collection,
     limit: 1,
     overrideAccess: true,
     where: {
@@ -313,7 +323,7 @@ async function upsertBySlug(
     },
   })
 
-  const existingDoc = existing.docs[0] as SeedDoc | undefined
+  const existingDoc = existing.docs[0] as unknown as SeedDoc | undefined
 
   if (existingDoc?.id) {
     if (!SHOULD_REFRESH_STARTER_CONTENT) {
@@ -322,21 +332,21 @@ async function upsertBySlug(
 
     const updatedDoc = await payload.update({
       id: existingDoc.id,
-      collection: collection as never,
-      data,
+      collection,
+      data: data as never,
       overrideAccess: true,
     })
 
-    return { ...(updatedDoc as SeedDoc), __created: false }
+    return { ...(updatedDoc as unknown as SeedDoc), __created: false }
   }
 
   const createdDoc = await payload.create({
-    collection: collection as never,
-    data,
+    collection,
+    data: data as never,
     overrideAccess: true,
   })
 
-  return { ...(createdDoc as SeedDoc), __created: true }
+  return { ...(createdDoc as unknown as SeedDoc), __created: true }
 }
 
 export async function seedDevAdminIfNeeded(payload: Payload): Promise<void> {
@@ -438,9 +448,8 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
   const resourceDocs = new Map<string, SeedDoc>()
 
   for (const resource of STARTER_RESOURCES) {
-    const { fileHref: _fileHref, ...resourceData } = resource
     const doc = await upsertBySlug(payload, 'resources', resource.slug, {
-      ...resourceData,
+      ...resource,
       audiences: [audienceDocs.get(resource.audience)?.id].filter(Boolean),
       topics: [topicDocs.get(resource.topic)?.id].filter(Boolean),
     })
@@ -542,11 +551,19 @@ async function seedStarterContentIfNeeded(payload: Payload): Promise<void> {
 
   for (const article of editorialArticles) {
     const memberships = article.series
-      .map((membership) => ({
-        order: membership.order,
-        series: seriesDocs.get(membership.slug)?.id,
-      }))
-      .filter((membership) => membership.series)
+      .map((membership) => {
+        const seriesId = seriesDocs.get(membership.slug)?.id
+
+        if (!isNumericId(seriesId)) {
+          return undefined
+        }
+
+        return {
+          order: membership.order,
+          series: seriesId,
+        }
+      })
+      .filter((membership): membership is { order: number; series: number } => Boolean(membership))
 
     if (memberships.length > 0) {
       const articleDoc = articleDocs.get(article.slug)

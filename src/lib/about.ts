@@ -24,30 +24,30 @@ export type AboutPageContent = {
 const fallbackAboutPage: AboutPageContent = {
   contactLinks: [
     { label: 'Email', url: 'mailto:hello@kovasz.hu' },
-    { label: 'Resources', url: '/resources' },
+    { label: 'Források', url: '/resources' },
   ],
   doctrine:
-    'Scripture remains the final authority for teaching, correction, and formation. The publication is explicitly Christian, Protestant in shape, and pastoral in tone.',
+    'A Szentírás marad a végső tekintély a tanításban, feddésben és formálódásban. A kiadvány egyértelműen keresztény, protestáns jellegű és pásztori hangvételű.',
   editorialPosture:
-    'The writing should stay calm, serious, and readable. Scripture comes first, supporting study helps follow, and decorative noise should stay out of the way.',
+    'Az írás maradjon nyugodt, komoly és olvasható. Először a Szentírás áll, utána következnek a tanulmányozást segítő anyagok, a díszítő zaj pedig maradjon háttérben.',
   manifesto:
-    'Kovasz exists to deepen understanding of the Bible, give spiritual guidance, and speak clearly about daily Christian life for new believers and mature readers alike.',
+    'A Kovász azért van, hogy mélyítse a Biblia megértését, lelki útmutatást adjon, és világosan beszéljen a mindennapi keresztény életről új hívőknek és érett olvasóknak egyaránt.',
   mission:
-    'Teach new Christians, support leaders, and provide content that strengthens daily relationship with God through Scripture-centered writing.',
+    'Új keresztényeket tanítani, vezetőket támogatni, és olyan tartalmat adni, amely a Szentírás-központú íráson keresztül erősíti a mindennapi kapcsolatot Istennel.',
   teamMembers: [
     {
-      bio: 'Leads the editorial direction and keeps the publication centered on Scripture.',
-      name: 'Editorial Team',
-      role: 'Editorial direction',
+      bio: 'Vezeti a szerkesztői irányt, és a kiadványt a Szentírás középpontjában tartja.',
+      name: 'Szerkesztőség',
+      role: 'Szerkesztői irány',
     },
     {
-      bio: 'Handles pastoral teaching, theological review, and the long-form article pipeline.',
-      name: 'Pastoral Desk',
-      role: 'Theological review',
+      bio: 'A pásztori tanítással, teológiai átnézéssel és a hosszabb cikkek folyamatával foglalkozik.',
+      name: 'Pásztori rovat',
+      role: 'Teológiai átnézés',
     },
   ],
   visualIdentity:
-    'A dark editorial frame, high-contrast typography, and restrained layout choices keep the site close to the reference direction while staying readable on mobile and desktop.',
+    'A sötét szerkesztőségi keret, a nagy kontrasztú tipográfia és a visszafogott elrendezés közel tartja az oldalt a kívánt irányhoz, miközben mobilon és asztali nézetben is olvasható marad.',
 }
 
 function normalizeAboutPage(doc: any): AboutPageContent {

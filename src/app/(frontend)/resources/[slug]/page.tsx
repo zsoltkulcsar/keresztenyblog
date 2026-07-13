@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 
 import { buildArticleUrl, loadArticleDetail } from '@/lib/article-detail'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { getTranslations, translateResourceLabel } from '@/lib/i18n'
 import {
   buildResourceUrl,
   loadResourceItem,
@@ -14,37 +15,32 @@ import { buildSeriesUrl } from '@/lib/series'
 
 export const dynamic = 'force-dynamic'
 
-const typeLabels: Record<ResourceType, string> = {
-  article: 'Article',
-  book: 'Book',
-  file: 'File',
-  'leader-tool': 'Leader tool',
-  link: 'Link',
-  'reading-plan': 'Reading plan',
-  series: 'Series',
-  'study-guide': 'Study guide',
-}
+const t = getTranslations()
 
 function typeLabel(value: string) {
-  return typeLabels[value as ResourceType] ?? value
+  return t.resources.typeLabels[value as ResourceType] ?? value
+}
+
+function resourceMetaLabel(value: string | undefined, fallback: string) {
+  return value ? translateResourceLabel(value) : fallback
 }
 
 function resourceAction(resource: ResourceItem) {
   if (resource.externalUrl) {
     return {
       href: resource.externalUrl,
-      label: resource.ctaLabel ?? 'Open external resource',
+      label: resource.ctaLabel ?? 'Külső forrás megnyitása',
       external: true,
-      note: 'External link',
+      note: 'Külső link',
     }
   }
 
   if (resource.fileHref) {
     return {
       href: resource.fileHref,
-      label: resource.ctaLabel ?? 'Open file',
+      label: resource.ctaLabel ?? 'Fájl megnyitása',
       external: true,
-      note: 'Download or file',
+      note: 'Letöltés vagy fájl',
     }
   }
 
@@ -52,9 +48,9 @@ function resourceAction(resource: ResourceItem) {
   if (firstSeries) {
     return {
       href: buildSeriesUrl(firstSeries),
-      label: resource.ctaLabel ?? 'Open related series',
+      label: resource.ctaLabel ?? 'Kapcsolódó sorozat megnyitása',
       external: false,
-      note: 'Series path',
+      note: 'Sorozatút',
     }
   }
 
@@ -62,9 +58,9 @@ function resourceAction(resource: ResourceItem) {
   if (firstArticle) {
     return {
       href: buildArticleUrl(firstArticle),
-      label: resource.ctaLabel ?? 'Open related article',
+      label: resource.ctaLabel ?? 'Kapcsolódó cikk megnyitása',
       external: false,
-      note: 'Related article',
+      note: 'Kapcsolódó cikk',
     }
   }
 
@@ -142,7 +138,7 @@ export default async function ResourceDetailPage({
       <header className="resource-guide-header">
         <div className="resource-guide-title">
           <Link className="resource-guide-back" href="/resources">
-            Resources
+            {t.resources.title}
           </Link>
           <p className="eyebrow">{typeLabel(resource.type)}</p>
           <h1>{resource.title}</h1>
@@ -150,8 +146,8 @@ export default async function ResourceDetailPage({
         </div>
 
         <aside className="resource-action-card" aria-label="Resource action">
-          <span>{action?.note ?? resource.format ?? 'Resource'}</span>
-          <h2>{resource.ctaLabel ?? 'Use this resource'}</h2>
+          <span>{action?.note ?? resourceMetaLabel(resource.format, t.resources.openResource)}</span>
+          <h2>{resource.ctaLabel ?? 'Használd ezt a forrást'}</h2>
           <p>{resource.usefulness}</p>
           {action ? (
             <Link
@@ -170,8 +166,8 @@ export default async function ResourceDetailPage({
         <div className="resource-guide-main">
           <section className="resource-guide-section resource-guide-section-intro">
             <div>
-              <p className="eyebrow">What this is</p>
-              <h2>A practical aid for study and growth</h2>
+              <p className="eyebrow">Mi ez?</p>
+              <h2>Gyakorlati segítség tanulmányozáshoz és növekedéshez</h2>
             </div>
             <p>{resource.usefulness}</p>
             {resource.highlights.length ? (
@@ -185,8 +181,8 @@ export default async function ResourceDetailPage({
 
           <section className="resource-guide-section">
             <div>
-              <p className="eyebrow">How to use it</p>
-              <h2>Use it with Scripture open</h2>
+              <p className="eyebrow">Hogyan használd?</p>
+              <h2>Használd nyitott Szentírással</h2>
             </div>
             <ol className="resource-guide-steps">
               {usageSteps.map((step, index) => (
@@ -201,14 +197,14 @@ export default async function ResourceDetailPage({
           {resource.relatedSeriesSlugs.length || articleLinks.length ? (
             <section className="resource-guide-section">
               <div>
-                <p className="eyebrow">Where it connects</p>
-                <h2>Continue from here</h2>
+                <p className="eyebrow">Kapcsolódási pontok</p>
+                <h2>Innen folytathatod</h2>
               </div>
               <div className="resource-guide-links">
                 {resource.relatedSeriesSlugs.map((seriesSlug) => (
                   <Link href={buildSeriesUrl(seriesSlug)} key={seriesSlug}>
-                    <span>Series path</span>
-                    <strong>Continue in the related study path</strong>
+                    <span>Sorozatút</span>
+                    <strong>Folytasd a kapcsolódó tanulmányi úton</strong>
                   </Link>
                 ))}
                 {articleLinks.map((article) => (
@@ -224,15 +220,15 @@ export default async function ResourceDetailPage({
           {relatedResources.length ? (
             <section className="resource-guide-section">
               <div>
-                <p className="eyebrow">More tools</p>
-                <h2>Related resources</h2>
+                <p className="eyebrow">További eszközök</p>
+                <h2>Kapcsolódó források</h2>
               </div>
               <div className="resource-guide-related-list">
                 {relatedResources.map((item) => (
                   <Link href={buildResourceUrl(item.slug)} key={item.slug}>
                     <span>{typeLabel(item.type)}</span>
                     <strong>{item.title}</strong>
-                    <small>{item.audience ?? item.topic ?? 'All readers'}</small>
+                    <small>{resourceMetaLabel(item.audience ?? item.topic, t.resources.allReaders)}</small>
                   </Link>
                 ))}
               </div>

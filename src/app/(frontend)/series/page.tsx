@@ -7,16 +7,16 @@ export const dynamic = 'force-dynamic'
 
 function labelFromValue(value: string) {
   const labels: Record<string, string> = {
-    'christian-life': 'Christian Life',
-    ethics: 'Ethics',
-    'all-believers': 'All believers',
-    families: 'Families',
-    'growing-believer': 'Growing believer',
-    leader: 'Leader',
-    marriage: 'Marriage',
-    'mature-believer': 'Mature believer',
-    'new-believer': 'New believer',
-    'pastoral-theology': 'Pastoral Theology',
+    'christian-life': 'Keresztény élet',
+    ethics: 'Etika',
+    'all-believers': 'Minden hívő',
+    families: 'Családok',
+    'growing-believer': 'Növekedő hívő',
+    leader: 'Vezető',
+    marriage: 'Házasság',
+    'mature-believer': 'Érett hívő',
+    'new-believer': 'Új hívő',
+    'pastoral-theology': 'Pásztori teológia',
   }
 
   return labels[value] ?? value
@@ -37,9 +37,9 @@ function filterHref(params: { audience?: string; topic?: string }) {
 
 export function generateMetadata() {
   return buildDiscoveryMetadata({
-    description: 'Browse the topic-based series and learning paths on Kovasz.',
+    description: 'Böngészd a Kovász témaalapú sorozatait és tanulási útjait.',
     path: '/series',
-    title: 'Series',
+    title: 'Sorozatok',
   })
 }
 
@@ -66,31 +66,32 @@ export default async function SeriesPage({
     <main className="study-path-page">
       <header className="study-path-header">
         <div>
-          <p className="eyebrow">Series</p>
-          <h1>Guided study paths</h1>
+          <p className="eyebrow">Sorozatok</p>
+          <h1>Vezetett tanulmányi utak</h1>
           <p>
-            Series are ordered learning journeys for readers who want structure, not scattered
-            articles. Start with a path, follow the parts, and return when you need review.
+            A sorozatok rendezett tanulási utak azoknak az olvasóknak, akik szerkezetet keresnek,
+            nem szétszórt cikkeket. Kezdj egy úttal, kövesd a részeket, és térj vissza, amikor
+            ismétlésre van szükséged.
           </p>
         </div>
 
         <aside className="study-path-summary">
-          <span>{items.length} visible paths</span>
-          <strong>{topic ? labelFromValue(topic) : 'All topics'}</strong>
-          <p>{audience ? labelFromValue(audience) : 'All audiences'}</p>
+          <span>{items.length} látható út</span>
+          <strong>{topic ? labelFromValue(topic) : 'Minden téma'}</strong>
+          <p>{audience ? labelFromValue(audience) : 'Minden célcsoport'}</p>
         </aside>
       </header>
 
-      <section className="study-path-router" aria-label="Series filters">
+      <section className="study-path-router" aria-label="Sorozatszűrők">
         <div>
-          <p className="eyebrow">Choose direction</p>
-          <h2>Filter by topic or reader stage</h2>
+          <p className="eyebrow">Irány kiválasztása</p>
+          <h2>Szűrés téma vagy olvasói szakasz szerint</h2>
         </div>
         <form className="study-path-form" method="get">
           <label>
-            <span>Topic</span>
+            <span>Téma</span>
             <select name="topic" defaultValue={topic ?? ''}>
-              <option value="">All topics</option>
+              <option value="">Minden téma</option>
               {seriesTopics.map((value) => (
                 <option key={value} value={value}>
                   {labelFromValue(value)}
@@ -100,9 +101,9 @@ export default async function SeriesPage({
           </label>
 
           <label>
-            <span>Audience</span>
+            <span>Célcsoport</span>
             <select name="audience" defaultValue={audience ?? ''}>
-              <option value="">All audiences</option>
+              <option value="">Minden célcsoport</option>
               {seriesAudiences.map((value) => (
                 <option key={value} value={value}>
                   {labelFromValue(value)}
@@ -111,44 +112,45 @@ export default async function SeriesPage({
             </select>
           </label>
 
-          <button type="submit">Apply</button>
-          <Link href="/series">Reset</Link>
+          <button type="submit">Alkalmazás</button>
+          <Link href="/series">Visszaállítás</Link>
         </form>
       </section>
 
       {items.length > 0 ? (
-        <section className="study-path-feature" aria-label="How to choose a series path">
+        <section className="study-path-feature" aria-label="Hogyan válassz sorozatot">
           <div className="study-path-feature-heading">
-            <p className="eyebrow">How to choose</p>
-            <h2>Every series is a path with ordered parts</h2>
+            <p className="eyebrow">Hogyan válassz</p>
+            <h2>Minden sorozat rendezett részekből álló út</h2>
             <p>
-              Use the filters above to narrow the paths, then choose one series below. The list is
-              the path index: each row shows the audience, topic, number of parts, and next action.
+              A fenti szűrőkkel szűkítsd az utakat, majd válassz egy sorozatot lent. A lista az
+              útmutató: minden sor megmutatja a célcsoportot, témát, részek számát és a következő
+              lépést.
             </p>
           </div>
 
           <div className="study-path-feature-steps">
             <div>
               <span>01</span>
-              <strong>Pick the reader</strong>
-              <p>New believer, growing believer, mature believer, or leader.</p>
+              <strong>Válaszd ki az olvasót</strong>
+              <p>Új hívő, növekedő hívő, érett hívő vagy vezető.</p>
             </div>
             <div>
               <span>02</span>
-              <strong>Pick the topic</strong>
-              <p>Christian life, pastoral theology, marriage, or ethics.</p>
+              <strong>Válaszd ki a témát</strong>
+              <p>Keresztény élet, pásztori teológia, házasság vagy etika.</p>
             </div>
             <div>
               <span>03</span>
-              <strong>Start the path</strong>
-              <p>Open one series and follow the lessons in order.</p>
+              <strong>Kezdd el az utat</strong>
+              <p>Nyiss meg egy sorozatot, és kövesd sorrendben a tanításokat.</p>
             </div>
           </div>
         </section>
       ) : null}
 
       {items.length > 0 ? (
-        <section className="study-path-list" aria-label="Series learning paths">
+        <section className="study-path-list" aria-label="Sorozatos tanulási utak">
           {items.map((series, index) => (
             <article className="study-path-card" key={series.slug}>
               <div className="study-path-number">
@@ -158,14 +160,14 @@ export default async function SeriesPage({
                 <p className="study-path-meta">
                   <span>{labelFromValue(series.topic)}</span>
                   <span>{labelFromValue(series.audience)}</span>
-                  <span>{series.articleSlugs.length} parts</span>
+                  <span>{series.articleSlugs.length} rész</span>
                 </p>
                 <h2>{series.title}</h2>
                 <p>{series.description}</p>
               </div>
               <div className="study-path-card-action">
-                <span>{series.articleSlugs.length > 1 ? 'Ordered path' : 'Short path'}</span>
-                <Link href={buildSeriesUrl(series.slug)}>Start path</Link>
+                <span>{series.articleSlugs.length > 1 ? 'Rendezett út' : 'Rövid út'}</span>
+                <Link href={buildSeriesUrl(series.slug)}>Út elkezdése</Link>
               </div>
             </article>
           ))}
@@ -173,11 +175,11 @@ export default async function SeriesPage({
       ) : (
         <section className="study-path-empty" aria-live="polite">
           <div>
-            <p className="eyebrow">No path found</p>
-            <h2>No series match these filters.</h2>
-            <p>Reset the filters to see all available study paths again.</p>
+            <p className="eyebrow">Nincs út</p>
+            <h2>Nincs sorozat ezekkel a szűrőkkel.</h2>
+            <p>Állítsd vissza a szűrőket, hogy újra lásd az összes elérhető tanulmányi utat.</p>
           </div>
-          <Link href="/series">Clear filters</Link>
+          <Link href="/series">Szűrők törlése</Link>
         </section>
       )}
     </main>

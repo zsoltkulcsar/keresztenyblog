@@ -14,8 +14,8 @@ describe('daily verse helpers', () => {
   it('returns a single daily verse entry by slug', () => {
     const entry = createDailyVerseEntry('2026-06-14')
 
-    expect(entry?.reference).toBe('2 Timothy 3:16-17')
-    expect(entry?.note).toContain('God uses the Word')
+    expect(entry?.reference).toBe('2 Timóteus 3:16-17')
+    expect(entry?.note).toContain('Isten az Igét használja')
   })
 
   it('builds stable daily verse urls', () => {
