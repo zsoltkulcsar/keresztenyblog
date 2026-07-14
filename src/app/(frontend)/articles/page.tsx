@@ -18,12 +18,10 @@ function getSingleValue(value: string | string[] | undefined) {
 
 function resolveSearchParams(searchParams: Record<string, string | string[] | undefined>) {
   return {
-    author: getSingleValue(searchParams.author),
     category: getSingleValue(searchParams.category),
     page: getSingleValue(searchParams.page),
     series: getSingleValue(searchParams.series),
     sort: getSingleValue(searchParams.sort),
-    tag: getSingleValue(searchParams.tag),
   }
 }
 
@@ -58,28 +56,22 @@ export function generateMetadata({
   return Promise.resolve(searchParams ?? {}).then((resolvedSearchParams) => {
     const category = getSingleValue(resolvedSearchParams.category)
     const series = getSingleValue(resolvedSearchParams.series)
-    const author = getSingleValue(resolvedSearchParams.author)
-    const tag = getSingleValue(resolvedSearchParams.tag)
     const page = getSingleValue(resolvedSearchParams.page)
 
     const selectedFilters = [
       category,
       series,
-      author,
-      tag,
       page && page !== '1' ? `${page}. oldal` : '',
     ].filter(Boolean) as string[]
     const suffix = selectedFilters.length > 0 ? ` / ${selectedFilters.join(' / ')}` : ''
     const query = new URLSearchParams()
 
-    if (author) query.set('author', author)
     if (category) query.set('category', category)
     if (page && page !== '1') query.set('page', page)
     if (series) query.set('series', series)
-    if (tag) query.set('tag', tag)
 
     return buildDiscoveryMetadata({
-      description: 'Böngészd a Kovász archívumát kategória, sorozat, szerző, címke és rendezés szerint.',
+      description: 'Böngészd a Kovász archívumát kategória, sorozat és rendezés szerint.',
       path: query.toString() ? `/articles?${query.toString()}` : '/articles',
       title: `Cikkek${suffix}`,
     })
@@ -129,8 +121,6 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
   const filterSummary = [
     archive.filters.category && optionLabel(archive.filters.category, archive.options.categories),
     archive.filters.series && optionLabel(archive.filters.series, archive.options.series),
-    archive.filters.author && optionLabel(archive.filters.author, archive.options.authors),
-    archive.filters.tag && optionLabel(archive.filters.tag, archive.options.tags),
   ].filter(Boolean) as string[]
   const latestArticle = archive.allArticles[0]
   const editorPicks = archive.allArticles.slice(1, 5)
@@ -261,6 +251,17 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
               </div>
               <form action="/articles" className="archive-filters" method="get">
                 <label>
+                  <span>Rendezés</span>
+                  <select name="sort" defaultValue={archive.filters.sort}>
+                    {archive.options.sortOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label>
                   <span>Téma</span>
                   <select name="category" defaultValue={archive.filters.category}>
                     <option value="">Minden téma</option>
@@ -284,41 +285,6 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                   </select>
                 </label>
 
-                <label>
-                  <span>Szerző</span>
-                  <select name="author" defaultValue={archive.filters.author}>
-                    <option value="">Minden szerző</option>
-                    {archive.options.authors.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label>
-                  <span>Szentírás / címke</span>
-                  <select name="tag" defaultValue={archive.filters.tag}>
-                    <option value="">Minden címke</option>
-                    {archive.options.tags.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label>
-                  <span>Rendezés</span>
-                  <select name="sort" defaultValue={archive.filters.sort}>
-                    {archive.options.sortOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
                 <button type="submit">Szűrők alkalmazása</button>
                 <Link className="archive-filter-reset" href="/articles">
                   Szűrők visszaállítása
@@ -329,7 +295,6 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
             <div className="archive-results" id="all-articles">
               <div className="archive-results-heading">
                 <div>
-                  <p className="eyebrow">Könyvtár</p>
                   <h2 id="archive-library-title">Összes cikk</h2>
                 </div>
                 {filterSummary.length > 0 ? (
@@ -358,10 +323,6 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                           <dt>Szerző</dt>
                           <dd>{article.author.label}</dd>
                         </div>
-                        <div>
-                          <dt>Címkék</dt>
-                          <dd>{article.tags.map((tag) => tag.label).join(' / ')}</dd>
-                        </div>
                       </dl>
                     </div>
                     <Link href={buildArticleUrl(article.slug)}>Cikk olvasása</Link>
@@ -380,12 +341,10 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                   archive.pagination.currentPage === 1
                     ? '/articles#all-articles'
                     : buildArchiveResultsUrl({
-                        author: archive.filters.author,
                         category: archive.filters.category,
                         page: archive.pagination.currentPage - 1,
                         series: archive.filters.series,
                         sort: archive.filters.sort,
-                        tag: archive.filters.tag,
                       })
                 }
                 tabIndex={archive.pagination.currentPage === 1 ? -1 : 0}
@@ -401,12 +360,10 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                       aria-current={page === archive.pagination.currentPage ? 'page' : undefined}
                       className="pagination-link"
                       href={buildArchiveResultsUrl({
-                        author: archive.filters.author,
                         category: archive.filters.category,
                         page,
                         series: archive.filters.series,
                         sort: archive.filters.sort,
-                        tag: archive.filters.tag,
                       })}
                       key={page}
                     >
@@ -422,20 +379,16 @@ export default async function ArticlesPage({ searchParams }: ArchivePageProps) {
                 href={
                   archive.pagination.currentPage === archive.pagination.totalPages
                     ? buildArchiveResultsUrl({
-                        author: archive.filters.author,
                         category: archive.filters.category,
                         page: archive.pagination.totalPages,
                         series: archive.filters.series,
                         sort: archive.filters.sort,
-                        tag: archive.filters.tag,
                       })
                     : buildArchiveResultsUrl({
-                        author: archive.filters.author,
                         category: archive.filters.category,
                         page: archive.pagination.currentPage + 1,
                         series: archive.filters.series,
                         sort: archive.filters.sort,
-                        tag: archive.filters.tag,
                       })
                 }
                 tabIndex={archive.pagination.currentPage === archive.pagination.totalPages ? -1 : 0}

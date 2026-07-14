@@ -35,7 +35,9 @@ describe('createArchiveContent', () => {
     })
 
     expect(content.pagination.currentPage).toBe(2)
-    expect(content.articles).toHaveLength(4)
+    expect(content.pagination.pageSize).toBe(8)
+    expect(content.articles.length).toBeGreaterThan(0)
+    expect(content.articles.length).toBeLessThanOrEqual(content.pagination.pageSize)
     expect(content.articles[0].readingMinutes).toBeLessThanOrEqual(
       content.articles[content.articles.length - 1].readingMinutes,
     )

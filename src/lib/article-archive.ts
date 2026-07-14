@@ -68,7 +68,7 @@ export type ArchiveContent = {
   totalFilteredArticles: number
 }
 
-const PAGE_SIZE = 4
+const PAGE_SIZE = 8
 
 const formatLabels = {
   devotion: translateArticleLabel('devotion'),
