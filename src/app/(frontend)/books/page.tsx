@@ -102,16 +102,7 @@ export default async function BooksPage({
       </header>
 
       <section className="books-library" aria-label="Könyvajánlók">
-        <aside className="books-catalog-rail">
-          <nav aria-label="Könyv nézetek" className="books-resource-tabs">
-            <Link aria-current="page" href="/books">
-              Minden könyv
-            </Link>
-            <Link href={buildBooksUrl({ audience: 'new-believer', sort })}>Új hívők</Link>
-            <Link href={buildBooksUrl({ audience: 'leader', sort })}>Vezetők</Link>
-            <Link href={buildBooksUrl({ level: 'beginner', sort })}>Kezdők</Link>
-          </nav>
-
+        <div className="books-filter-band">
           <form action="/books" className="books-filter-form" method="get">
             <label>
               <span>Rendezés</span>
@@ -154,10 +145,12 @@ export default async function BooksPage({
                 ))}
               </select>
             </label>
-            <button type="submit">Szűrők alkalmazása</button>
-            <Link href="/books">Szűrők visszaállítása</Link>
+            <div className="books-filter-actions">
+              <button type="submit">Szűrők alkalmazása</button>
+              <Link href="/books">Szűrők visszaállítása</Link>
+            </div>
           </form>
-        </aside>
+        </div>
 
         <div className="books-catalog">
           <div className="books-catalog-heading">
@@ -168,9 +161,9 @@ export default async function BooksPage({
           </div>
 
           {books.length ? (
-            <ol className="books-list">
+            <ol className="books-grid">
               {books.map((book) => (
-                <li className="book-list-item" key={book.slug}>
+                <li className="book-grid-card" key={book.slug}>
                   <Link
                     className={`book-cover book-cover-${book.coverTone}`}
                     href={buildBookUrl(book.slug)}
@@ -180,9 +173,8 @@ export default async function BooksPage({
                     <strong>{book.title}</strong>
                     <small>{book.author}</small>
                   </Link>
-                  <div className="book-list-copy">
+                  <div className="book-grid-copy">
                     <p className="book-meta">
-                      <span>{bookTopicLabels[book.topic]}</span>
                       <span>{bookAudienceLabels[book.audience]}</span>
                       <span>{bookLevelLabels[book.level]}</span>
                     </p>

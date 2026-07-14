@@ -11,6 +11,7 @@ const primaryLinks = [
   { href: '/articles', label: t.chrome.links.articles },
   { href: '/series', label: t.chrome.links.series },
   { href: '/resources', label: t.chrome.links.resources },
+  { href: '/books', label: t.chrome.links.books },
   { href: '/about', label: t.chrome.links.about },
 ]
 

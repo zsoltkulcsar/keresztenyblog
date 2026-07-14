@@ -3350,11 +3350,6 @@ img {
   border-bottom: 1px solid #d9e2ea;
 }
 
-.about-hero-copy {
-  display: grid;
-  gap: 18px;
-}
-
 .about-hero h1,
 .about-section h2,
 .about-commitment h2,
@@ -3393,11 +3388,6 @@ img {
   margin: 0;
   color: #354454;
   line-height: 1.65;
-}
-
-.about-hero-copy > p:last-child {
-  max-width: 760px;
-  font-size: clamp(1.08rem, 1.8vw, 1.32rem);
 }
 
 .about-hero-card {
@@ -3583,7 +3573,7 @@ img {
 
 .about-contact {
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(320px, 520px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(28px, 6vw, 76px);
   align-items: start;
   border-top: 1px solid #d9e2ea;
@@ -3854,40 +3844,25 @@ img {
 
 .books-library {
   display: grid;
-  grid-template-columns: minmax(190px, 230px) minmax(0, 1fr);
-  gap: clamp(24px, 5vw, 56px);
+  gap: clamp(22px, 4vw, 38px);
   align-items: start;
   padding-top: 34px;
   padding-bottom: clamp(58px, 7vw, 96px);
 }
 
-.books-catalog-rail {
+.books-filter-band {
   display: grid;
-  gap: 28px;
-}
-
-.books-resource-tabs {
-  display: grid;
-  gap: 2px;
   border-top: 1px solid #d9e2ea;
-}
-
-.books-resource-tabs a {
   border-bottom: 1px solid #d9e2ea;
-  color: #24547f;
-  font-weight: 800;
-  padding: 12px 0;
-  text-decoration: none;
-}
-
-.books-resource-tabs a[aria-current='page'] {
-  color: #111827;
+  background: transparent;
+  padding: 18px 0;
 }
 
 .books-filter-form {
   display: grid;
-  gap: 14px;
-  align-items: start;
+  grid-template-columns: repeat(4, minmax(140px, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
 }
 
 .books-filter-form label,
@@ -3900,6 +3875,13 @@ img {
   color: #354454;
   font-size: 0.78rem;
   font-weight: 800;
+}
+
+.books-filter-actions {
+  display: flex;
+  gap: 8px;
+  align-items: end;
+  flex-wrap: wrap;
 }
 
 .books-filter-form select,
@@ -3924,6 +3906,7 @@ img {
   background: #24547f;
   color: #ffffff;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .books-filter-form a {
@@ -3933,6 +3916,7 @@ img {
   background: #f7fbff;
   color: #24547f;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .books-catalog {
@@ -3967,6 +3951,55 @@ img {
   font-family: Georgia, 'Times New Roman', serif;
   font-size: clamp(1.65rem, 3vw, 2.6rem);
   font-weight: 500;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 3vw, 28px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.book-grid-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 16px;
+  border: 1px solid #cbd6df;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 16px;
+}
+
+.book-grid-card .book-cover {
+  min-height: 260px;
+}
+
+.book-grid-copy {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.book-grid-copy h2 {
+  margin: 0;
+  color: #111827;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-weight: 500;
+  line-height: 1.04;
+}
+
+.book-grid-copy h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.book-grid-copy p {
+  margin: 0;
+  color: #354454;
+  line-height: 1.55;
 }
 
 .books-list {
@@ -4413,8 +4446,8 @@ img {
 
 .study-path-router {
   display: grid;
-  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
-  gap: clamp(20px, 5vw, 52px);
+  grid-template-columns: 1fr;
+  gap: 16px;
   align-items: end;
   border-top: 1px solid #d9e2ea;
   padding-top: 24px;
@@ -4473,12 +4506,12 @@ img {
 
 .study-path-feature {
   display: grid;
-  gap: 24px;
-  border: 1px solid #cbd6df;
-  border-radius: 8px;
-  background: #eaf2fa;
-  padding-top: clamp(22px, 4vw, 34px);
-  padding-bottom: clamp(22px, 4vw, 34px);
+  gap: 14px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding-top: 0;
+  padding-bottom: 28px;
 }
 
 .study-path-feature-heading {
@@ -7510,15 +7543,19 @@ img {
   }
 
   .books-library {
-    grid-template-columns: minmax(160px, 210px) minmax(0, 1fr);
+    grid-template-columns: 1fr;
   }
 
-  .book-list-item {
-    grid-template-columns: 98px minmax(0, 1fr);
+  .books-filter-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .book-list-item .book-cover {
-    min-height: 145px;
+  .books-filter-actions {
+    grid-column: 1 / -1;
+  }
+
+  .books-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .book-facts,
@@ -8103,7 +8140,6 @@ img {
 .book-back-link,
 .book-comment-form button,
 .books-filter-form button,
-.books-resource-tabs a,
 .study-path-form button,
 .study-path-form a,
 .discipleship-back-link,
@@ -8127,7 +8163,6 @@ img {
 .book-comment-form button,
 .books-filter-form button,
 .books-filter-form a,
-.books-resource-tabs a,
 .study-path-form button,
 .study-path-form a,
 .discipleship-back-link,
@@ -8191,7 +8226,6 @@ img {
 .discipleship-purpose-card h2,
 .scripture-study-header p,
 .scripture-study-body p,
-.about-hero-copy p,
 .about-principle p,
 .about-writer-card p,
 .books-header p,
@@ -8307,6 +8341,127 @@ img {
   align-items: center;
 }
 
+/* Inner pages should read like calm indexes, not second landing pages. */
+.archive-header,
+.resources-hero,
+.toolbox-header,
+.resource-guide-header,
+.study-path-header,
+.scripture-study-header,
+.about-hero,
+.books-header,
+.book-detail-header,
+.taxonomy-header,
+.profile-hero {
+  padding-top: clamp(38px, 5vw, 68px);
+  padding-bottom: clamp(22px, 3.5vw, 34px);
+}
+
+.toolbox-header {
+  grid-template-columns: minmax(0, 700px) minmax(240px, 330px);
+  gap: clamp(20px, 4vw, 42px);
+  align-items: end;
+}
+
+.archive-header h1,
+.resources-hero h1,
+.toolbox-header h1,
+.resource-guide-title h1,
+.study-path-header h1,
+.discipleship-path-title h1,
+.scripture-study-header h1,
+.about-hero h1,
+.books-header h1,
+.book-detail-header h1,
+.taxonomy-header h1,
+.profile-hero h1 {
+  max-width: 720px;
+  font-size: clamp(2.15rem, 4.2vw, 4rem);
+  line-height: 1.06;
+}
+
+.archive-intro,
+.resources-hero > p,
+.toolbox-header-note p,
+.resource-guide-title p,
+.study-path-header p,
+.scripture-study-header p,
+.books-header p,
+.book-detail-header p,
+.taxonomy-header p {
+  max-width: 680px;
+  color: #465566;
+  font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+  line-height: 1.62;
+}
+
+.toolbox-header-note {
+  border: 1px solid #d9e2ea;
+  border-radius: 8px;
+  background: #f7fbff;
+  padding: 16px 18px;
+}
+
+.toolbox-header-note span {
+  color: #24547f;
+}
+
+.books-header,
+.book-detail-header,
+.taxonomy-header,
+.archive-header {
+  border-bottom-color: rgba(53, 68, 84, 0.16);
+}
+
+/* About page: quieter hierarchy and smoother reading rhythm. */
+.about-principles {
+  gap: 12px;
+  padding-top: clamp(28px, 5vw, 48px);
+  padding-bottom: clamp(34px, 5vw, 54px);
+}
+
+.about-principle {
+  border-radius: 6px;
+  background: #ffffff;
+  padding: clamp(16px, 2.5vw, 22px);
+}
+
+.about-writers,
+.about-process,
+.about-publishing,
+.about-contact {
+  gap: clamp(20px, 4vw, 44px);
+  padding-top: clamp(28px, 4vw, 44px);
+  padding-bottom: clamp(28px, 4vw, 44px);
+}
+
+.about-section-heading {
+  max-width: 640px;
+  gap: 10px;
+}
+
+.about-section-heading h2,
+.about-process h2,
+.about-contact h2 {
+  font-size: clamp(1.35rem, 2.35vw, 2rem);
+  line-height: 1.14;
+}
+
+.about-section-heading p,
+.about-process li,
+.about-contact-copy p {
+  color: #465566;
+  line-height: 1.62;
+}
+
+.about-contact {
+  background: #ffffff;
+}
+
+.about-contact-form {
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.06);
+}
+
 @media (max-width: 720px) {
   .site-brand {
     font-size: 1.1rem;
@@ -8321,7 +8476,10 @@ img {
     text-align: left;
   }
 
-  .guided-masthead h1,
+  .guided-masthead h1 {
+    line-height: 1.02;
+  }
+
   .archive-header h1,
   .toolbox-header h1,
   .resource-guide-title h1,
@@ -8333,15 +8491,24 @@ img {
   .book-detail-header h1,
   .taxonomy-header h1,
   .profile-hero h1 {
-    line-height: 1.02;
+    font-size: clamp(2rem, 12vw, 3rem);
+    line-height: 1.08;
   }
 
   .archive-header,
   .toolbox-header,
+  .books-header,
+  .taxonomy-header,
   .study-path-header,
   .resource-guide-header,
   .book-detail-header {
     gap: 22px;
+    padding-top: 32px;
+    padding-bottom: 24px;
+  }
+
+  .toolbox-header-note {
+    padding: 14px;
   }
 
   .archive-search,
@@ -8356,5 +8523,44 @@ img {
   .about-contact-form button,
   .book-comment-form button {
     width: 100%;
+  }
+
+  .books-filter-band {
+    padding: 16px 0;
+  }
+
+  .books-filter-actions {
+    display: grid;
+  }
+
+  .books-filter-actions button,
+  .books-filter-actions a {
+    width: 100%;
+  }
+
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .book-grid-card .book-cover {
+    min-height: 230px;
+  }
+
+  .about-hero h1 {
+    font-size: clamp(1.35rem, 6.5vw, 1.75rem);
+    line-height: 1.14;
+  }
+
+  .about-hero {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .about-section-heading h2,
+  .about-process h2,
+  .about-contact h2 {
+    font-size: clamp(1.28rem, 6.5vw, 1.8rem);
   }
 }

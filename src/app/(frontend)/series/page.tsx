@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
-import { buildSeriesUrl, loadSeries, loadSeriesAudiences, loadSeriesTopics } from '@/lib/series'
+import { buildSeriesUrl, loadSeries } from '@/lib/series'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,13 +26,8 @@ function getSingleValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value
 }
 
-function filterHref(params: { audience?: string; topic?: string }) {
-  const searchParams = new URLSearchParams()
-  if (params.topic) searchParams.set('topic', params.topic)
-  if (params.audience) searchParams.set('audience', params.audience)
-
-  const query = searchParams.toString()
-  return query ? `/series?${query}` : '/series'
+function uniqueValues(values: string[]) {
+  return [...new Set(values)]
 }
 
 export function generateMetadata() {
@@ -55,8 +50,8 @@ export default async function SeriesPage({
   const audience = getSingleValue(resolvedSearchParams.audience)
 
   const allSeries = await loadSeries()
-  const seriesTopics = await loadSeriesTopics()
-  const seriesAudiences = await loadSeriesAudiences()
+  const seriesTopics = uniqueValues(allSeries.map((series) => series.topic))
+  const seriesAudiences = uniqueValues(allSeries.map((series) => series.audience))
   const items = allSeries.filter((series) => {
     const topicMatch = !topic || series.topic === topic
     const audienceMatch = !audience || series.audience === audience
@@ -83,10 +78,6 @@ export default async function SeriesPage({
       </header>
 
       <section className="study-path-router" aria-label="Sorozatszűrők">
-        <div>
-          <p className="eyebrow">Irány kiválasztása</p>
-          <h2>Szűrés téma vagy olvasói szakasz szerint</h2>
-        </div>
         <form className="study-path-form" method="get">
           <label>
             <span>Téma</span>
@@ -119,16 +110,6 @@ export default async function SeriesPage({
 
       {items.length > 0 ? (
         <section className="study-path-feature" aria-label="Hogyan válassz sorozatot">
-          <div className="study-path-feature-heading">
-            <p className="eyebrow">Hogyan válassz</p>
-            <h2>Minden sorozat rendezett részekből álló út</h2>
-            <p>
-              A fenti szűrőkkel szűkítsd az utakat, majd válassz egy sorozatot lent. A lista az
-              útmutató: minden sor megmutatja a célcsoportot, témát, részek számát és a következő
-              lépést.
-            </p>
-          </div>
-
           <div className="study-path-feature-steps">
             <div>
               <span>01</span>

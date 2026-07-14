@@ -30,14 +30,6 @@ export default async function AboutPage() {
 
   return (
     <main className="about-page">
-      <header className="about-hero">
-        <div className="about-hero-copy">
-          <p className="eyebrow">{t.about.heroEyebrow}</p>
-          <h1>{t.about.heroTitle}</h1>
-          <p>{t.about.heroBody}</p>
-        </div>
-      </header>
-
       <section className="about-principles" aria-label="Kovász küldetés és szerkesztői alapelvek">
         {principles.map((item) => (
           <article className="about-principle" key={item.title}>
