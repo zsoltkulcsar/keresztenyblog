@@ -78,13 +78,31 @@ export default async function BookDetailPage({
   return (
     <main className="book-detail-page">
       <header className="book-detail-header">
-        <div>
+        <div className="book-detail-copy">
           <Link className="book-back-link" href="/books">
             Könyvek
           </Link>
           <p className="eyebrow">{bookTopicLabels[book.topic]}</p>
           <h1>{book.title}</h1>
           <p>{book.description}</p>
+          <dl className="book-detail-meta-row">
+            <div>
+              <dt>Célcsoport</dt>
+              <dd>{bookAudienceLabels[book.audience]}</dd>
+            </div>
+            <div>
+              <dt>Mélység</dt>
+              <dd>{bookLevelLabels[book.level]}</dd>
+            </div>
+            <div>
+              <dt>Forma</dt>
+              <dd>{bookFormatLabel(book.format)}</dd>
+            </div>
+            <div>
+              <dt>Szerző</dt>
+              <dd>{book.author}</dd>
+            </div>
+          </dl>
         </div>
         <aside className="book-detail-side">
           <div
@@ -107,7 +125,7 @@ export default async function BookDetailPage({
         <section className="book-detail-section book-detail-intro">
           <div>
             <p className="eyebrow">Miről szól?</p>
-            <h2>Ajánlás figyelmes olvasáshoz</h2>
+            <h2>Miért érdemes kézbe venni?</h2>
           </div>
           <div>
             <p>{book.whyRead}</p>
@@ -117,31 +135,6 @@ export default async function BookDetailPage({
               ))}
             </div>
           </div>
-        </section>
-
-        <section className="book-detail-section">
-          <div>
-            <p className="eyebrow">Kinek segít?</p>
-            <h2>Olvasói illeszkedés</h2>
-          </div>
-          <dl className="book-facts">
-            <div>
-              <dt>Célcsoport</dt>
-              <dd>{bookAudienceLabels[book.audience]}</dd>
-            </div>
-            <div>
-              <dt>Mélység</dt>
-              <dd>{bookLevelLabels[book.level]}</dd>
-            </div>
-            <div>
-              <dt>Forma</dt>
-              <dd>{bookFormatLabel(book.format)}</dd>
-            </div>
-            <div>
-              <dt>Szerző</dt>
-              <dd>{book.author}</dd>
-            </div>
-          </dl>
         </section>
 
         <section className="book-detail-section">

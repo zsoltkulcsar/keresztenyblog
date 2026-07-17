@@ -76,6 +76,10 @@ The site exists to help readers:
 - study panel content should adapt to the article
 - image and metadata are important, but not the first visual anchor
 
+### Follow-Up Topics
+
+- Decide whether article tags should be visible on article detail pages or kept only as search/discovery metadata.
+
 ### Study Panel Content
 
 The study panel may include:

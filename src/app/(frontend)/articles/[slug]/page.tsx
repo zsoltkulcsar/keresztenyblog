@@ -4,9 +4,11 @@ import { notFound } from 'next/navigation'
 import { ReadingProgress } from '@/components/features/article/ReadingProgress'
 import { ShareTools } from '@/components/features/article/ShareTools'
 import { buildArticleUrl, loadArticleDetail } from '@/lib/article-detail'
-import { loadArchiveContent } from '@/lib/article-archive'
+import { loadArchiveContent, type ArchiveArticle } from '@/lib/article-archive'
 import { buildAuthorUrl, loadAuthorProfileByName } from '@/lib/authors'
+import { buildBookUrl, listBooks } from '@/lib/books'
 import { buildDiscoveryMetadata } from '@/lib/discovery-metadata'
+import { buildResourceUrl, loadResourceItems } from '@/lib/resources'
 import { buildSeriesUrl } from '@/lib/series'
 import { buildTaxonomyUrl } from '@/lib/taxonomy'
 
@@ -36,6 +38,47 @@ function parseParams(params: Record<string, string | string[] | undefined>) {
   return {
     slug: getSingleValue(params.slug) ?? '',
   }
+}
+
+function normalizeText(value: string | undefined) {
+  return (
+    value
+      ?.trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim() ?? ''
+  )
+}
+
+function scoreRelatedArticle(article: ArchiveArticle, currentArticle: ArchiveArticle) {
+  const currentTopics = new Set(currentArticle.topics.map((topic) => topic.value))
+  const currentAudiences = new Set(currentArticle.audiences.map((audience) => audience.value))
+  const topicMatches = article.topics.filter((topic) => currentTopics.has(topic.value)).length
+  const audienceMatches = article.audiences.filter((audience) =>
+    currentAudiences.has(audience.value),
+  ).length
+
+  return (
+    (article.series.value === currentArticle.series.value ? 6 : 0) +
+    topicMatches * 4 +
+    (article.category.value === currentArticle.category.value ? 3 : 0) +
+    audienceMatches * 2
+  )
+}
+
+function bookTopicMatchesArticle(bookTopic: string, articleTopicValues: Set<string>) {
+  const aliases: Record<string, string[]> = {
+    'bible-study': ['bible-reading', 'scripture'],
+    'christian-life': ['christian-life', 'discipleship', 'spiritual-growth'],
+    doctrine: ['doctrine', 'grace', 'identity-in-christ', 'salvation'],
+    family: ['family', 'marriage'],
+    leadership: ['leadership', 'pastoral-theology'],
+    prayer: ['prayer'],
+  }
+
+  return aliases[bookTopic]?.some((topic) => articleTopicValues.has(topic)) ?? false
 }
 
 export function generateMetadata({
@@ -77,14 +120,38 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound()
   }
 
+  const archiveArticle = detail.archiveArticle
   const authorProfile = await loadAuthorProfileByName(detail.author)
-  const relatedArchive = await loadArchiveContent()
-  const relatedArticles = relatedArchive.articles
-    .filter(
-      (article) =>
-        article.slug !== slug && article.category.value === detail.archiveArticle?.category.value,
+  const [relatedArchive, resources] = await Promise.all([loadArchiveContent(), loadResourceItems()])
+  const otherArticles = relatedArchive.allArticles.filter((article) => article.slug !== slug)
+  const rankedRelatedArticles = otherArticles
+    .map((article) => ({
+      article,
+      score: scoreRelatedArticle(article, archiveArticle),
+    }))
+    .filter((item) => item.score > 0)
+    .sort(
+      (left, right) =>
+        right.score - left.score || right.article.publishedAt.localeCompare(left.article.publishedAt),
     )
-    .slice(0, 3)
+    .map((item) => item.article)
+  const fallbackArticles = otherArticles
+    .filter((article) => !rankedRelatedArticles.some((related) => related.slug === article.slug))
+    .sort((left, right) => right.publishedAt.localeCompare(left.publishedAt))
+  const relatedArticles = [...rankedRelatedArticles, ...fallbackArticles].slice(0, 4)
+  const articleTopicValues = new Set(archiveArticle.topics.map((topic) => topic.value))
+  const relatedResource =
+    resources.find(
+      (resource) => normalizeText(resource.title) === normalizeText(detail.relatedResource),
+    ) ??
+    resources.find(
+      (resource) =>
+        resource.relatedArticleSlugs.includes(detail.slug) ||
+        Boolean(detail.series && resource.relatedSeriesSlugs.includes(detail.series.slug)),
+    )
+  const relatedBook =
+    listBooks().find((book) => normalizeText(book.title) === normalizeText(detail.relatedBook)) ??
+    listBooks().find((book) => bookTopicMatchesArticle(book.topic, articleTopicValues))
 
   return (
     <main className="scripture-study-page">
@@ -113,7 +180,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </div>
               <div>
                 <dt>Sorozat</dt>
-                <dd>{detail.series?.label ?? 'Önálló cikk'}</dd>
+                <dd>
+                  {detail.series ? (
+                    <Link href={buildSeriesUrl(detail.series.slug)}>{detail.series.label}</Link>
+                  ) : (
+                    'Önálló cikk'
+                  )}
+                </dd>
               </div>
               <div>
                 <dt>Témák</dt>
@@ -134,10 +207,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     </Link>
                   ))}
                 </dd>
-              </div>
-              <div>
-                <dt>Címkék</dt>
-                <dd>{detail.tags.join(' / ')}</dd>
               </div>
             </dl>
             <ShareTools title={detail.title} url={buildArticleUrl(detail.slug)} />
@@ -213,21 +282,42 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <ShareTools title={detail.title} url={buildArticleUrl(detail.slug)} />
           </section>
 
-          {detail.series ? (
-            <section>
-              <p className="eyebrow">Sorozat kontextus</p>
-              <h2>{detail.series.label}</h2>
-              <p>{detail.series.description}</p>
-              <Link href={buildSeriesUrl(detail.series.slug)}>Út folytatása</Link>
-            </section>
-          ) : null}
-
           {detail.relatedResource || detail.relatedBook ? (
             <section>
               <p className="eyebrow">Következő tanulmány</p>
               <h2>Kapcsolódó segítségek</h2>
-              {detail.relatedResource ? <p>Forrás: {detail.relatedResource}</p> : null}
-              {detail.relatedBook ? <p>Könyv: {detail.relatedBook}</p> : null}
+              <div className="scripture-study-support-links">
+                {detail.relatedResource ? (
+                  relatedResource ? (
+                    <Link href={buildResourceUrl(relatedResource.slug)}>
+                      <span>Forrás</span>
+                      <strong>{relatedResource.title}</strong>
+                      <small>{relatedResource.usefulness}</small>
+                    </Link>
+                  ) : (
+                    <Link href="/resources">
+                      <span>Forrás</span>
+                      <strong>{detail.relatedResource}</strong>
+                      <small>Kapcsolódó segédanyagok megnyitása</small>
+                    </Link>
+                  )
+                ) : null}
+                {detail.relatedBook ? (
+                  relatedBook ? (
+                    <Link href={buildBookUrl(relatedBook.slug)}>
+                      <span>Könyv</span>
+                      <strong>{relatedBook.title}</strong>
+                      <small>{relatedBook.description}</small>
+                    </Link>
+                  ) : (
+                    <Link href="/books">
+                      <span>Könyv</span>
+                      <strong>{detail.relatedBook}</strong>
+                      <small>Könyvajánlók megnyitása</small>
+                    </Link>
+                  )
+                ) : null}
+              </div>
             </section>
           ) : null}
         </footer>
